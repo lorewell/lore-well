@@ -102,6 +102,10 @@ interface GameState {
   openShop: (npcId: string) => void
   closeShop: () => void
   buyItem: (itemId: string, price: number) => boolean
+  sellItem: (itemId: string, price: number) => boolean
+
+  // 复活
+  respawnAtVillage: () => void
 }
 
 // ─── Store ───────────────────────────────────────────────────────────────────
@@ -553,6 +557,34 @@ export const useGameStore = create<GameState>()(
         set((s) => ({ gold: s.gold - price }))
         get().addItem(item, 1)
         return true
+      },
+
+      // ── 商店：出售 ─────────────────────────────────────────────────────────
+      sellItem: (itemId, price) => {
+        const inv = get().inventory
+        const slot = inv.find((i) => i.item.id === itemId)
+        if (!slot || slot.quantity < 1) return false
+        get().removeItem(itemId, 1)
+        set((s) => ({ gold: s.gold + price }))
+        return true
+      },
+
+      // ── 复活：传送到村庄并恢复 50% HP/MP ───────────────────────────────────
+      respawnAtVillage: () => {
+        set((s) => {
+          const stats = s.player.stats
+          return {
+            currentLocationId: 'village',
+            player: {
+              ...s.player,
+              stats: {
+                ...stats,
+                hp: Math.max(1, Math.floor(stats.maxHp * 0.5)),
+                mp: Math.max(0, Math.floor(stats.maxMp * 0.5)),
+              },
+            },
+          }
+        })
       },
     } as GameState & { _autoCompleteObjectives: (t: ObjectiveTrigger) => void }),
     {

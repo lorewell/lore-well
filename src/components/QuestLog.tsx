@@ -1,4 +1,3 @@
-import React from 'react'
 import { useGameStore } from '../store/gameStore'
 import type { Quest } from '../types'
 
@@ -7,8 +6,6 @@ interface Props {
 }
 
 function QuestCard({ quest }: { quest: Quest }) {
-  const allDone = quest.objectives.every((o) => o.completed)
-
   const statusColor =
     quest.status === 'completed'
       ? 'border-green-600/50 bg-green-900/10'

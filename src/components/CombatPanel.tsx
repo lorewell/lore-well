@@ -13,6 +13,7 @@ export default function CombatPanel({ onBattleEnd }: CombatPanelProps) {
   const inventory = useGameStore((s) => s.inventory)
   const executeBattleAction = useGameStore((s) => s.executeBattleAction)
   const restoreHpMp = useGameStore((s) => s.restoreHpMp)
+  const respawnAtVillage = useGameStore((s) => s.respawnAtVillage)
   const logRef = useRef<HTMLDivElement>(null)
 
   // 自动滚动日志到底部
@@ -49,9 +50,17 @@ export default function CombatPanel({ onBattleEnd }: CombatPanelProps) {
   }
 
   const handleClose = () => {
-    restoreHpMp()
-    GameManager.exitCombat()
-    onBattleEnd()
+    if (battle.phase === 'defeat') {
+      // 失败时：传送回村庄，恢复 50% HP/MP（不满血）
+      respawnAtVillage()
+      GameManager.exitCombat()
+      onBattleEnd()
+    } else {
+      // 胜利/逃跑：正常恢复并退出
+      restoreHpMp()
+      GameManager.exitCombat()
+      onBattleEnd()
+    }
   }
 
   const consumables = inventory.filter((i) => i.item.type === 'consumable')
@@ -73,8 +82,9 @@ export default function CombatPanel({ onBattleEnd }: CombatPanelProps) {
           </div>
           <MiniBar label="HP" pct={hpPct} color="#44cc66" />
           <MiniBar label="MP" pct={mpPct} color="#4488ff" />
-          <div className="text-[10px] mt-1" style={{ color: '#9070b0' }}>
-            {playerStats.hp}/{playerStats.maxHp} HP · {playerStats.mp}/{playerStats.maxMp} MP
+          <div className="text-[10px] mt-1 space-y-0.5" style={{ color: '#9070b0' }}>
+            <div>{playerStats.hp}/{playerStats.maxHp} HP · {playerStats.mp}/{playerStats.maxMp} MP</div>
+            <div>ATK {playerStats.atk} · DEF {playerStats.def}</div>
           </div>
         </div>
 
@@ -95,8 +105,9 @@ export default function CombatPanel({ onBattleEnd }: CombatPanelProps) {
             {battle.enemy.name}
           </div>
           <MiniBar label="HP" pct={enemyHpPct} color="#cc4466" reverse />
-          <div className="text-[10px] mt-1" style={{ color: '#9070b0' }}>
-            {enemyStats.hp}/{enemyStats.maxHp} HP
+          <div className="text-[10px] mt-1 space-y-0.5" style={{ color: '#9070b0' }}>
+            <div>{enemyStats.hp}/{enemyStats.maxHp} HP</div>
+            <div>ATK {enemyStats.atk} · DEF {enemyStats.def}</div>
           </div>
         </div>
       </div>
@@ -158,35 +169,56 @@ export default function CombatPanel({ onBattleEnd }: CombatPanelProps) {
           </ActionButton>
         </div>
       ) : (
-        <div className="flex flex-col items-center gap-3">
-          <p
-            className="text-lg tracking-widest font-medium"
-            style={{
-              color:
-                battle.phase === 'victory'
-                  ? '#ffcc44'
-                  : battle.phase === 'flee'
-                  ? '#9070b0'
-                  : '#cc4444',
-            }}
-          >
-            {battle.phase === 'victory'
-              ? '✦ 胜利 ✦'
-              : battle.phase === 'flee'
-              ? '成功逃脱'
-              : '败北……'}
-          </p>
-          <button
-            onClick={handleClose}
-            className="px-8 py-2.5 text-sm tracking-widest border cursor-pointer hover:brightness-125 transition-all"
-            style={{
-              borderColor: '#3a1a5a',
-              background: 'rgba(102,0,204,0.2)',
-              color: '#e2d8f0',
-            }}
-          >
-            继续
-          </button>
+        <div className="flex flex-col items-center gap-3 py-2">
+          {battle.phase === 'victory' && (
+            <>
+              <p className="text-lg tracking-widest font-medium" style={{ color: '#ffcc44' }}>
+                ✦ 胜利 ✦
+              </p>
+              <button
+                onClick={handleClose}
+                className="px-8 py-2.5 text-sm tracking-widest border cursor-pointer hover:brightness-125 transition-all"
+                style={{ borderColor: '#3a1a5a', background: 'rgba(102,0,204,0.2)', color: '#e2d8f0' }}
+              >
+                继续
+              </button>
+            </>
+          )}
+          {battle.phase === 'flee' && (
+            <>
+              <p className="text-lg tracking-widest font-medium" style={{ color: '#9070b0' }}>
+                成功逃脱
+              </p>
+              <button
+                onClick={handleClose}
+                className="px-8 py-2.5 text-sm tracking-widest border cursor-pointer hover:brightness-125 transition-all"
+                style={{ borderColor: '#3a1a5a', background: 'rgba(102,0,204,0.2)', color: '#e2d8f0' }}
+              >
+                继续
+              </button>
+            </>
+          )}
+          {battle.phase === 'defeat' && (
+            <>
+              <p className="text-lg tracking-widest font-medium" style={{ color: '#cc4444' }}>
+                ✝ 战斗失败
+              </p>
+              <p className="text-xs text-center max-w-xs" style={{ color: '#7a5a70' }}>
+                你陷入了昏迷……
+                <br />
+                客栈老板发现了你，将你带回了晨曦村。
+                <br />
+                <span style={{ color: '#cc8888' }}>HP/MP 恢复至 50%，装备与道具保留。</span>
+              </p>
+              <button
+                onClick={handleClose}
+                className="mt-1 px-8 py-2.5 text-sm tracking-widest border cursor-pointer hover:brightness-125 transition-all"
+                style={{ borderColor: '#5a1a1a', background: 'rgba(100,10,10,0.3)', color: '#e2c8c8' }}
+              >
+                重回晨曦村
+              </button>
+            </>
+          )}
         </div>
       )}
     </div>

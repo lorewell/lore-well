@@ -4,6 +4,29 @@
 
 ---
 
+## [0.5.0] — Phase 9：商店出售 + 战斗失败处理 + 代码修复
+
+### 改动说明
+完善商店系统（加入出售功能）、实现战斗失败重生机制、优化战斗 UI 信息展示，修复预存 lint 错误。
+
+### 修改文件
+
+| 文件 | 改动类型 | 说明 |
+|---|---|---|
+| `src/store/gameStore.ts` | 修改 | 新增 `sellItem(itemId, price): boolean` 动作；新增 `respawnAtVillage()` 动作（传送至村庄，HP/MP 恢复 50%） |
+| `src/components/ShopPanel.tsx` | 重写 | 加入买/卖切换 Tab；出售模式展示背包中所有非任务物品及出售价格（优先用商品条目价格 × 40%，否则按类型兜底）；支持 Esc 关闭 |
+| `src/components/CombatPanel.tsx` | 修改 | 引入 `respawnAtVillage`；战斗失败显示专用结算界面（说明传送后果 + "重回晨曦村"按钮）；胜利/逃跑走原流程；状态栏新增 ATK/DEF 展示 |
+| `src/components/QuestLog.tsx` | 修复 | 移除未使用的 `React` 导入和 `allDone` 变量 |
+| `src/components/InventoryPanel.tsx` | 修复 | 移除未使用的 `React` 导入；将 `useItem` 重命名为 `consumeItem` 以避免 React Hook 命名规则误报 |
+| `README.md` | 重写 | 更新已实现功能列表至最新状态；更新项目结构；清理残留 eslint 代码片段 |
+
+### 设计约定（本次建立）
+- **出售价格**：在 ShopEntry 中可定义 `sellPrice`；若未设置，默认为 `floor(price × 0.4)`；非本店物品按类型兜底（装备 12G / 消耗品 8G / 杂项 3G）
+- **战斗失败行为**：玩家 HP/MP 恢复至 50%（不满血，以示惩罚），传送至晨曦村，装备与道具完整保留
+- **respawnAtVillage**：直接修改 `currentLocationId` + `player.stats.hp/mp`，无需额外动画或确认
+
+---
+
 ## [0.4.0] — Phase 8：商店系统 + 内容扩充 + UI 完善
 
 ### 改动说明

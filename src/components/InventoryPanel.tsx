@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useGameStore } from '../store/gameStore'
 import { applyEquipmentBonuses } from '../store/gameStore'
 import type { EquipSlot, InventoryItem } from '../types'
@@ -19,14 +19,14 @@ export default function InventoryPanel({ onClose }: Props) {
   const gold = useGameStore((s) => s.gold)
   const equipItem = useGameStore((s) => s.equipItem)
   const unequipItem = useGameStore((s) => s.unequipItem)
-  const useItem = useGameStore((s) => s.useItem)
+  const consumeItem = useGameStore((s) => s.useItem)
 
   const [selected, setSelected] = useState<InventoryItem | null>(null)
 
   const effectiveStats = applyEquipmentBonuses(player.baseStats, player.equipment)
 
   const handleUse = (itemId: string) => {
-    useItem(itemId)
+    consumeItem(itemId)
     setSelected(null)
   }
 
