@@ -30,6 +30,17 @@ export const SHOPS: Record<string, Shop> = {
       { itemId: 'elixir',        price: 80  },
     ],
   },
+
+  grocer_shop: {
+    id: 'grocer_shop',
+    npcId: 'grocer',
+    name: '梅娜的杂货铺',
+    entries: [
+      { itemId: 'health_potion', price: 25  },
+      { itemId: 'mana_potion',   price: 20  },
+      { itemId: 'iron_ore',      price: 15  },
+    ],
+  },
 }
 
 /** 根据 NPC id 查找商店（找不到返回 undefined） */

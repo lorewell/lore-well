@@ -3,14 +3,17 @@ import type { Location } from '../types'
 export const LOCATIONS: Record<string, Location> = {
   village: {
     id: 'village',
-    name: '晨曦村',
-    description: '一个宁静的小村庄，被森林和山脉环绕。这里的人们过着平静的生活，但近来却笼罩在不安的阴影之下。',
+    name: '落瀑村',
+    description: '坐落于隐秘瀑布脚下的宁静村庄。潺潺水声自山间倾泻而下，流经村旁，世代哺育着这里的居民。近来，村子周边的不安暗流让村民们忧心忡忡。',
     backgroundKey: 'bg_village',
     exits: ['forest', 'temple_ruins', 'mine_cave'],
     interactions: [
-      { id: 'village_inn', label: '暮光客栈（玛格）', type: 'npc', targetId: 'innkeeper' },
+      { id: 'village_waterfall', label: '隐秘瀑布（发现之地）', type: 'building', targetId: 'waterfall' },
+      { id: 'village_elder_home', label: '艾尔文的家', type: 'npc', targetId: 'elder' },
       { id: 'village_smith', label: '铁匠铺（托尔）', type: 'npc', targetId: 'blacksmith' },
-      { id: 'village_elder', label: '长老之屋', type: 'npc', targetId: 'elder' },
+      { id: 'village_inn', label: '暮光客栈（玛格）', type: 'npc', targetId: 'innkeeper' },
+      { id: 'village_grocer', label: '杂货铺（梅娜）', type: 'npc', targetId: 'grocer' },
+      { id: 'village_chief', label: '村长之屋（格雷）', type: 'npc', targetId: 'village_chief' },
       { id: 'village_slime', label: '附近的史莱姆', type: 'enemy', targetId: 'slime' },
     ],
   },
