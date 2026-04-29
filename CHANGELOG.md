@@ -4,6 +4,38 @@
 
 ---
 
+## [0.4.0] — Phase 8：商店系统 + 内容扩充 + UI 完善
+
+### 改动说明
+新增商店购买系统、暂停菜单、主菜单存档预览；大幅扩充物品、敌人、地点和任务内容。
+
+### 修改文件
+
+| 文件 | 改动类型 | 说明 |
+|---|---|---|
+| `src/types/index.ts` | 新增 | 添加 `ShopEntry`、`Shop` 类型 |
+| `src/data/items.ts` | 扩充 | 新增 8 件物品：elixir、steel_sword、magic_staff、chain_mail、swift_ring、vitality_amulet、iron_ore、goblin_emblem，共 13 件 |
+| `src/data/enemies.ts` | 扩充 | 新增 3 种敌人：cave_spider（毒牙）、goblin_mage（火焰箭）、stone_golem（重锤）；goblin 新增 goblin_emblem 掉落 |
+| `src/data/shops.ts` | 新增 | 铁匠铺（7 件装备）和客栈小卖部（3 件消耗品）定义；导出 `getShopByNpc` 辅助函数 |
+| `src/data/locations.ts` | 扩充 | 新增 `mine_cave` 地点；village 新增矿洞出口；temple_ruins 新增哥布林法师；forest_depths 新增石像鬼；npc 类型交互已替换 building 类型以正确触发对话 |
+| `src/data/npcs.ts` | 修改 | 铁匠托尔加入"查看商品"对话选项；客栈玛格加入"购买物资"选项和新闻节点 |
+| `src/data/quests.ts` | 扩充 | 新增 `quest_blacksmith`（铁匠委托）：收集铁矿石 → 回报铁匠，奖励 steel_sword |
+| `src/store/gameStore.ts` | 修改 | 新增 `activeShopNpcId` 状态；新增 `openShop` / `closeShop` / `buyItem` 动作；`openDialogue` 在铁匠首谈时自动激活铁匠任务 |
+| `src/components/ShopPanel.tsx` | 新增 | 商店全屏面板：列出商品（装备蓝色/消耗品绿色）、价格、属性加成；金币不足时禁用购买按钮 |
+| `src/components/PauseMenu.tsx` | 新增 | 暂停全屏菜单：继续游戏 / 返回主菜单（含确认对话框）；显示自动存档提示 |
+| `src/components/DialogBox.tsx` | 修改 | 对话节点 next='shop' 时触发 `openShop` 并关闭对话框 |
+| `src/screens/GameScreen.tsx` | 修改 | 新增 `paused` 状态；渲染 PauseMenu 和 ShopPanel；顶部 "≡ MENU" 按钮 |
+| `src/screens/MainMenuScreen.tsx` | 修改 | 存档预览：显示角色名、等级、所在地点 |
+| `src/game/scenes/PreloadScene.ts` | 修改 | 新增 `bg_mine` 占位纹理 |
+| `README.md` | 修改 | 更新已实现功能清单，版本升至 v0.4.0 |
+
+### 设计约定（本次建立）
+- **商店触发流程**：对话节点 `next='shop'` → `DialogBox` 调用 `openShop(npcId)` → store 记录 `activeShopNpcId` → `GameScreen` 渲染 `ShopPanel` → 关闭时 `closeShop()` 清空
+- **buyItem 签名**：`buyItem(itemId, price): boolean`，price 直接从 ShopEntry 传入，避免 store 重复查找商店结构
+- **任务激活时机**：首次与 NPC 对话时在 `openDialogue` 中调用 `activateQuest`，保持与已有长老任务一致
+
+---
+
 ## [0.3.0] — Phase 7：装备系统 + 任务系统
 
 ### 改动说明

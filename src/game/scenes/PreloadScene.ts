@@ -39,6 +39,7 @@ export default class PreloadScene extends Phaser.Scene {
       { key: 'bg_forest',      color: 0x0a1a0a, label: '幽暗森林' },
       { key: 'bg_forest_deep', color: 0x050a05, label: '森林深处' },
       { key: 'bg_temple',      color: 0x1a1020, label: '古代神殿' },
+      { key: 'bg_mine',        color: 0x0a0a0f, label: '废弃矿洞' },
     ]
 
     for (const loc of locations) {

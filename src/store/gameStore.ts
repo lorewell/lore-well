@@ -65,6 +65,7 @@ interface GameState {
   quests: Quest[]
   battle: BattleState
   activeDialogue: { npcId: string; nodeId: string } | null
+  activeShopNpcId: string | null
 
   // 基础操作
   startNewGame: (playerName?: string) => void
@@ -96,6 +97,11 @@ interface GameState {
   // 任务
   activateQuest: (questId: string) => void
   completeQuest: (questId: string) => void
+
+  // 商店
+  openShop: (npcId: string) => void
+  closeShop: () => void
+  buyItem: (itemId: string, price: number) => boolean
 }
 
 // ─── Store ───────────────────────────────────────────────────────────────────
@@ -111,6 +117,7 @@ export const useGameStore = create<GameState>()(
       consumedInteractions: new Set(),
       quests: structuredClone(INITIAL_QUESTS),
       activeDialogue: null,
+      activeShopNpcId: null,
 
       battle: {
         active: false,
@@ -135,6 +142,7 @@ export const useGameStore = create<GameState>()(
           consumedInteractions: new Set(),
           quests: structuredClone(INITIAL_QUESTS),
           activeDialogue: null,
+          activeShopNpcId: null,
           battle: {
             active: false,
             phase: 'idle',
@@ -263,6 +271,10 @@ export const useGameStore = create<GameState>()(
         if (npcId === 'elder') {
           get().activateQuest('quest_elder')
           get().activateQuest('quest_forest')
+        }
+        // 首次与铁匠对话时激活铁矿任务
+        if (npcId === 'blacksmith') {
+          get().activateQuest('quest_blacksmith')
         }
       },
 
@@ -520,6 +532,27 @@ export const useGameStore = create<GameState>()(
             completeQuest(q.id)
           }
         }
+      },
+
+      // ── 商店：打开 ─────────────────────────────────────────────────────────
+      openShop: (npcId) => {
+        set({ activeShopNpcId: npcId })
+      },
+
+      // ── 商店：关闭 ─────────────────────────────────────────────────────────
+      closeShop: () => {
+        set({ activeShopNpcId: null })
+      },
+
+      // ── 商店：购买 ─────────────────────────────────────────────────────────
+      buyItem: (itemId, price) => {
+        const { gold } = get()
+        if (gold < price) return false
+        const item = ITEMS[itemId]
+        if (!item) return false
+        set((s) => ({ gold: s.gold - price }))
+        get().addItem(item, 1)
+        return true
       },
     } as GameState & { _autoCompleteObjectives: (t: ObjectiveTrigger) => void }),
     {

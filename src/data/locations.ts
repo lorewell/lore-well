@@ -6,10 +6,10 @@ export const LOCATIONS: Record<string, Location> = {
     name: '晨曦村',
     description: '一个宁静的小村庄，被森林和山脉环绕。这里的人们过着平静的生活，但近来却笼罩在不安的阴影之下。',
     backgroundKey: 'bg_village',
-    exits: ['forest', 'temple_ruins'],
+    exits: ['forest', 'temple_ruins', 'mine_cave'],
     interactions: [
-      { id: 'village_inn', label: '暮光客栈', type: 'building', targetId: 'innkeeper' },
-      { id: 'village_smith', label: '铁匠铺', type: 'building', targetId: 'blacksmith' },
+      { id: 'village_inn', label: '暮光客栈（玛格）', type: 'npc', targetId: 'innkeeper' },
+      { id: 'village_smith', label: '铁匠铺（托尔）', type: 'npc', targetId: 'blacksmith' },
       { id: 'village_elder', label: '长老之屋', type: 'npc', targetId: 'elder' },
       { id: 'village_slime', label: '附近的史莱姆', type: 'enemy', targetId: 'slime' },
     ],
@@ -34,6 +34,7 @@ export const LOCATIONS: Record<string, Location> = {
     exits: ['forest'],
     interactions: [
       { id: 'depth_wolf', label: '古老的狼灵', type: 'enemy', targetId: 'forest_wolf' },
+      { id: 'depth_golem', label: '石像鬼守卫', type: 'enemy', targetId: 'stone_golem' },
       { id: 'depth_key', label: '石台上的匣子', type: 'item', targetId: 'ancient_key' },
     ],
   },
@@ -45,7 +46,20 @@ export const LOCATIONS: Record<string, Location> = {
     exits: ['village'],
     interactions: [
       { id: 'temple_guard', label: '遗迹守卫者', type: 'enemy', targetId: 'goblin' },
+      { id: 'temple_mage', label: '哥布林法师', type: 'enemy', targetId: 'goblin_mage' },
       { id: 'temple_altar', label: '神秘祭坛', type: 'building', targetId: 'elder' },
+    ],
+  },
+  mine_cave: {
+    id: 'mine_cave',
+    name: '废弃矿洞',
+    description: '村子北边的旧矿洞，曾经是繁忙的采矿场，如今只剩危险的怪物和散落的矿石。',
+    backgroundKey: 'bg_mine',
+    exits: ['village'],
+    interactions: [
+      { id: 'mine_spider', label: '洞穴蜘蛛', type: 'enemy', targetId: 'cave_spider' },
+      { id: 'mine_goblin', label: '挖矿哥布林', type: 'enemy', targetId: 'goblin' },
+      { id: 'mine_ore', label: '裸露的矿脉', type: 'item', targetId: 'iron_ore' },
     ],
   },
 }

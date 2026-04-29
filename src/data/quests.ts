@@ -43,4 +43,15 @@ export const INITIAL_QUESTS: Quest[] = [
     ],
     reward: { exp: 50 },
   },
+  {
+    id: 'quest_blacksmith',
+    title: '铁匠的请托',
+    description: '铁匠托尔需要铁矿石来打造更好的武器。前往废弃矿洞采集铁矿石，带回给他。',
+    status: 'locked',
+    objectives: [
+      { id: 'get_ore', description: '获得铁矿石', completed: false, trigger: { type: 'have_item', itemId: 'iron_ore' } },
+      { id: 'return_to_smith', description: '带铁矿石回去找铁匠托尔', completed: false, trigger: { type: 'talk_npc', npcId: 'blacksmith' } },
+    ],
+    reward: { exp: 120, gold: 80, items: [{ itemId: 'steel_sword', qty: 1 }] },
+  },
 ]

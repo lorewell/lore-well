@@ -7,9 +7,10 @@ export const NPCS: Record<string, NPC> = {
     dialogues: [
       {
         id: 'greeting',
-        text: '欢迎来到暮光客栈，旅行者！想要休息一下吗？',
+        text: '欢迎来到暮光客栈，旅行者！想要休息，还是买点什么？',
         options: [
           { text: '我想休息（回复满血）', next: 'rest' },
+          { text: '我想买些物资。', next: 'shop' },
           { text: '最近有什么消息吗？', next: 'news' },
           { text: '不了，谢谢。' },
         ],
@@ -19,8 +20,12 @@ export const NPCS: Record<string, NPC> = {
         text: '好的，请在这里休息吧。（HP/MP 已恢复）',
       },
       {
+        id: 'shop',
+        text: '药水和补给，都在柜台上，你自己挑吧。',
+      },
+      {
         id: 'news',
-        text: '听说森林里最近出现了异常活动，村民们都不敢靠近……小心点吧。',
+        text: '听说矿洞那边最近不太平，有探矿的人失踪了。还有，神殿方向昨晚又有奇怪的光……小心点吧。',
         options: [{ text: '我知道了，谢谢。' }],
       },
     ],
@@ -31,15 +36,20 @@ export const NPCS: Record<string, NPC> = {
     dialogues: [
       {
         id: 'greeting',
-        text: '哦，又来了个冒险者。我这儿有好东西，不过你得先给我带些铁矿石。',
+        text: '哦，又来了个冒险者。我这儿有上好的武器和护甲，你需要什么？',
         options: [
+          { text: '我想看看你的商品。', next: 'shop' },
           { text: '我有铁矿石。', next: 'has_ore' },
-          { text: '我去找找看。' },
+          { text: '随便看看。' },
         ],
       },
       {
+        id: 'shop',
+        text: '行，你自己选吧。好货不便宜，便宜没好货。',
+      },
+      {
         id: 'has_ore',
-        text: '不错！我来给你打造点好东西。（功能待完善）',
+        text: '不错，带了铁矿石。我下次给你多留几件好货。',
       },
     ],
   },

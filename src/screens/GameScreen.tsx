@@ -8,7 +8,10 @@ import DialogBox from '../components/DialogBox'
 import CombatPanel from '../components/CombatPanel'
 import InventoryPanel from '../components/InventoryPanel'
 import QuestLog from '../components/QuestLog'
+import PauseMenu from '../components/PauseMenu'
+import ShopPanel from '../components/ShopPanel'
 import { LOCATIONS } from '../data/locations'
+import { getShopByNpc } from '../data/shops'
 
 type ActivePanel = 'none' | 'inventory' | 'quests'
 
@@ -20,6 +23,11 @@ export default function GameScreen() {
 
   const [inCombat, setInCombat] = useState(false)
   const [activePanel, setActivePanel] = useState<ActivePanel>('none')
+  const [paused, setPaused] = useState(false)
+
+  const activeShopNpcId = useGameStore((s) => s.activeShopNpcId)
+  const closeShop = useGameStore((s) => s.closeShop)
+  const activeShop = activeShopNpcId ? getShopByNpc(activeShopNpcId) : undefined
 
   const togglePanel = useCallback((panel: ActivePanel) => {
     setActivePanel((prev) => (prev === panel ? 'none' : panel))
@@ -35,14 +43,18 @@ export default function GameScreen() {
   // 键盘快捷键
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (inCombat) return
+      if (e.key === 'Escape') {
+        if (paused) { setPaused(false); return }
+        if (activePanel !== 'none') { setActivePanel('none'); return }
+        if (!inCombat) setPaused(true)
+      }
+      if (inCombat || paused) return
       if (e.key === 'b' || e.key === 'B') togglePanel('inventory')
       if (e.key === 'q' || e.key === 'Q') togglePanel('quests')
-      if (e.key === 'Escape') setActivePanel('none')
     }
     window.addEventListener('keydown', handler)
     return () => window.removeEventListener('keydown', handler)
-  }, [inCombat, togglePanel])
+  }, [inCombat, paused, activePanel, togglePanel])
 
   // 初始化 Phaser
   useEffect(() => {
@@ -124,14 +136,22 @@ export default function GameScreen() {
         <CombatPanel onBattleEnd={() => setInCombat(false)} />
       )}
 
-      {/* 返回主菜单 */}
-      <button
-        onClick={() => navigate('/')}
-        className="absolute top-3 right-4 text-[10px] tracking-widest opacity-30 hover:opacity-70 transition-opacity cursor-pointer"
-        style={{ color: '#9070b0' }}
-      >
-        ← MENU
-      </button>
+      {/* 返回主菜单 → 改为暂停按钮 */}
+      {!inCombat && (
+        <button
+          onClick={() => setPaused(true)}
+          className="absolute top-3 right-4 text-[10px] tracking-widest opacity-30 hover:opacity-70 transition-opacity cursor-pointer"
+          style={{ color: '#9070b0' }}
+        >
+          ≡ MENU
+        </button>
+      )}
+
+      {/* 暂停菜单 */}
+      {paused && <PauseMenu onClose={() => setPaused(false)} />}
+
+      {/* 商店面板 */}
+      {activeShop && <ShopPanel shop={activeShop} onClose={closeShop} />}
     </div>
   )
 }

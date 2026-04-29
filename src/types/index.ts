@@ -181,3 +181,19 @@ export interface SaveData {
   /** 已完成交互的 id 集合（用于状态持久化） */
   consumedInteractions: string[]
 }
+
+// ─── 商店系统 ────────────────────────────────────────────────────────────────
+
+export interface ShopEntry {
+  itemId: string
+  price: number          // 购买价格（金币）
+  sellPrice?: number     // 出售价格（未实现时留空）
+  stock?: number         // undefined = 无限库存
+}
+
+export interface Shop {
+  id: string
+  npcId: string          // 关联的 NPC id
+  name: string
+  entries: ShopEntry[]
+}

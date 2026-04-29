@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import Phaser from 'phaser'
 import MainMenuScene from '../game/scenes/MainMenuScene'
 import { useGameStore } from '../store/gameStore'
+import { LOCATIONS } from '../data/locations'
 
 export default function MainMenuScreen() {
   const canvasRef = useRef<HTMLDivElement>(null)
@@ -10,6 +11,9 @@ export default function MainMenuScreen() {
   const navigate = useNavigate()
   const startNewGame = useGameStore((s) => s.startNewGame)
   const started = useGameStore((s) => s.started)
+  const player = useGameStore((s) => s.player)
+  const currentLocationId = useGameStore((s) => s.currentLocationId)
+  const locationName = LOCATIONS[currentLocationId]?.name ?? '未知'
 
   const [showNameInput, setShowNameInput] = useState(false)
   const [nameValue, setNameValue] = useState('')
@@ -86,9 +90,18 @@ export default function MainMenuScreen() {
             <>
               <MenuButton onClick={handleNewGame}>新的旅程</MenuButton>
               {started && (
-                <MenuButton onClick={handleContinue} variant="secondary">
-                  继续冒险
-                </MenuButton>
+                <>
+                  <MenuButton onClick={handleContinue} variant="secondary">
+                    继续冒险
+                  </MenuButton>
+                  {/* 存档摘要 */}
+                  <div
+                    className="w-full text-center text-xs py-1.5 px-4 rounded border"
+                    style={{ borderColor: '#2a1840', color: '#9070b0', background: 'rgba(0,0,0,0.3)' }}
+                  >
+                    {player.name} · LV {player.level} · {locationName}
+                  </div>
+                </>
               )}
               <MenuButton variant="ghost" onClick={() => {}}>
                 设置
@@ -127,7 +140,7 @@ export default function MainMenuScreen() {
 
         {/* 底部版本号 */}
         <p className="text-xs tracking-widest" style={{ color: '#4a3060' }}>
-          v0.1.0 · PROTOTYPE
+          v0.3.0 · PROTOTYPE
         </p>
       </div>
     </div>

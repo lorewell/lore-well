@@ -7,6 +7,7 @@ export default function DialogBox() {
   const advanceDialogue = useGameStore((s) => s.advanceDialogue)
   const closeDialogue = useGameStore((s) => s.closeDialogue)
   const restoreHpMp = useGameStore((s) => s.restoreHpMp)
+  const openShop = useGameStore((s) => s.openShop)
   const boxRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -29,6 +30,12 @@ export default function DialogBox() {
     // 特殊动作：innkeeper 休息
     if (activeDialogue.npcId === 'innkeeper' && nextNodeId === 'rest') {
       restoreHpMp()
+    }
+    // 特殊动作：打开商店
+    if (nextNodeId === 'shop') {
+      openShop(activeDialogue.npcId)
+      closeDialogue()
+      return
     }
     if (nextNodeId) {
       advanceDialogue(nextNodeId)
