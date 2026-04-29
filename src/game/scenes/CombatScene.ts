@@ -1,4 +1,4 @@
-﻿import Phaser from 'phaser'
+﻿import * as Phaser from 'phaser'
 
 /**
  * 战斗场景 —— 战斗背景与双方角色展示

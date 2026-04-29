@@ -1,4 +1,4 @@
-import Phaser from 'phaser'
+import * as Phaser from 'phaser'
 import PreloadScene from './scenes/PreloadScene'
 import LocationScene from './scenes/LocationScene'
 import CombatScene from './scenes/CombatScene'
@@ -58,7 +58,9 @@ export const GameManager = {
     const location = this.getLocationScene()
     if (!combat || !location) return
 
-    instance?.scene.pause('LocationScene')
+    if (instance?.scene.isActive('LocationScene')) {
+      instance?.scene.pause('LocationScene')
+    }
     if (!instance?.scene.isActive('CombatScene')) {
       instance?.scene.start('CombatScene')
       // 等一帧再调用入场动效

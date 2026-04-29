@@ -1,4 +1,4 @@
-﻿import Phaser from 'phaser'
+﻿import * as Phaser from 'phaser'
 
 /**
  * 预加载场景 —— 生成占位纹理并启动地点场景

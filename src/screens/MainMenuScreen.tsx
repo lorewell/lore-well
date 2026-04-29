@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import Phaser from 'phaser'
+import * as Phaser from 'phaser'
 import MainMenuScene from '../game/scenes/MainMenuScene'
 import { useGameStore } from '../store/gameStore'
 import { LOCATIONS } from '../data/locations'

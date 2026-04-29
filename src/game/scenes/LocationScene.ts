@@ -1,4 +1,4 @@
-﻿import Phaser from 'phaser'
+﻿import * as Phaser from 'phaser'
 
 /**
  * 地点场景 —— 显示当前地点背景图

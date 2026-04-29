@@ -61,7 +61,7 @@ interface GameState {
   inventory: InventoryItem[]
   gold: number
   currentLocationId: string
-  consumedInteractions: Set<string>
+  consumedInteractions: string[]
   quests: Quest[]
   battle: BattleState
   activeDialogue: { npcId: string; nodeId: string } | null
@@ -118,7 +118,7 @@ export const useGameStore = create<GameState>()(
       inventory: [],
       gold: 50,
       currentLocationId: STARTING_LOCATION,
-      consumedInteractions: new Set(),
+      consumedInteractions: [],
       quests: structuredClone(INITIAL_QUESTS),
       activeDialogue: null,
       activeShopNpcId: null,
@@ -143,7 +143,7 @@ export const useGameStore = create<GameState>()(
           inventory: [],
           gold: 50,
           currentLocationId: STARTING_LOCATION,
-          consumedInteractions: new Set(),
+          consumedInteractions: [],
           quests: structuredClone(INITIAL_QUESTS),
           activeDialogue: null,
           activeShopNpcId: null,
@@ -263,23 +263,24 @@ export const useGameStore = create<GameState>()(
       // ── 消耗交互点 ──────────────────────────────────────────────────────────
       consumeInteraction: (interactionId) => {
         set((s) => ({
-          consumedInteractions: new Set([...s.consumedInteractions, interactionId]),
+          consumedInteractions: s.consumedInteractions.includes(interactionId)
+            ? s.consumedInteractions
+            : [...s.consumedInteractions, interactionId],
         }))
       },
 
       // ── 对话 ────────────────────────────────────────────────────────────────
       openDialogue: (npcId) => {
         set({ activeDialogue: { npcId, nodeId: 'greeting' } })
-        get()._autoCompleteObjectives({ type: 'talk_npc', npcId })
-        // 首次与长老对话时激活委托任务
+        // 先激活任务，再自动完成目标，确保任务存在后才能勾选
         if (npcId === 'elder') {
           get().activateQuest('quest_elder')
           get().activateQuest('quest_forest')
         }
-        // 首次与铁匠对话时激活铁矿任务
         if (npcId === 'blacksmith') {
           get().activateQuest('quest_blacksmith')
         }
+        get()._autoCompleteObjectives({ type: 'talk_npc', npcId })
       },
 
       advanceDialogue: (nodeId) => {
@@ -363,7 +364,12 @@ export const useGameStore = create<GameState>()(
         if (es.hp <= 0) {
           log.push(`【${battle.enemy.name}】被击败了！`)
           state.gainExp(battle.enemy.expReward)
-          for (const drop of battle.enemy.dropTable) {
+          const gold = battle.enemy.goldReward ?? 0
+          if (gold > 0) {
+            set((s) => ({ gold: s.gold + gold }))
+            log.push(`获得了 ${gold} 金币！`)
+          }
+          for (const drop of (Array.isArray(battle.enemy.dropTable) ? battle.enemy.dropTable : [])) {
             if (Math.random() < drop.chance) {
               state.addItem(drop.item)
               log.push(`获得了【${drop.item.name}】！`)
@@ -434,7 +440,7 @@ export const useGameStore = create<GameState>()(
       // ── 获得经验并升级（同步更新 baseStats 和 stats） ──────────────────────
       gainExp: (amount) => {
         set((s) => {
-          let player = { ...s.player }
+          const player = { ...s.player }
           player.exp += amount
           while (player.exp >= player.expToNext) {
             player.exp -= player.expToNext
@@ -590,18 +596,11 @@ export const useGameStore = create<GameState>()(
     {
       name: 'lore-well-save',
       version: SAVE_VERSION,
-      serialize: (state) =>
-        JSON.stringify({
-          ...state,
-          state: {
-            ...state.state,
-            consumedInteractions: [...(state.state.consumedInteractions as Set<string>)],
-          },
-        }),
-      deserialize: (str) => {
-        const parsed = JSON.parse(str)
-        parsed.state.consumedInteractions = new Set(parsed.state.consumedInteractions)
-        return parsed
+      partialize: (s) => {
+        // 排除战斗状态（战斗中途刷新后应重置），避免持久化的 enemy 对象丢失方法
+        const { battle: _battle, ...rest } = s as unknown as Record<string, unknown>
+        void _battle
+        return rest as unknown as typeof s
       },
     },
   ),

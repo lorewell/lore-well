@@ -1,6 +1,5 @@
 import { useGameStore } from '../store/gameStore'
 import { LOCATIONS } from '../data/locations'
-import { NPCS } from '../data/npcs'
 import { ENEMIES } from '../data/enemies'
 import { ITEMS } from '../data/items'
 import type { Interaction } from '../types'
@@ -23,7 +22,7 @@ export default function LocationPanel({ onStartBattle }: LocationPanelProps) {
   if (!location) return null
 
   const handleInteraction = (interaction: Interaction) => {
-    if (consumedInteractions.has(interaction.id)) return
+    if (consumedInteractions.includes(interaction.id)) return
 
     switch (interaction.type) {
       case 'npc':
@@ -79,7 +78,7 @@ export default function LocationPanel({ onStartBattle }: LocationPanelProps) {
         {/* 交互列表 */}
         <div className="grid grid-cols-2 gap-2 mb-4">
           {location.interactions.map((inter) => {
-            const consumed = consumedInteractions.has(inter.id)
+            const consumed = consumedInteractions.includes(inter.id)
             return (
               <button
                 key={inter.id}

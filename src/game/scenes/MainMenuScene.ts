@@ -1,4 +1,4 @@
-﻿import Phaser from 'phaser'
+﻿import * as Phaser from 'phaser'
 
 /**
  * 主菜单背景场景 —— 静态渐变背景

@@ -8,7 +8,7 @@ export const ENEMIES: Record<string, Enemy> = {
     stats: { hp: 40, maxHp: 40, mp: 0, maxMp: 0, atk: 8, def: 3, spd: 5 },
     skills: [],
     expReward: 20,
-    dropTable: [{ item: ITEMS.health_potion, chance: 0.4 }],
+    goldReward: 5,
     sprite: 'enemy_slime',
   },
   goblin: {
@@ -25,6 +25,7 @@ export const ENEMIES: Record<string, Enemy> = {
       },
     ],
     expReward: 45,
+    goldReward: 15,
     dropTable: [
       { item: ITEMS.health_potion, chance: 0.3 },
       { item: ITEMS.iron_sword, chance: 0.1 },
@@ -46,6 +47,7 @@ export const ENEMIES: Record<string, Enemy> = {
       },
     ],
     expReward: 70,
+    goldReward: 20,
     dropTable: [{ item: ITEMS.leather_armor, chance: 0.15 }],
     sprite: 'enemy_wolf',
   },
@@ -63,6 +65,7 @@ export const ENEMIES: Record<string, Enemy> = {
       },
     ],
     expReward: 40,
+    goldReward: 10,
     dropTable: [
       { item: ITEMS.mana_potion, chance: 0.25 },
       { item: ITEMS.iron_ore, chance: 0.5 },
@@ -83,6 +86,7 @@ export const ENEMIES: Record<string, Enemy> = {
       },
     ],
     expReward: 60,
+    goldReward: 18,
     dropTable: [
       { item: ITEMS.mana_potion, chance: 0.4 },
       { item: ITEMS.magic_staff, chance: 0.05 },
@@ -103,6 +107,7 @@ export const ENEMIES: Record<string, Enemy> = {
       },
     ],
     expReward: 150,
+    goldReward: 50,
     dropTable: [
       { item: ITEMS.chain_mail, chance: 0.12 },
       { item: ITEMS.elixir, chance: 0.3 },

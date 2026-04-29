@@ -67,6 +67,7 @@ export interface Enemy {
   stats: Stats
   skills: Skill[]
   expReward: number
+  goldReward: number
   dropTable: Array<{ item: Item; chance: number }>
   sprite?: string       // Phaser 精灵 key
 }
