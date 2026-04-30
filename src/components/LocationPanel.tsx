@@ -53,6 +53,9 @@ export default function LocationPanel({ onStartBattle, onOpenPanel }: LocationPa
         }
         break
       }
+      case 'portal':
+        // 传送阵逻辑占位：当前损坏，不可使用
+        break
     }
   }
 
@@ -61,6 +64,7 @@ export default function LocationPanel({ onStartBattle, onOpenPanel }: LocationPa
     building: '🏛',
     enemy: '⚔️',
     item: '📦',
+    portal: '◈',
   }
 
   // ── 小地图模式 ────────────────────────────────────────────────────────────
@@ -100,8 +104,15 @@ export default function LocationPanel({ onStartBattle, onOpenPanel }: LocationPa
     const minRow = Math.min(...rows), maxRow = Math.max(...rows)
     const gridW = maxCol - minCol + 1
     const gridH = maxRow - minRow + 1
-    const CELL = 32   // px per cell
-    const GAP  = 6    // px gap
+
+    // 自适应 CELL：根据网格尺寸动态缩放，最大 32px，最小 16px
+    const GAP = 4
+    const MAX_MAP_W = 108
+    const MAX_MAP_H = 148
+    const cellByW = Math.floor((MAX_MAP_W - (gridW - 1) * GAP) / gridW)
+    const cellByH = Math.floor((MAX_MAP_H - (gridH - 1) * GAP) / gridH)
+    const CELL = Math.max(16, Math.min(32, cellByW, cellByH))
+
     const mapW = gridW * CELL + (gridW - 1) * GAP
     const mapH = gridH * CELL + (gridH - 1) * GAP
 
@@ -124,8 +135,8 @@ export default function LocationPanel({ onStartBattle, onOpenPanel }: LocationPa
           className="flex items-stretch gap-0"
           style={{
             paddingBottom: 'max(16px, env(safe-area-inset-bottom))',
-            paddingLeft:   'max(4px, env(safe-area-inset-left))',
-            paddingRight:  'max(4px, env(safe-area-inset-right))',
+            paddingLeft:   'max(16px, env(safe-area-inset-left))',
+            paddingRight:  'max(16px, env(safe-area-inset-right))',
             minHeight: '160px',
           }}
         >
@@ -151,7 +162,7 @@ export default function LocationPanel({ onStartBattle, onOpenPanel }: LocationPa
                 height={mapH}
                 style={{ overflow: 'visible' }}
               >
-                {Object.entries(subMap.nodes).map(([id, node]) => {
+              {Object.entries(subMap.nodes).map(([id, node]) => {
                   const from = nodeCoords[id]
                   if (!from) return null
                   return (['east', 'south'] as const).map((dir) => {
@@ -179,38 +190,55 @@ export default function LocationPanel({ onStartBattle, onOpenPanel }: LocationPa
                 const coord = nodeCoords[id]
                 if (!coord) return null
                 const isCurrent = id === currentSubLocationId
+                const isPortalNode = node.interactions.some((i) => i.type === 'portal')
                 const left = (coord.col - minCol) * (CELL + GAP)
                 const top  = (coord.row - minRow) * (CELL + GAP)
+
+                // portal 节点配色
+                const portalBorder  = isCurrent ? '#7744aa' : '#2a1a3a'
+                const portalBg      = isCurrent ? 'rgba(60,20,80,0.6)' : 'rgba(20,8,32,0.8)'
+                const normalBorder  = isCurrent ? '#aa55ff' : '#3a2050'
+                const normalBg      = isCurrent ? 'rgba(170,85,255,0.25)' : 'rgba(30,16,48,0.8)'
+
                 return (
                   <button
                     key={id}
                     onClick={() => travelToSubLocation(id)}
                     title={node.name}
-                    className="absolute flex items-center justify-center transition-all duration-150 cursor-pointer"
+                    className="absolute flex flex-col items-center justify-center transition-all duration-150 cursor-pointer overflow-hidden"
                     style={{
                       left, top,
                       width: CELL, height: CELL,
-                      border: `1.5px solid ${isCurrent ? '#aa55ff' : '#3a2050'}`,
-                      background: isCurrent
-                        ? 'rgba(170,85,255,0.25)'
-                        : 'rgba(30,16,48,0.8)',
+                      border: `1.5px solid ${isPortalNode ? portalBorder : normalBorder}`,
+                      background: isPortalNode ? portalBg : normalBg,
                       borderRadius: '3px',
-                      boxShadow: isCurrent ? '0 0 8px rgba(170,85,255,0.5)' : 'none',
-                      color: isCurrent ? '#e2d8f0' : '#6a5080',
+                      boxShadow: isCurrent
+                        ? isPortalNode
+                          ? '0 0 6px rgba(100,40,160,0.5)'
+                          : '0 0 8px rgba(170,85,255,0.5)'
+                        : 'none',
+                      color: isCurrent ? '#e2d8f0' : isPortalNode ? '#4a2860' : '#6a5080',
                       fontSize: '9px',
                     }}
                     onMouseEnter={(e) => {
-                      if (!isCurrent) (e.currentTarget as HTMLButtonElement).style.borderColor = '#6a3890'
+                      if (!isCurrent) (e.currentTarget as HTMLButtonElement).style.borderColor = isPortalNode ? '#5a2880' : '#6a3890'
                     }}
                     onMouseLeave={(e) => {
-                      if (!isCurrent) (e.currentTarget as HTMLButtonElement).style.borderColor = '#3a2050'
+                      if (!isCurrent) (e.currentTarget as HTMLButtonElement).style.borderColor = isPortalNode ? portalBorder : normalBorder
                     }}
                   >
                     {/* 出口标记 */}
                     {node.exits && node.exits.length > 0 && (
-                      <span style={{ position: 'absolute', top: 1, right: 2, fontSize: '7px', color: '#7a50a0' }}>↗</span>
+                      <span style={{ position: 'absolute', top: 1, right: 2, fontSize: '6px', color: '#7a50a0' }}>↗</span>
                     )}
-                    <span className="truncate px-0.5 text-center leading-tight" style={{ maxWidth: CELL - 4, fontSize: '7px' }}>
+                    {/* portal 图标 */}
+                    {isPortalNode && (
+                      <span style={{ fontSize: CELL >= 24 ? '9px' : '7px', opacity: 0.5, lineHeight: 1 }}>◈</span>
+                    )}
+                    <span
+                      className="truncate text-center leading-tight px-px"
+                      style={{ maxWidth: CELL - 2, fontSize: Math.max(6, CELL >= 24 ? 7 : 6) + 'px' }}
+                    >
                       {node.name.length > 4 ? node.name.slice(0, 4) : node.name}
                     </span>
                   </button>
@@ -242,28 +270,45 @@ export default function LocationPanel({ onStartBattle, onOpenPanel }: LocationPa
                 {subLoc.interactions.length > 0 ? (
                   <div className="flex flex-col gap-1">
                     {subLoc.interactions.map((inter) => {
-                      const consumed = consumedInteractions.includes(inter.id)
+                      const consumed  = consumedInteractions.includes(inter.id)
+                      const isPortal  = inter.type === 'portal'
+                      const isDisabled = consumed || inter.disabled || isPortal
                       return (
                         <button
                           key={inter.id}
-                          onClick={() => handleInteraction(inter)}
-                          disabled={consumed}
-                          className="flex items-center gap-2 px-2.5 py-1.5 text-left text-xs tracking-wider border transition-all duration-150 cursor-pointer disabled:opacity-35 disabled:cursor-not-allowed"
+                          onClick={() => !isDisabled && handleInteraction(inter)}
+                          disabled={isDisabled}
+                          className="flex items-center gap-2 px-2.5 py-1.5 text-left text-xs tracking-wider border transition-all duration-150"
                           style={{
-                            background: consumed ? 'transparent' : 'rgba(255,255,255,0.04)',
-                            borderColor: inter.type === 'enemy' ? '#440022' : '#2a1840',
-                            color: consumed ? '#4a3060' : inter.type === 'enemy' ? '#cc6688' : '#c0a0e0',
+                            cursor: isDisabled ? 'not-allowed' : 'pointer',
+                            opacity: isDisabled ? (isPortal ? 0.5 : 0.35) : 1,
+                            background: isPortal
+                              ? 'rgba(40,8,60,0.6)'
+                              : consumed
+                                ? 'transparent'
+                                : 'rgba(255,255,255,0.04)',
+                            borderColor: isPortal
+                              ? '#2a1240'
+                              : inter.type === 'enemy' ? '#440022' : '#2a1840',
+                            color: isPortal
+                              ? '#5a3070'
+                              : consumed ? '#4a3060' : inter.type === 'enemy' ? '#cc6688' : '#c0a0e0',
                           }}
                           onMouseEnter={(e) => {
-                            if (!consumed) (e.currentTarget as HTMLButtonElement).style.background = 'rgba(170,85,255,0.12)'
+                            if (!isDisabled) (e.currentTarget as HTMLButtonElement).style.background = 'rgba(170,85,255,0.12)'
                           }}
                           onMouseLeave={(e) => {
-                            if (!consumed) (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.04)'
+                            if (!isDisabled) (e.currentTarget as HTMLButtonElement).style.background = isPortal ? 'rgba(40,8,60,0.6)' : 'rgba(255,255,255,0.04)'
                           }}
                         >
-                          <span>{iconMap[inter.type]}</span>
+                          <span style={{ fontSize: isPortal ? '12px' : undefined }}>{iconMap[inter.type]}</span>
                           <span className="truncate">{inter.label}</span>
-                          {consumed && <span className="ml-auto text-[9px] shrink-0" style={{ color: '#3a2050' }}>已完成</span>}
+                          {consumed && !isPortal && (
+                            <span className="ml-auto text-[9px] shrink-0" style={{ color: '#3a2050' }}>已完成</span>
+                          )}
+                          {isPortal && (
+                            <span className="ml-auto text-[9px] shrink-0" style={{ color: '#3a2050' }}>损坏·未激活</span>
+                          )}
                         </button>
                       )
                     })}

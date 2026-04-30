@@ -12,54 +12,115 @@ export const LOCATIONS: Record<string, Location> = {
     subMap: {
       startNodeId: 'village_center',
       nodes: {
+        // ── 中心广场（起始节点） ──────────────────────────────────────────────
         village_center: {
           id: 'village_center',
-          name: '村庄中心',
-          description: '落瀑村的中心广场，古老的石井旁老槐树枝叶繁茂。村民们在此聚集，低声谈论着近来越来越频繁的异动。',
+          name: '中心广场',
+          description: '落瀑村的中心广场，古老的石井旁老槐树枝叶繁茂。四条路分别通向村子各处，村民们三三两两聚集于此低声谈论。',
           interactions: [],
-          north: 'village_north',
-          east: 'village_east',
-          west: 'village_west',
-          south: 'village_south',
+          north: 'village_elder_home',
+          west:  'village_inn',
+          east:  'village_blacksmith',
+          south: 'village_south_gate',
         },
-        village_north: {
-          id: 'village_north',
+
+        // ── 北部：瀑布 → 艾尔文的家 → (西)村长之屋 (东)村子外围 ──────────────
+        village_waterfall: {
+          id: 'village_waterfall',
           name: '隐秘瀑布',
           description: '一道银白色的瀑布从山间石缝倾泻而下，水声如鼓，雾气弥漫。就是在这片乱石丛中，艾尔文老人发现了昏迷的你。',
           interactions: [
-            { id: 'village_waterfall', label: '凝视瀑布', type: 'building', targetId: 'waterfall' },
-            { id: 'village_elder_home', label: '艾尔文的家', type: 'npc', targetId: 'elder' },
-            { id: 'village_slime', label: '附近的史莱姆', type: 'enemy', targetId: 'slime' },
+            { id: 'village_waterfall_npc', label: '凝视瀑布', type: 'building', targetId: 'waterfall' },
           ],
+          south: 'village_elder_home',
+        },
+        village_elder_home: {
+          id: 'village_elder_home',
+          name: '艾尔文的家',
+          description: '一栋朴素而整洁的石屋，窗台上摆着几本泛黄的古籍。长老艾尔文在此居住了数十年，守护着有关神殿的秘密。',
+          interactions: [
+            { id: 'village_elder', label: '长老 艾尔文', type: 'npc', targetId: 'elder' },
+          ],
+          north: 'village_waterfall',
+          west:  'village_chief_home',
+          east:  'village_outskirts',
           south: 'village_center',
         },
-        village_west: {
-          id: 'village_west',
-          name: '暮光客栈',
-          description: '村里唯一的客栈，木质招牌在风中轻轻摇晃，里面总是温暖而昏黄的。村长格雷的房子就在隔壁。',
+        village_chief_home: {
+          id: 'village_chief_home',
+          name: '村长之屋',
+          description: '木质门梁上刻着格雷家族的徽记，厚重的橡木门显示出主人的地位。屋内透出暖黄的烛光，村长正在里面处理村务。',
           interactions: [
-            { id: 'village_inn', label: '老板娘 玛格', type: 'npc', targetId: 'innkeeper' },
-            { id: 'village_chief', label: '村长之屋（格雷）', type: 'npc', targetId: 'village_chief' },
+            { id: 'village_chief_npc', label: '村长 格雷', type: 'npc', targetId: 'village_chief' },
+          ],
+          east: 'village_elder_home',
+        },
+        village_outskirts: {
+          id: 'village_outskirts',
+          name: '村子外围',
+          description: '村庄边缘的开阔地带，木栅栏已有几处腐朽倒塌。近来史莱姆频繁在此出没，村民们对此忧心忡忡。',
+          interactions: [
+            { id: 'village_slime', label: '附近的史莱姆', type: 'enemy', targetId: 'slime' },
+          ],
+          west: 'village_elder_home',
+        },
+
+        // ── 西：暮光客栈 ──────────────────────────────────────────────────────
+        village_inn: {
+          id: 'village_inn',
+          name: '暮光客栈',
+          description: '村里唯一的客栈，木质招牌在风中轻轻摇晃，里面总是温暖而昏黄的。炉火的气息和玛格爽朗的笑声混在一起，令人安心。',
+          interactions: [
+            { id: 'village_inn_npc', label: '老板娘 玛格', type: 'npc', targetId: 'innkeeper' },
           ],
           east: 'village_center',
         },
-        village_east: {
-          id: 'village_east',
-          name: '铁匠铺区',
-          description: '叮叮当当的锤击声从铁匠铺里传出，旁边是梅娜那间摆满各色杂货的小铺子。',
+
+        // ── 东：铁匠铺 → (南)杂货铺 ────────────────────────────────────────
+        village_blacksmith: {
+          id: 'village_blacksmith',
+          name: '铁匠铺',
+          description: '叮叮当当的锤击声从铁匠铺里传出，炉膛里的火焰映红了托尔的脸。武器和护甲整齐地挂在墙上，等待着有缘人。',
           interactions: [
-            { id: 'village_smith', label: '铁匠铺（托尔）', type: 'npc', targetId: 'blacksmith' },
-            { id: 'village_grocer', label: '杂货铺（梅娜）', type: 'npc', targetId: 'grocer' },
+            { id: 'village_smith_npc', label: '铁匠 托尔', type: 'npc', targetId: 'blacksmith' },
           ],
-          west: 'village_center',
+          west:  'village_center',
+          south: 'village_grocer',
         },
-        village_south: {
-          id: 'village_south',
+        village_grocer: {
+          id: 'village_grocer',
+          name: '杂货铺',
+          description: '梅娜那间摆满各色杂货的小铺子，药草、绳索、干粮堆得满满当当。老板娘总能第一时间打听到村里的消息。',
+          interactions: [
+            { id: 'village_grocer_npc', label: '杂货商 梅娜', type: 'npc', targetId: 'grocer' },
+          ],
+          north: 'village_blacksmith',
+        },
+
+        // ── 南：出口节点 → 废旧传送阵 ──────────────────────────────────────
+        village_south_gate: {
+          id: 'village_south_gate',
           name: '村南路口',
           description: '通往村外的岔路口，一块风化的路标立在道旁，指向远方不同的方向。村庄的喧嚣在此渐渐淡去。',
           interactions: [],
-          north: 'village_center',
+          north:  'village_center',
+          south:  'village_portal',
           exits: ['forest', 'temple_ruins', 'mine_cave'],
+        },
+        village_portal: {
+          id: 'village_portal',
+          name: '废旧传送阵',
+          description: '石台中央刻满了密密麻麻的古老符文，地面留有烧焦的痕迹。曾经，这里能将人瞬间送往遥远的地方——但那已是遥远的过去。',
+          interactions: [
+            {
+              id: 'village_portal_interact',
+              label: '废旧传送阵',
+              type: 'portal',
+              targetId: '',
+              disabled: true,
+            },
+          ],
+          north: 'village_south_gate',
         },
       },
     },

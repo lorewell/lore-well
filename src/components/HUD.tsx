@@ -11,7 +11,7 @@ export default function HUD() {
 
   return (
     <div
-      className="absolute top-0 left-0 right-0 flex items-start justify-between px-4 py-3 pointer-events-none"
+      className="absolute top-0 left-0 right-0 flex items-start justify-between px-5 py-4 pointer-events-none"
       style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, transparent 100%)' }}
     >
       {/* 左侧：玩家信息 */}

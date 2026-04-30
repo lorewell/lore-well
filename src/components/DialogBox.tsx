@@ -45,59 +45,72 @@ export default function DialogBox() {
   }
 
   return (
-    <div className="absolute inset-0 flex items-end justify-center pb-32 px-6 pointer-events-none">
+    <div
+      ref={boxRef}
+      className="absolute bottom-0 left-0 right-0"
+      style={{
+        background: 'linear-gradient(to top, rgba(0,0,0,0.96) 68%, transparent 100%)',
+        borderTop: '1px solid #3a1a5a',
+        minHeight: '160px',
+      }}
+    >
       <div
-        ref={boxRef}
-        className="w-full max-w-2xl pointer-events-auto border"
+        className="flex"
         style={{
-          background: 'rgba(10,5,20,0.92)',
-          borderColor: '#3a1a5a',
-          boxShadow: '0 0 30px rgba(102,0,204,0.3)',
+          paddingBottom: 'max(16px, env(safe-area-inset-bottom))',
+          paddingLeft: 'max(12px, env(safe-area-inset-left))',
+          paddingRight: 'max(12px, env(safe-area-inset-right))',
+          minHeight: '160px',
         }}
       >
-        {/* NPC 名字 */}
+        {/* NPC 名字竖栏 */}
         <div
-          className="px-4 py-2 border-b text-xs tracking-widest"
-          style={{ borderColor: '#2a1040', color: '#aa55ff' }}
+          className="shrink-0 flex flex-col justify-center pt-3 pb-3 pr-3"
+          style={{ width: 'clamp(90px, 14vw, 120px)', borderRight: '1px solid #2a1040' }}
         >
-          {npc.name}
+          <span className="text-[9px] tracking-widest mb-1" style={{ color: '#4a3060' }}>对话中</span>
+          <span className="text-xs font-medium leading-tight" style={{ color: '#aa55ff' }}>{npc.name}</span>
         </div>
 
-        {/* 对话文本 */}
-        <div className="px-4 py-4 text-sm leading-relaxed" style={{ color: '#e2d8f0' }}>
-          {node.text}
-        </div>
+        {/* 对话内容区 */}
+        <div className="flex-1 min-w-0 flex flex-col justify-center pt-3 pb-3 pl-4 pr-2">
+          {/* 对话文本 */}
+          <p className="text-xs leading-relaxed mb-3" style={{ color: '#e2d8f0' }}>
+            {node.text}
+          </p>
 
-        {/* 选项 / 关闭 */}
-        <div className="px-4 pb-4 flex flex-col gap-1.5">
-          {node.options && node.options.length > 0 ? (
-            node.options.map((opt, i) => (
+          {/* 选项列表 + 始终追加"没事了" */}
+          <div className="flex flex-col gap-1">
+            {node.options?.map((opt, i) => (
               <button
                 key={i}
                 onClick={() => handleOption(opt.next)}
-                className="text-left text-xs px-3 py-2 border cursor-pointer transition-all duration-150 hover:brightness-125"
+                className="text-left text-xs px-2.5 py-1.5 border cursor-pointer transition-all duration-150"
                 style={{
                   background: 'rgba(255,255,255,0.04)',
                   borderColor: '#2a1040',
                   color: '#c0a0e0',
                 }}
+                onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(170,85,255,0.12)' }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.04)' }}
               >
                 ▶ {opt.text}
               </button>
-            ))
-          ) : (
+            ))}
             <button
               onClick={() => closeDialogue()}
-              className="text-left text-xs px-3 py-2 border cursor-pointer transition-all duration-150 hover:brightness-125"
+              className="text-left text-xs px-2.5 py-1.5 border cursor-pointer transition-all duration-150"
               style={{
-                background: 'rgba(255,255,255,0.04)',
-                borderColor: '#2a1040',
-                color: '#9070b0',
+                background: 'transparent',
+                borderColor: '#1e1030',
+                color: '#4a3060',
               }}
+              onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.color = '#9070b0' }}
+              onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.color = '#4a3060' }}
             >
-              ▶ [关闭]
+              ▶ 没事了。
             </button>
-          )}
+          </div>
         </div>
       </div>
     </div>

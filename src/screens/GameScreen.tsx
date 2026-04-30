@@ -119,6 +119,7 @@ export default function GameScreen() {
   const activeShopNpcId = useGameStore((s) => s.activeShopNpcId)
   const closeShop = useGameStore((s) => s.closeShop)
   const activeShop = activeShopNpcId ? getShopByNpc(activeShopNpcId) : undefined
+  const activeDialogue = useGameStore((s) => s.activeDialogue)
 
   const togglePanel = useCallback((panel: ActivePanel) => {
     setActivePanel((prev) => (prev === panel ? 'none' : panel))
@@ -178,7 +179,10 @@ export default function GameScreen() {
   if (!started) return null
 
   return (
-    <div className="relative w-full h-full overflow-hidden">
+    <div
+      className="relative w-full h-full overflow-hidden"
+      style={{ boxShadow: 'inset 0 0 0 2px rgba(58,32,80,0.5)' }}
+    >
       {/* Phaser 画布容器 */}
       <div ref={canvasRef} className="absolute inset-0" />
 
@@ -186,10 +190,12 @@ export default function GameScreen() {
       {!inCombat ? (
         <>
           <HUD />
-          <LocationPanel
-            onStartBattle={() => setInCombat(true)}
-            onOpenPanel={(panel) => setActivePanel(panel)}
-          />
+          {!activeDialogue && (
+            <LocationPanel
+              onStartBattle={() => setInCombat(true)}
+              onOpenPanel={(panel) => setActivePanel(panel)}
+            />
+          )}
           <DialogBox />
 
           {/* 面板覆盖层 */}

@@ -74,7 +74,7 @@ export interface Enemy {
 
 // ─── 地点 ────────────────────────────────────────────────────────────────────
 
-export type InteractionType = 'npc' | 'item' | 'building' | 'enemy'
+export type InteractionType = 'npc' | 'item' | 'building' | 'enemy' | 'portal'
 
 export interface NPC {
   id: string
@@ -100,6 +100,10 @@ export interface Interaction {
   targetId: string
   /** 是否已被消耗（如拾取物品后消失） */
   consumed?: boolean
+  /** 强制禁用（如损坏的传送阵）——不同于 consumed，展示不同样式 */
+  disabled?: boolean
+  /** 传送目标地点 id 列表（portal 类型专用，激活后填写） */
+  portalTargets?: string[]
 }
 
 /** 小地图中的单个节点 */
