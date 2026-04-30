@@ -1,9 +1,7 @@
 name: Build & Deploy
 
 on:
-  push:
-    branches: [main]
-  workflow_dispatch:         # 允许手动触发
+  workflow_dispatch:         # 仅手动触发
 
 env:
   REGISTRY: ghcr.io
