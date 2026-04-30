@@ -28,9 +28,9 @@ jobs:
       - name: Sync to Server
         uses: easingthemes/ssh-deploy@main
         with:
-          SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
-          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
-          REMOTE_USER: ${{ secrets.REMOTE_USER }}
+          SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          REMOTE_HOST: ${{ secrets.DEPLOY_HOST }}
+          REMOTE_USER: ${{ secrets.DEPLOY_USER }}
           # 关键点 1：只上传 dist 文件夹下的内容（末尾加 / 表示上传内容而非文件夹本身）
           SOURCE: "dist/" 
           # 关键点 2：目标路径，确保这是 1Panel 静态站点存放文件的目录
