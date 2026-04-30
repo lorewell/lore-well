@@ -114,7 +114,10 @@ export default function LocationPanel({ onStartBattle, onOpenPanel }: LocationPa
     return (
       <div
         className="absolute bottom-0 left-0 right-0"
-        style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.92) 68%, transparent 100%)' }}
+        style={{
+          background: 'linear-gradient(to top, rgba(0,0,0,0.92) 68%, transparent 100%)',
+          borderTop: '1px solid #2a1840',
+        }}
       >
         {/* ── 主内容行 ── */}
         <div
@@ -129,10 +132,10 @@ export default function LocationPanel({ onStartBattle, onOpenPanel }: LocationPa
 
           {/* ── 左栏：可视化小地图 ──────────────────────────────────────────── */}
           <div
-            className="shrink-0 flex flex-col items-center justify-end pt-3 pb-3 pl-3 pr-2 sm:pl-5 sm:pr-3"
-            style={{ width: 'clamp(130px, 22vw, 168px)' }}
+            className="shrink-0 flex flex-col items-center justify-center pt-3 pb-3 pl-3 pr-2 sm:pl-5 sm:pr-3"
+            style={{ width: 'clamp(130px, 22vw, 168px)', borderRight: '1px solid #2a1840' }}
           >
-            <p className="text-[9px] tracking-widest mb-2 w-full text-center" style={{ color: '#4a3060' }}>
+            <p className="text-[9px] tracking-widest mb-3 w-full text-center" style={{ color: '#4a3060' }}>
               {location.name}
             </p>
 
@@ -215,43 +218,10 @@ export default function LocationPanel({ onStartBattle, onOpenPanel }: LocationPa
               })}
             </div>
 
-            {/* 方向键盘 */}
-            <div className="mt-3 grid grid-cols-3 gap-1" style={{ width: 'fit-content' }}>
-              {(['north', 'south', 'west', 'east'] as const).map((dir, i) => {
-                const arrows = { north: '↑', south: '↓', west: '←', east: '→' }
-                const targetId = subLoc[dir]
-                const positions = [
-                  'col-start-2',
-                  'col-start-2',
-                  'col-start-1 row-start-2',
-                  'col-start-3 row-start-2',
-                ]
-                return (
-                  <button
-                    key={dir}
-                    onClick={() => targetId && travelToSubLocation(targetId)}
-                    disabled={!targetId}
-                    title={targetId ? subMap.nodes[targetId]?.name : undefined}
-                    className={`h-8 w-8 flex items-center justify-center text-sm border transition-all duration-100
-                      disabled:opacity-15 disabled:cursor-not-allowed cursor-pointer ${positions[i]}`}
-                    style={{
-                      borderColor: targetId ? '#4a2870' : '#1e1030',
-                      background: targetId ? 'rgba(170,85,255,0.1)' : 'transparent',
-                      color: '#c0a0e0',
-                      borderRadius: '2px',
-                    }}
-                    onMouseEnter={(e) => { if (targetId) (e.currentTarget as HTMLButtonElement).style.background = 'rgba(170,85,255,0.25)' }}
-                    onMouseLeave={(e) => { if (targetId) (e.currentTarget as HTMLButtonElement).style.background = 'rgba(170,85,255,0.1)' }}
-                  >
-                    {arrows[dir]}
-                  </button>
-                )
-              })}
-            </div>
           </div>
 
           {/* ── 中栏：地点信息 / 快捷菜单 ──────────────────────────────────── */}
-          <div className="flex-1 min-w-0 pt-3 pb-3 pr-2 sm:pr-4" style={{ borderLeft: '1px solid #2a1840' }}>
+          <div className="flex-1 min-w-0 pt-3 pb-3 pr-2 sm:pr-4">
             {!showMenu ? (
               /* 地点信息 + 交互 */
               <div className="pl-4">

@@ -1,102 +1,39 @@
-name: Build & Deploy
+name: Main Phaser Deploy
 
 on:
-  workflow_dispatch:         # 仅手动触发
-
-env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}   # e.g. yourname/lore-well
+  push:
+    branches:
+      - 'main'
 
 jobs:
-  # ─────────────────────────────────────────────────────────────────
-  # 阶段一：构建镜像并推送到 GitHub Container Registry
-  # ─────────────────────────────────────────────────────────────────
-  build-and-push:
-    name: Build & Push Docker Image
+  deploy:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write       # 写入 GHCR 需要此权限
-
-    outputs:
-      image_tag: ${{ steps.meta.outputs.version }}
-
     steps:
-      - name: Checkout
+      - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          node-version: 22
 
-      - name: Extract Docker metadata (tags & labels)
-        id: meta
-        uses: docker/metadata-action@v5
+      - name: Install pnpm
+        run: corepack enable && corepack prepare pnpm@latest --activate
+
+      - name: Build Project
+        run: |
+          pnpm install
+          pnpm build  # 此时产物会生成在 dist 文件夹中
+
+      - name: Sync to Server
+        uses: easingthemes/ssh-deploy@main
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          tags: |
-            type=sha,prefix=sha-,format=short
-            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
-
-      - name: Build and push
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-  # ─────────────────────────────────────────────────────────────────
-  # 阶段二：SSH 到服务器，拉取新镜像并重启容器
-  # ─────────────────────────────────────────────────────────────────
-  deploy:
-    name: Deploy to Server
-    runs-on: ubuntu-latest
-    needs: build-and-push
-    environment: production     # 可在 GitHub 仓库设置中配置保护规则
-
-    steps:
-      - name: Deploy via SSH
-        uses: appleboy/ssh-action@v1.2.0
-        with:
-          host:     ${{ secrets.DEPLOY_HOST }}
-          username: ${{ secrets.DEPLOY_USER }}
-          key:      ${{ secrets.DEPLOY_SSH_KEY }}
-          port:     ${{ secrets.DEPLOY_PORT || 22 }}
-          script: |
-            set -e
-
-            IMAGE="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest"
-            CONTAINER="lore-well"
-            PORT="${{ secrets.APP_PORT || 8000 }}"
-
-            echo "▶ 登录 GHCR..."
-            echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io \
-              -u "${{ secrets.GHCR_USER }}" --password-stdin
-
-            echo "▶ 拉取新镜像..."
-            docker pull "$IMAGE"
-
-            echo "▶ 停止并删除旧容器（如存在）..."
-            docker stop "$CONTAINER" 2>/dev/null || true
-            docker rm   "$CONTAINER" 2>/dev/null || true
-
-            echo "▶ 启动新容器..."
-            docker run -d \
-              --name "$CONTAINER" \
-              --restart unless-stopped \
-              -p "${PORT}:80" \
-              "$IMAGE"
-
-            echo "▶ 清理悬空镜像..."
-            docker image prune -f
-
-            echo "✅ 部署完成，容器端口: ${PORT}"
+          SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
+          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+          REMOTE_USER: ${{ secrets.REMOTE_USER }}
+          # 关键点 1：只上传 dist 文件夹下的内容（末尾加 / 表示上传内容而非文件夹本身）
+          SOURCE: "dist/" 
+          # 关键点 2：目标路径，确保这是 1Panel 静态站点存放文件的目录
+          TARGET: "/opt/1panel/www/sites/games/index/lore-well/" 
+          # 关键点 3：使用 -avz 增量传输，--delete 确保同步删除服务器上多余的旧文件
+          ARGS: "-avz --delete"
