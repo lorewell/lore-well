@@ -4,6 +4,80 @@
 
 ---
 
+## [0.8.0] — CI/CD：GitHub Actions + Docker 自动部署
+
+### 改动说明
+新增完整的持续集成/持续部署流水线：在 GitHub Actions 中构建 Docker 镜像并推送至 GHCR，再通过 SSH 自动部署到服务器。
+
+### 新增文件
+
+| 文件 | 说明 |
+|---|---|
+| `Dockerfile` | 多阶段构建：`node:22-alpine` 运行 `pnpm build`，产物由 `nginx:1.27-alpine` 静态托管 |
+| `nginx.conf` | SPA 路由回落（`try_files $uri /index.html`）；hash 文件名资源设置 1 年强缓存；禁止访问隐藏文件 |
+| `.dockerignore` | 排除 `node_modules/`、`dist/`、`.git/` 等无关文件，减小构建上下文 |
+| `.github/workflows/deploy.yml` | 两阶段 workflow：① `build-and-push`：buildx 多平台构建 + 推送 GHCR（利用 GHA 缓存加速）；② `deploy`：`appleboy/ssh-action` 登录服务器、拉取新镜像、重启容器、清理悬空镜像 |
+
+### 设计约定（本次建立）
+- **镜像仓库**：GitHub Container Registry（`ghcr.io`），使用 `GITHUB_TOKEN` 推送，无需额外费用
+- **镜像标签**：`latest`（main 分支）+ `sha-<短 hash>`（每次构建唯一标识，便于回滚）
+- **服务器 Secrets**：`DEPLOY_HOST` / `DEPLOY_USER` / `DEPLOY_SSH_KEY` / `DEPLOY_PORT` / `APP_PORT` / `GHCR_USER` / `GHCR_TOKEN`
+- **触发条件**：push 到 `main` 或手动 `workflow_dispatch`
+
+---
+
+## [0.7.0] — 移动端适配 + 底栏间距优化
+
+### 改动说明
+解决底部 HUD 面板内容贴边问题，补充 iOS 安全区支持，方向键改为更大的触摸目标，左栏宽度改为响应式。
+
+### 修改文件
+
+| 文件 | 改动类型 | 说明 |
+|---|---|---|
+| `index.html` | 修改 | `viewport` 补加 `viewport-fit=cover`，解锁 `env(safe-area-inset-*)` iOS 安全区 API |
+| `src/index.css` | 修改 | 高度改用 `100dvh`（动态视口高度），修复移动端地址栏收起后内容被截断的问题 |
+| `src/components/LocationPanel.tsx` | 修改 | ① 外层渐变截止点从 55% 提高到 68%；② 主内容行底部 padding 改为 `max(16px, env(safe-area-inset-bottom))`；③ 左栏宽度从固定 `160px` 改为 `clamp(130px, 22vw, 168px)`；④ 上下内边距从仅底部 `pb-5` 改为对称 `pt-3 pb-3`；⑤ 方向键尺寸从 `h-6 w-6`（24px）增大至 `h-8 w-8`（32px）提升触摸可用性；⑥ 兼容模式底部 padding 改为 `max(20px, env(safe-area-inset-bottom))` |
+
+### 设计约定（本次建立）
+- **安全区 padding 公式**：`max(固定最小值, env(safe-area-inset-bottom))`，在非刘海屏上退化为固定值，在 iPhone 上自动扩展
+- **移动端触摸目标**：按钮最小尺寸保持 32×32 px（iOS HIG 推荐 44pt，此处为游戏风格取折中）
+
+---
+
+## [0.6.0] — Phase 10：双层地图系统 + HUD 重设计
+
+### 改动说明
+将所有大地点拆分为含多个子节点的内部子地图，玩家在大地图间传送后，在小地图内通过方向键或节点点击自由移动。底部 HUD 重构为三栏布局（小地图 | 地点信息 | 菜单切换），新增状态面板。
+
+### 修改文件
+
+| 文件 | 改动类型 | 说明 |
+|---|---|---|
+| `src/types/index.ts` | 新增 | 新增 `SubLocation` 接口（`id/name/description/interactions/north/south/east/west/exits`）；`Location` 接口新增可选 `subMap: { nodes: Record<string, SubLocation>; startNodeId: string }` 字段 |
+| `src/data/locations.ts` | 重写 | 五个大地点（village/forest/forest_depths/temple_ruins/mine_cave）全部拆分为子地图节点；父级 `exits` 和 `interactions` 置空（兼容字段）；世界地图传送入口改为子节点的 `exits` 属性 |
+| `src/store/gameStore.ts` | 修改 | 新增 `currentSubLocationId: string \| null` 状态；新增 `travelToSubLocation(subId)` 动作；`travelTo` 进入新大地点时自动设置 `startNodeId`；`respawnAtVillage` 同步重置子地点；SAVE_VERSION 升至 3 |
+| `src/components/LocationPanel.tsx` | 重写 | 三栏布局：左栏（BFS 可视化节点网格 + 方向键盘）、中栏（子地点名/描述/交互按钮/世界出口）、右栏（菜单切换按钮）；BFS 算法从 `startNodeId` 出发自动计算所有节点的 `(col, row)` 坐标；当前节点高亮；新增兼容模式（无 subMap 地点的旧式渲染）；新增 `onOpenPanel` 回调 prop |
+| `src/screens/GameScreen.tsx` | 修改 | 新增内联 `StatusPanel` 组件（属性/装备总览）；`ActivePanel` 联合类型增加 `'status'`；移除旧版右侧工具栏；`LocationPanel` 传入 `onOpenPanel` 回调；键盘快捷键 `B/Q/C` 分别打开背包/任务/状态 |
+
+### 子地图节点结构（`village` 示例）
+
+```
+village_north（瀑布）
+       ↑
+village_west ← village_center → village_east
+（客栈/村长）      ↓         （铁匠/杂货）
+             village_south
+           （→ 森林/遗迹/矿洞）
+```
+
+### 设计约定（本次建立）
+- **BFS 坐标分配**：以 `startNodeId` 为原点 `(0,0)`，按 N/S/E/W 方向递归分配整数格坐标，SVG 绘制东/南方向连接线
+- **世界传送入口**：子节点的 `exits` 字段列出可前往的大地点 ID，点击后调用 `travelTo` + `GameManager.changeLocation`
+- **兼容模式**：无 `subMap` 的地点继续使用旧式 `location.interactions` + `location.exits` 渲染，不影响现有数据
+
+---
+
 ## [0.5.0] — Phase 9：商店出售 + 战斗失败处理 + 代码修复
 
 ### 改动说明
