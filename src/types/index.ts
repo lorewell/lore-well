@@ -102,15 +102,36 @@ export interface Interaction {
   consumed?: boolean
 }
 
+/** 小地图中的单个节点 */
+export interface SubLocation {
+  id: string
+  name: string
+  description: string
+  interactions: Interaction[]
+  /** 四向连接（值为同一大地点内的 SubLocation id） */
+  north?: string
+  south?: string
+  east?: string
+  west?: string
+  /** 此节点可通往的世界地图大地点 id（出口节点才填写） */
+  exits?: string[]
+}
+
 export interface Location {
   id: string
   name: string
   description: string
   /** Phaser 背景 texture key */
   backgroundKey: string
-  /** 可前往的地点 id */
+  /** 世界地图出口（保留兼容，小地图模式改用 SubLocation.exits） */
   exits: string[]
+  /** 顶层交互（保留兼容，小地图模式改用 subMap） */
   interactions: Interaction[]
+  /** 小地图数据（存在时启用双层地图模式） */
+  subMap?: {
+    nodes: Record<string, SubLocation>
+    startNodeId: string
+  }
 }
 
 // ─── 任务系统 ────────────────────────────────────────────────────────────────

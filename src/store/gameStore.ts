@@ -13,12 +13,12 @@ import type {
   ObjectiveTrigger,
 } from '../types'
 import { PLAYER_TEMPLATE } from '../data/characters'
-import { STARTING_LOCATION } from '../data/locations'
+import { LOCATIONS, STARTING_LOCATION } from '../data/locations'
 import { INITIAL_QUESTS } from '../data/quests'
 import { ITEMS } from '../data/items'
 
 // ─── 存档版本 ────────────────────────────────────────────────────────────────
-const SAVE_VERSION = 2
+const SAVE_VERSION = 3
 
 // ─── 属性计算辅助 ────────────────────────────────────────────────────────────
 
@@ -61,6 +61,8 @@ interface GameState {
   inventory: InventoryItem[]
   gold: number
   currentLocationId: string
+  /** 当前所在子地点 id（使用小地图时有效） */
+  currentSubLocationId: string | null
   consumedInteractions: string[]
   quests: Quest[]
   battle: BattleState
@@ -70,6 +72,7 @@ interface GameState {
   // 基础操作
   startNewGame: (playerName?: string) => void
   travelTo: (locationId: string) => void
+  travelToSubLocation: (subId: string) => void
 
   // 物品操作
   addItem: (item: Item, qty?: number) => void
@@ -118,6 +121,7 @@ export const useGameStore = create<GameState>()(
       inventory: [],
       gold: 50,
       currentLocationId: STARTING_LOCATION,
+      currentSubLocationId: LOCATIONS[STARTING_LOCATION].subMap?.startNodeId ?? null,
       consumedInteractions: [],
       quests: structuredClone(INITIAL_QUESTS),
       activeDialogue: null,
@@ -143,6 +147,7 @@ export const useGameStore = create<GameState>()(
           inventory: [],
           gold: 50,
           currentLocationId: STARTING_LOCATION,
+          currentSubLocationId: LOCATIONS[STARTING_LOCATION].subMap?.startNodeId ?? null,
           consumedInteractions: [],
           quests: structuredClone(INITIAL_QUESTS),
           activeDialogue: null,
@@ -159,10 +164,16 @@ export const useGameStore = create<GameState>()(
         })
       },
 
-      // ── 地点切换 ────────────────────────────────────────────────────────────
+      // ── 大地点切换（世界地图级） ──────────────────────────────────
       travelTo: (locationId) => {
-        set({ currentLocationId: locationId })
+        const startSub = LOCATIONS[locationId]?.subMap?.startNodeId ?? null
+        set({ currentLocationId: locationId, currentSubLocationId: startSub })
         get()._autoCompleteObjectives({ type: 'visit_location', locationId })
+      },
+
+      // ── 小地图子节点移动 ───────────────────────────────────────
+      travelToSubLocation: (subId) => {
+        set({ currentSubLocationId: subId })
       },
 
       // ── 物品：添加 ─────────────────────────────────────────────────────────
@@ -581,6 +592,7 @@ export const useGameStore = create<GameState>()(
           const stats = s.player.stats
           return {
             currentLocationId: 'village',
+            currentSubLocationId: LOCATIONS['village'].subMap?.startNodeId ?? null,
             player: {
               ...s.player,
               stats: {
