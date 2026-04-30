@@ -1,6 +1,66 @@
 import type { NPC } from '../types'
 
 export const NPCS: Record<string, NPC> = {
+  // ── 序章：小莉娜（一次性开场对话，由 startNewGame 自动触发）────────────────
+  lina_prologue: {
+    id: 'lina_prologue',
+    name: '小莉娜',
+    dialogues: [
+      {
+        id: 'greeting',
+        text: '迷迷糊糊中，好像做了一个非常漫长的梦……待你睁开眼睛，眼前出现了一张小女孩充满担忧的脸。「你终于醒了！我还以为你会一直睡下去呢。」',
+        options: [
+          { text: '……我在哪里？', next: 'where' },
+          { text: '（努力回忆，却什么都想不起来。）', next: 'confused' },
+        ],
+      },
+      {
+        id: 'where',
+        text: '这里是落瀑村，暮光客栈的客房里。三天前，艾尔文爷爷在村北的瀑布边发现了你，把你背回来的。你身上有不少伤……',
+        options: [
+          { text: '艾尔文？那位老先生现在在哪里？', next: 'find_elder' },
+        ],
+      },
+      {
+        id: 'confused',
+        text: '没关系，你刚醒来，先别急着想。我叫莉娜，就住在这村子里。你是在村北瀑布边被艾尔文爷爷发现的——他说你身上有伤，就把你背回来了。',
+        options: [
+          { text: '艾尔文……那位老先生现在在哪里？', next: 'find_elder' },
+        ],
+      },
+      {
+        id: 'find_elder',
+        text: '爷爷昨天去格雷村长那儿商量事情了，应该还在村长之屋。从中心广场往西北走就能找到，那栋最旧的石屋就是。你去找他吧，他肯定有话想跟你说。',
+        options: [
+          { text: '好，我去找他。谢谢你，莉娜。' },
+        ],
+      },
+    ],
+  },
+
+  // ── 莉娜（客栈可重复对话）──────────────────────────────────────────────────
+  lina: {
+    id: 'lina',
+    name: '小莉娜',
+    dialogues: [
+      {
+        id: 'greeting',
+        text: '啊，你回来了！客栈很安全的，有什么不明白的尽管来问我。',
+        options: [
+          { text: '艾尔文爷爷和村长那边怎么说？', next: 'hint' },
+          { text: '只是来看看你。' },
+        ],
+      },
+      {
+        id: 'hint',
+        text: '村长之屋在中心广场西北边，艾尔文爷爷家在村长之屋旁边再往东一点。你多保重，别一个人乱跑。',
+        options: [
+          { text: '知道了，谢谢莉娜。' },
+        ],
+      },
+    ],
+  },
+
   waterfall: {
     id: 'waterfall',
     name: '隐秘瀑布',
@@ -77,12 +137,16 @@ export const NPCS: Record<string, NPC> = {
     dialogues: [
       {
         id: 'greeting',
-        text: '你醒来了，好极了。那天清晨我和莉娜在瀑布边散步，发现你倒在乱石丛中，浑身是伤……你还好吗？',
+        text: '你来了，太好了。莉娜跑来告诉我你醒了，我这心里总算放下了。你在昏睡的这几天，我一直悬着心……你现在感觉怎么样？',
         options: [
           { text: '我的记忆全部消失了。', next: 'memory_lost' },
           { text: '村子现在还安全吗？', next: 'village_danger' },
-          { text: '谢谢你救了我。', next: 'thanks' },
+          { text: '是你救了我？谢谢你。', next: 'thanks' },
         ],
+      },
+      {
+        id: 'thanks',
+        text: '举手之劳而已。那天我一早在瀑布边散步，就看见你倒在乱石丛里。不把你带回来，我怎么放得下心呢。你既然来到了落瀑村，这里就是你的家。',
       },
       {
         id: 'memory_lost',
@@ -99,10 +163,7 @@ export const NPCS: Record<string, NPC> = {
           { text: '我还没准备好。' },
         ],
       },
-      {
-        id: 'thanks',
-        text: '举手之劳而已。莉娜很担心你呢，她一直守在你身边。你既然来到了落瀑村，就是有缘人，这里就是你的家。',
-      },
+
       {
         id: 'more',
         text: '带上这把古代钥匙，也许它能打开神殿的大门。那里封印着某种古老的力量……小心为上，祝你好运。',
@@ -115,12 +176,16 @@ export const NPCS: Record<string, NPC> = {
     dialogues: [
       {
         id: 'greeting',
-        text: '你就是艾尔文老头救回来的那个旅人？唔……看你的气质不像普通流浪者。我是落瀑村的村长格雷，这村子的安危都压在我肩上。',
+        text: '你就是艾尔文从瀑布边救回来的那个旅人？你总算醒了。艾尔文刚刚还在这里，商量完事情便回他家去了——他让我转告你，说有重要的事情想告诉你，让你去找他。',
         options: [
           { text: '村子最近出了什么事？', next: 'trouble' },
           { text: '我能帮上什么忙吗？', next: 'help' },
-          { text: '只是随便问问。' },
+          { text: '好，我去找艾尔文。谢谢村长。', next: 'chief_farewell' },
         ],
+      },
+      {
+        id: 'chief_farewell',
+        text: '保重，有事随时来找我。艾尔文的家就在我这往东走，那栋摆着古籍的石屋就是。',
       },
       {
         id: 'trouble',

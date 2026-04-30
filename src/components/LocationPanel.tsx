@@ -69,8 +69,14 @@ export default function LocationPanel({ onStartBattle, onOpenPanel }: LocationPa
 
   // ── 小地图模式 ────────────────────────────────────────────────────────────
   const subMap = location.subMap
+  // 如果 currentSubLocationId 失效（旧存档迁移），自动回退到 startNodeId
+  const effectiveSubId: string | null = subMap
+    ? (currentSubLocationId && subMap.nodes[currentSubLocationId]
+        ? currentSubLocationId
+        : subMap.startNodeId)
+    : null
   const subLoc: SubLocation | undefined =
-    subMap && currentSubLocationId ? subMap.nodes[currentSubLocationId] : undefined
+    subMap && effectiveSubId ? subMap.nodes[effectiveSubId] : undefined
 
   if (subMap && subLoc) {
     // ── 小地图：计算所有节点的相对坐标用于可视化 ────────────────────────────
@@ -189,7 +195,7 @@ export default function LocationPanel({ onStartBattle, onOpenPanel }: LocationPa
               {Object.entries(subMap.nodes).map(([id, node]) => {
                 const coord = nodeCoords[id]
                 if (!coord) return null
-                const isCurrent = id === currentSubLocationId
+                const isCurrent = id === effectiveSubId
                 const isPortalNode = node.interactions.some((i) => i.type === 'portal')
                 const left = (coord.col - minCol) * (CELL + GAP)
                 const top  = (coord.row - minRow) * (CELL + GAP)

@@ -153,7 +153,7 @@ export const useGameStore = create<GameState>()(
           currentSubLocationId: LOCATIONS[STARTING_LOCATION].subMap?.startNodeId ?? null,
           consumedInteractions: [],
           quests: structuredClone(INITIAL_QUESTS),
-          activeDialogue: null,
+          activeDialogue: { npcId: 'lina_prologue', nodeId: 'greeting' },
           activeShopNpcId: null,
           battle: {
             active: false,
@@ -165,6 +165,8 @@ export const useGameStore = create<GameState>()(
             round: 0,
           },
         })
+        // 序章对话自动激活初始任务
+        get().activateQuest('quest_arrive')
       },
 
       // ── 大地点切换（世界地图级） ──────────────────────────────────

@@ -10,6 +10,28 @@ import type { Quest } from '../types'
  *   'completed' — 已完成
  */
 export const INITIAL_QUESTS: Quest[] = [
+  // ── 序章任务（游戏开始后自动激活） ──────────────────────────────────────────
+  {
+    id: 'quest_arrive',
+    title: '初来乍到',
+    description: '你在一个陌生的地方醒来，身边是一个叫莉娜的小女孩。据她所说，一位叫艾尔文的老先生将你救回了落瀑村——而他现在在村长之屋。你需要去找他了解更多情况。',
+    status: 'locked',
+    objectives: [
+      {
+        id: 'visit_chief',
+        description: '前往村长之屋，打听艾尔文的下落',
+        completed: false,
+        trigger: { type: 'talk_npc', npcId: 'village_chief' },
+      },
+      {
+        id: 'talk_elder_first',
+        description: '前往艾尔文的家，与他交谈',
+        completed: false,
+        trigger: { type: 'talk_npc', npcId: 'elder' },
+      },
+    ],
+    reward: { exp: 80 },
+  },
   {
     id: 'quest_elder',
     title: '长老的委托',

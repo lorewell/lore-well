@@ -69,9 +69,10 @@ export const LOCATIONS: Record<string, Location> = {
         village_inn: {
           id: 'village_inn',
           name: '暮光客栈',
-          description: '村里唯一的客栈，木质招牌在风中轻轻摇晃，里面总是温暖而昏黄的。炉火的气息和玛格爽朗的笑声混在一起，令人安心。',
+          description: '村里唯一的客栈——你醒来时就在这里。炉火的气息和玛格爽朗的笑声混在一起，令人安心。小莉娜常在此处帮忙。',
           interactions: [
             { id: 'village_inn_npc', label: '老板娘 玛格', type: 'npc', targetId: 'innkeeper' },
+            { id: 'village_inn_lina', label: '小莉娜', type: 'npc', targetId: 'lina' },
           ],
           east: 'village_center',
         },
