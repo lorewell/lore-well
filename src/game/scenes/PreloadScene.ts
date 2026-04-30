@@ -56,8 +56,8 @@ export default class PreloadScene extends Phaser.Scene {
         .text(640, 360, loc.label, {
           fontSize: '48px',
           color: '#ffffff',
-          alpha: 0.08,
         })
+        .setAlpha(0.08)
         .setOrigin(0.5)
         .setVisible(false) // 只用于标记，不显示到场景中
     }

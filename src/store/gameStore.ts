@@ -109,6 +109,9 @@ interface GameState {
 
   // 复活
   respawnAtVillage: () => void
+
+  // 内部：自动完成任务目标（暴露在接口上以消除 TS 报错）
+  _autoCompleteObjectives: (trigger: ObjectiveTrigger) => void
 }
 
 // ─── Store ───────────────────────────────────────────────────────────────────

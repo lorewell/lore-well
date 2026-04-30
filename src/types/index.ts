@@ -23,8 +23,8 @@ export interface Item {
   equipSlot?: EquipSlot
   /** 消耗品使用效果（正数回复，负数伤害） */
   effect?: Partial<Stats>
-  /** 装备提供的属性加成 */
-  statBonus?: Partial<Omit<Stats, 'hp' | 'mp' | 'maxHp' | 'maxMp'>>
+  /** 装备提供的属性加成（可含 maxHp / maxMp，但不含当前 hp/mp） */
+  statBonus?: Partial<Omit<Stats, 'hp' | 'mp'>>
   icon?: string
   stackable: boolean
 }
@@ -68,7 +68,7 @@ export interface Enemy {
   skills: Skill[]
   expReward: number
   goldReward: number
-  dropTable: Array<{ item: Item; chance: number }>
+  dropTable?: Array<{ item: Item; chance: number }>
   sprite?: string       // Phaser 精灵 key
 }
 
