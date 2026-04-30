@@ -13,7 +13,98 @@ import ShopPanel from '../components/ShopPanel'
 import { LOCATIONS } from '../data/locations'
 import { getShopByNpc } from '../data/shops'
 
-type ActivePanel = 'none' | 'inventory' | 'quests'
+// ── 角色状态面板（内联，轻量） ──────────────────────────────────────────────
+function StatusPanel({ onClose }: { onClose: () => void }) {
+  const player = useGameStore((s) => s.player)
+  const gold = useGameStore((s) => s.gold)
+  const { stats, baseStats, equipment, level, exp, expToNext } = player
+
+  const statRows = [
+    { label: 'ATK 攻击',  value: stats.atk,  base: baseStats.atk },
+    { label: 'DEF 防御',  value: stats.def,  base: baseStats.def },
+    { label: 'SPD 速度',  value: stats.spd,  base: baseStats.spd },
+    { label: 'HP 上限',   value: stats.maxHp, base: baseStats.maxHp },
+    { label: 'MP 上限',   value: stats.maxMp, base: baseStats.maxMp },
+  ]
+
+  const equipSlots = [
+    { key: 'weapon' as const, label: '武器' },
+    { key: 'armor'  as const, label: '防具' },
+    { key: 'accessory' as const, label: '饰品' },
+  ]
+
+  return (
+    <div className="absolute inset-0 z-40 flex items-center justify-center"
+      style={{ background: 'rgba(0,0,0,0.6)' }}
+      onClick={onClose}
+    >
+      <div
+        className="relative p-6 min-w-72 max-w-sm w-full mx-4"
+        style={{ background: 'rgba(12,6,24,0.97)', border: '1px solid #3a2050' }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* 标题 */}
+        <div className="flex items-baseline justify-between mb-4">
+          <div>
+            <h2 className="text-base font-semibold tracking-widest" style={{ color: '#e2d8f0' }}>
+              {player.name}
+            </h2>
+            <span className="text-[11px] tracking-widest" style={{ color: '#6a5080' }}>
+              Lv.{level} · {gold} G
+            </span>
+          </div>
+          <button onClick={onClose} className="text-lg cursor-pointer" style={{ color: '#5a4070' }}>✕</button>
+        </div>
+
+        {/* EXP 条 */}
+        <div className="mb-4">
+          <div className="flex justify-between text-[10px] mb-0.5" style={{ color: '#6a5080' }}>
+            <span>EXP</span><span>{exp} / {expToNext}</span>
+          </div>
+          <div className="h-1 w-full" style={{ background: '#1e1030' }}>
+            <div className="h-full" style={{ width: `${(exp / expToNext) * 100}%`, background: '#6040a0' }} />
+          </div>
+        </div>
+
+        {/* 属性 */}
+        <div className="mb-4">
+          <p className="text-[9px] tracking-widest mb-2" style={{ color: '#4a3060' }}>基础属性</p>
+          <div className="flex flex-col gap-1">
+            {statRows.map(({ label, value, base }) => {
+              const bonus = value - base
+              return (
+                <div key={label} className="flex items-center justify-between text-xs">
+                  <span style={{ color: '#7a5898' }}>{label}</span>
+                  <span style={{ color: '#c0a0e0' }}>
+                    {value}
+                    {bonus > 0 && <span style={{ color: '#80c080', fontSize: '10px' }}> (+{bonus})</span>}
+                  </span>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+
+        {/* 装备 */}
+        <div>
+          <p className="text-[9px] tracking-widest mb-2" style={{ color: '#4a3060' }}>当前装备</p>
+          <div className="flex flex-col gap-1">
+            {equipSlots.map(({ key, label }) => (
+              <div key={key} className="flex items-center justify-between text-xs">
+                <span style={{ color: '#4a3060' }}>{label}</span>
+                <span style={{ color: equipment[key] ? '#c0a0e0' : '#2a1840' }}>
+                  {equipment[key]?.name ?? '— 未装备 —'}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+type ActivePanel = 'none' | 'inventory' | 'quests' | 'status'
 
 export default function GameScreen() {
   const canvasRef = useRef<HTMLDivElement>(null)
@@ -95,34 +186,11 @@ export default function GameScreen() {
       {!inCombat ? (
         <>
           <HUD />
-          <LocationPanel onStartBattle={() => setInCombat(true)} />
+          <LocationPanel
+            onStartBattle={() => setInCombat(true)}
+            onOpenPanel={(panel) => setActivePanel(panel)}
+          />
           <DialogBox />
-
-          {/* 右侧工具栏 */}
-          <div className="absolute right-4 top-1/2 -translate-y-1/2 flex flex-col gap-2 z-30">
-            <button
-              onClick={() => togglePanel('inventory')}
-              title="背包 (B)"
-              className={`w-10 h-10 rounded-lg border text-sm font-bold transition-colors ${
-                activePanel === 'inventory'
-                  ? 'bg-yellow-600 border-yellow-500 text-white'
-                  : 'bg-gray-900/80 border-gray-600 text-gray-300 hover:border-yellow-500 hover:text-yellow-300'
-              }`}
-            >
-              包
-            </button>
-            <button
-              onClick={() => togglePanel('quests')}
-              title="任务 (Q)"
-              className={`w-10 h-10 rounded-lg border text-sm font-bold transition-colors ${
-                activePanel === 'quests'
-                  ? 'bg-yellow-600 border-yellow-500 text-white'
-                  : 'bg-gray-900/80 border-gray-600 text-gray-300 hover:border-yellow-500 hover:text-yellow-300'
-              }`}
-            >
-              任
-            </button>
-          </div>
 
           {/* 面板覆盖层 */}
           {activePanel === 'inventory' && (
@@ -130,6 +198,9 @@ export default function GameScreen() {
           )}
           {activePanel === 'quests' && (
             <QuestLog onClose={() => setActivePanel('none')} />
+          )}
+          {activePanel === 'status' && (
+            <StatusPanel onClose={() => setActivePanel('none')} />
           )}
         </>
       ) : (
