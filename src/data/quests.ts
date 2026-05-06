@@ -103,4 +103,20 @@ export const INITIAL_QUESTS: Quest[] = [
     ],
     reward: { exp: 120, gold: 80, items: [{ itemId: 'steel_sword', qty: 1 }] },
   },
+  // ── 彩蛋支线：戒指的秘密（后期任务，仅第一步可见）────────────────────────
+  {
+    id: 'quest_ring_origin',
+    title: '戒指的秘密',
+    description: '在瀑布下的水池中，你捡到了一枚陌生却莫名熟悉的戒指。某个人曾经将它交到你手中——但那个人是谁，身在何处，你全都想不起来。',
+    status: 'locked',
+    objectives: [
+      {
+        id: 'investigate_origin',
+        description: '调查戒指的来源',
+        completed: false,
+        trigger: { type: 'talk_npc', npcId: 'ring_mystery_contact' },
+      },
+    ],
+    reward: { exp: 0 },
+  },
 ]

@@ -120,4 +120,11 @@ export const ITEMS: Record<string, Item> = {
     type: 'quest',
     stackable: false,
   },
+  mysterious_ring: {
+    id: 'mysterious_ring',
+    name: '未知的戒指',
+    description: '从瀑布水池底部捡到的戒指，花纹磨损，内圈刻有几乎辨不清的文字。某个人曾经将它给了你——但那个人是谁，你已想不起来。',
+    type: 'quest',
+    stackable: false,
+  },
 }

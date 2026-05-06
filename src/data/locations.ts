@@ -31,9 +31,11 @@ export const LOCATIONS: Record<string, Location> = {
         village_waterfall: {
           id: 'village_waterfall',
           name: '隐秘瀑布',
-          description: '一道银白色的瀑布从山间石缝倾泻而下，水声如鼓，雾气弥漫。就是在这片乱石丛中，艾尔文老人发现了昏迷的你。',
+          description: '一道银白色的瀑布从山间石缝倾泻而下，水声如鼓，雾气弥漫。就是在这片乱石丛中，艾尔文老人发现了昏迷的你。瀑布底部积成一汪清潭，透可见底。',
           interactions: [
             { id: 'village_waterfall_npc', label: '凝视瀑布', type: 'building', targetId: 'waterfall' },
+            { id: 'waterfall_pool_bathe', label: '在水池中沐浴', type: 'building', targetId: 'waterfall_pool' },
+            { id: 'waterfall_pool_ring', label: '探查水底', type: 'npc', targetId: 'waterfall_ring_event' },
           ],
           south: 'village_elder_home',
         },
@@ -42,7 +44,6 @@ export const LOCATIONS: Record<string, Location> = {
           name: '艾尔文的家',
           description: '一栋朴素而整洁的石屋，窗台上摆着几本泛黄的古籍。长老艾尔文在此居住了数十年，守护着有关神殿的秘密。',
           interactions: [
-            { id: 'village_elder', label: '长老 艾尔文', type: 'npc', targetId: 'elder' },
             { id: 'village_elder_bookshelf', label: '旧书架', type: 'building', targetId: 'elder_bookshelf' },
           ],
           north: 'village_waterfall',
@@ -55,7 +56,7 @@ export const LOCATIONS: Record<string, Location> = {
           name: '村长之屋',
           description: '木质门梁上刻着格雷家族的徽记，厚重的橡木门显示出主人的地位。屋内透出暖黄的烛光，村长正在里面处理村务。',
           interactions: [
-            { id: 'village_chief_npc', label: '村长 格雷', type: 'npc', targetId: 'village_chief' },
+
             { id: 'village_chief_map', label: '墙上地图', type: 'building', targetId: 'chief_map' },
           ],
           east: 'village_elder_home',
@@ -77,8 +78,7 @@ export const LOCATIONS: Record<string, Location> = {
           name: '暮光客栈',
           description: '村里唯一的客栈——你醒来时就在这里。炉火的气息和玛格爽朗的笑声混在一起，令人安心。小莉娜常在此处帮忙。',
           interactions: [
-            { id: 'village_inn_npc', label: '老板娘 玛格', type: 'npc', targetId: 'innkeeper' },
-            { id: 'village_inn_lina', label: '小莉娜', type: 'npc', targetId: 'lina' },
+
             { id: 'village_inn_hearth', label: '壁炉', type: 'building', targetId: 'inn_hearth' },
           ],
           east: 'village_center',
@@ -90,7 +90,6 @@ export const LOCATIONS: Record<string, Location> = {
           name: '铁匠铺',
           description: '叮叮当当的锤击声从铁匠铺里传出，炉膛里的火焰映红了托尔的脸。武器和护甲整齐地挂在墙上，等待着有缘人。',
           interactions: [
-            { id: 'village_smith_npc', label: '铁匠 托尔', type: 'npc', targetId: 'blacksmith' },
             { id: 'village_smith_anvil', label: '铁砧', type: 'building', targetId: 'smith_anvil' },
           ],
           west:  'village_center',
@@ -101,7 +100,6 @@ export const LOCATIONS: Record<string, Location> = {
           name: '杂货铺',
           description: '梅娜那间摆满各色杂货的小铺子，药草、绳索、干粮堆得满满当当。老板娘总能第一时间打听到村里的消息。',
           interactions: [
-            { id: 'village_grocer_npc', label: '杂货商 梅娜', type: 'npc', targetId: 'grocer' },
             { id: 'village_grocer_herbs', label: '草药架', type: 'building', targetId: 'grocer_herbs' },
           ],
           north: 'village_blacksmith',

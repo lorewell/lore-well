@@ -82,6 +82,12 @@ export interface NPC {
   portrait?: string
   /** 对话节点列表 */
   dialogues: DialogueNode[]
+  /** NPC 初始所在大地点 id（无位置的固定场景点可不填） */
+  locationId?: string
+  /** NPC 初始所在子节点 id */
+  subLocationId?: string
+  /** 交互列表显示的按钮文本，不填则使用 name */
+  interactionLabel?: string
 }
 
 export interface DialogueNode {

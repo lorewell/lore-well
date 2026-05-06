@@ -36,6 +36,10 @@ export default function DialogBox() {
     if (activeDialogue.npcId === 'innkeeper' && nextNodeId === 'rest') {
       restoreHpMp()
     }
+    // 特殊动作：瀑布水池沐浴
+    if (activeDialogue.npcId === 'waterfall_pool' && nextNodeId === 'bathe') {
+      restoreHpMp()
+    }
     // 特殊动作：打开商店
     if (nextNodeId === 'shop') {
       openShop(activeDialogue.npcId)

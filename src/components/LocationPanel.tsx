@@ -3,6 +3,7 @@ import { useGameStore } from '../store/gameStore'
 import { LOCATIONS } from '../data/locations'
 import { ENEMIES } from '../data/enemies'
 import { ITEMS } from '../data/items'
+import { NPCS } from '../data/npcs'
 import type { Interaction, Location, SubLocation } from '../types'
 import { GameManager } from '../game/GameManager'
 
@@ -25,6 +26,7 @@ export default function LocationPanel({ onStartBattle, onOpenPanel, onPause }: L
   const addItem = useGameStore((s) => s.addItem)
   const consumeInteraction = useGameStore((s) => s.consumeInteraction)
   const consumedInteractions = useGameStore((s) => s.consumedInteractions)
+  const npcLocations = useGameStore((s) => s.npcLocations)
 
   const [mode, setMode] = useState<PanelMode>('scene')
 
@@ -68,8 +70,27 @@ export default function LocationPanel({ onStartBattle, onOpenPanel, onPause }: L
       : subMap?.startNodeId
   const subLoc = subMap && effectiveSubId ? subMap.nodes[effectiveSubId] : undefined
 
+  /** 根据 npcLocations 快照，找出当前子节点中的 NPC，生成临时 Interaction 列表 */
+  function getNpcInteractions(locId: string, subId: string): Interaction[] {
+    return Object.values(NPCS)
+      .filter((npc) => {
+        const pos = npcLocations[npc.id]
+        return pos && pos.locationId === locId && pos.subLocationId === subId
+      })
+      .map((npc) => ({
+        id: `npc_dynamic_${npc.id}`,
+        label: npc.interactionLabel ?? npc.name,
+        type: 'npc' as const,
+        targetId: npc.id,
+      }))
+  }
+
   if (subMap && subLoc && effectiveSubId) {
     const map = buildSubMapLayout(subMap, effectiveSubId)
+    const dynamicInteractions = [
+      ...getNpcInteractions(currentLocationId, effectiveSubId),
+      ...subLoc.interactions,
+    ]
 
     return (
       <div className="pixel-bottom-shell">
@@ -86,7 +107,7 @@ export default function LocationPanel({ onStartBattle, onOpenPanel, onPause }: L
             {mode === 'scene' ? (
               <SceneColumn
                 subLoc={subLoc}
-                interactions={subLoc.interactions}
+                interactions={dynamicInteractions}
                 exits={subLoc.exits ?? []}
                 consumedInteractions={consumedInteractions}
                 onInteraction={handleInteraction}

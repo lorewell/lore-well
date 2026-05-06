@@ -16,9 +16,27 @@ import { PLAYER_TEMPLATE } from '../data/characters'
 import { LOCATIONS, STARTING_LOCATION } from '../data/locations'
 import { INITIAL_QUESTS } from '../data/quests'
 import { ITEMS } from '../data/items'
+import { NPCS } from '../data/npcs'
 
 // ─── 存档版本 ────────────────────────────────────────────────────────────────
-const SAVE_VERSION = 3
+const SAVE_VERSION = 4
+
+// ─── NPC 位置快照类型 ────────────────────────────────────────────────────────
+export interface NpcLocationEntry {
+  locationId: string
+  subLocationId: string
+}
+
+/** 从 NPCS 静态数据初始化位置快照 */
+function buildInitialNpcLocations(): Record<string, NpcLocationEntry> {
+  const result: Record<string, NpcLocationEntry> = {}
+  for (const npc of Object.values(NPCS)) {
+    if (npc.locationId && npc.subLocationId) {
+      result[npc.id] = { locationId: npc.locationId, subLocationId: npc.subLocationId }
+    }
+  }
+  return result
+}
 
 // ─── 属性计算辅助 ────────────────────────────────────────────────────────────
 
@@ -68,6 +86,8 @@ interface GameState {
   battle: BattleState
   activeDialogue: { npcId: string; nodeId: string } | null
   activeShopNpcId: string | null
+  /** NPC 当前位置快照，可在运行时更改 */
+  npcLocations: Record<string, NpcLocationEntry>
 
   // 基础操作
   startNewGame: (playerName?: string) => void
@@ -101,6 +121,9 @@ interface GameState {
   activateQuest: (questId: string) => void
   completeQuest: (questId: string) => void
 
+  // NPC 移动
+  moveNpc: (npcId: string, locationId: string, subLocationId: string) => void
+
   // 商店
   openShop: (npcId: string) => void
   closeShop: () => void
@@ -129,6 +152,7 @@ export const useGameStore = create<GameState>()(
       quests: structuredClone(INITIAL_QUESTS),
       activeDialogue: null,
       activeShopNpcId: null,
+      npcLocations: buildInitialNpcLocations(),
 
       battle: {
         active: false,
@@ -155,6 +179,7 @@ export const useGameStore = create<GameState>()(
           quests: structuredClone(INITIAL_QUESTS),
           activeDialogue: { npcId: 'lina_prologue', nodeId: 'greeting' },
           activeShopNpcId: null,
+          npcLocations: buildInitialNpcLocations(),
           battle: {
             active: false,
             phase: 'idle',
@@ -296,6 +321,12 @@ export const useGameStore = create<GameState>()(
         }
         if (npcId === 'blacksmith') {
           get().activateQuest('quest_blacksmith')
+        }
+        // 戒指发现事件（一次性）：发放道具 + 激活支线 + 消耗该交互点
+        if (npcId === 'waterfall_ring_event') {
+          get().addItem(ITEMS['mysterious_ring'], 1)
+          get().activateQuest('quest_ring_origin')
+          get().consumeInteraction('waterfall_pool_ring')
         }
         get()._autoCompleteObjectives({ type: 'talk_npc', npcId })
       },
@@ -590,6 +621,16 @@ export const useGameStore = create<GameState>()(
         get().removeItem(itemId, 1)
         set((s) => ({ gold: s.gold + price }))
         return true
+      },
+
+      // ── NPC 位置移动 ─────────────────────────────────────────────────────────
+      moveNpc: (npcId, locationId, subLocationId) => {
+        set((s) => ({
+          npcLocations: {
+            ...s.npcLocations,
+            [npcId]: { locationId, subLocationId },
+          },
+        }))
       },
 
       // ── 复活：传送到村庄并恢复 50% HP/MP ───────────────────────────────────
