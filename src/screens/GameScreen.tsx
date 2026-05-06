@@ -208,6 +208,7 @@ export default function GameScreen() {
               <LocationPanel
                 onStartBattle={() => setInCombat(true)}
                 onOpenPanel={(panel) => setActivePanel(panel)}
+                onPause={() => setPaused(true)}
               />
             )}
             <DialogBox />
@@ -224,16 +225,6 @@ export default function GameScreen() {
           </>
         ) : (
           <CombatPanel onBattleEnd={() => setInCombat(false)} />
-        )}
-
-        {!inCombat && (
-          <button
-            onClick={() => setPaused(true)}
-            className="pixel-button absolute right-4 z-30 px-3 py-2 text-[10px] font-bold tracking-[0.14em] opacity-80"
-            style={{ top: 'calc(max(12px, env(safe-area-inset-top)) + 146px)' }}
-          >
-            PAUSE
-          </button>
         )}
 
         {paused && <PauseMenu onClose={() => setPaused(false)} />}

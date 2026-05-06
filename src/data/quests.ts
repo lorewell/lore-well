@@ -33,9 +33,36 @@ export const INITIAL_QUESTS: Quest[] = [
     reward: { exp: 80 },
   },
   {
+    id: 'quest_village_intro',
+    title: '村中的面孔',
+    description: '在离开落瀑村前，先认识几位能帮助旅人的村民。玛格熟悉休整与补给，梅娜消息灵通，托尔则掌管武器与护甲。',
+    status: 'locked',
+    objectives: [
+      {
+        id: 'talk_innkeeper',
+        description: '去暮光客栈与老板娘玛格聊聊',
+        completed: false,
+        trigger: { type: 'talk_npc', npcId: 'innkeeper' },
+      },
+      {
+        id: 'talk_grocer',
+        description: '去杂货铺向梅娜打听消息',
+        completed: false,
+        trigger: { type: 'talk_npc', npcId: 'grocer' },
+      },
+      {
+        id: 'talk_blacksmith',
+        description: '去铁匠铺和托尔打个照面',
+        completed: false,
+        trigger: { type: 'talk_npc', npcId: 'blacksmith' },
+      },
+    ],
+    reward: { exp: 70, gold: 30, items: [{ itemId: 'mana_potion', qty: 1 }] },
+  },
+  {
     id: 'quest_elder',
     title: '长老的委托',
-    description: '晨曦村的长老艾尔文托付给你一项重要任务——探索古代神殿遗迹，解开笼罩村庄的黑暗之谜。',
+    description: '落瀑村的长老艾尔文托付给你一项重要任务——探索古代神殿遗迹，解开笼罩村庄的黑暗之谜。',
     status: 'locked',
     objectives: [
       { id: 'talk_elder', description: '与长老艾尔文交谈', completed: false, trigger: { type: 'talk_npc', npcId: 'elder' } },

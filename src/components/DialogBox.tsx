@@ -26,6 +26,11 @@ export default function DialogBox() {
   const node = npc.dialogues.find((d) => d.id === activeDialogue.nodeId)
   if (!node) return null
 
+  const isRootNode = activeDialogue.nodeId === 'greeting'
+  const hasOptions = Boolean(node.options?.length)
+  const showDismissOption = isRootNode
+  const showEndOption = !isRootNode && !hasOptions
+
   const handleOption = (nextNodeId?: string) => {
     // 特殊动作：innkeeper 休息
     if (activeDialogue.npcId === 'innkeeper' && nextNodeId === 'rest') {
@@ -79,7 +84,7 @@ export default function DialogBox() {
             {node.text}
           </p>
 
-          {/* 选项列表 + 始终追加"没事了" */}
+          {/* 根节点可直接收起；深层终点只保留明确的结束动作，避免误中断分支 */}
           <div className="flex flex-col gap-1">
             {node.options?.map((opt, i) => (
               <button
@@ -97,19 +102,36 @@ export default function DialogBox() {
                 ▶ {opt.text}
               </button>
             ))}
-            <button
-              onClick={() => closeDialogue()}
-              className="text-left text-xs px-2.5 py-1.5 border cursor-pointer transition-all duration-150"
-              style={{
-                background: 'transparent',
-                borderColor: '#1e1030',
-                color: '#4a3060',
-              }}
-              onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.color = '#9070b0' }}
-              onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.color = '#4a3060' }}
-            >
-              ▶ 没事了。
-            </button>
+            {showDismissOption && (
+              <button
+                onClick={() => closeDialogue()}
+                className="text-left text-xs px-2.5 py-1.5 border cursor-pointer transition-all duration-150"
+                style={{
+                  background: 'transparent',
+                  borderColor: '#1e1030',
+                  color: '#4a3060',
+                }}
+                onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.color = '#9070b0' }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.color = '#4a3060' }}
+              >
+                ▶ 没事了。
+              </button>
+            )}
+            {showEndOption && (
+              <button
+                onClick={() => closeDialogue()}
+                className="text-left text-xs px-2.5 py-1.5 border cursor-pointer transition-all duration-150"
+                style={{
+                  background: 'rgba(255,255,255,0.04)',
+                  borderColor: '#2a1040',
+                  color: '#c0a0e0',
+                }}
+                onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(170,85,255,0.12)' }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.04)' }}
+              >
+                ▶ 结束对话
+              </button>
+            )}
           </div>
         </div>
       </div>

@@ -87,7 +87,7 @@ export interface NPC {
 export interface DialogueNode {
   id: string
   text: string
-  /** 选项为空则自动关闭对话 */
+  /** 选项为空时，由 UI 提供结束对话按钮 */
   options?: Array<{ text: string; next?: string }>
 }
 

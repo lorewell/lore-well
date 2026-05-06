@@ -167,6 +167,7 @@ export const useGameStore = create<GameState>()(
         })
         // 序章对话自动激活初始任务
         get().activateQuest('quest_arrive')
+        get().activateQuest('quest_village_intro')
       },
 
       // ── 大地点切换（世界地图级） ──────────────────────────────────

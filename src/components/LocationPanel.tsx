@@ -9,12 +9,13 @@ import { GameManager } from '../game/GameManager'
 interface LocationPanelProps {
   onStartBattle: () => void
   onOpenPanel: (panel: 'inventory' | 'quests' | 'status') => void
+  onPause: () => void
 }
 
 type PanelMode = 'scene' | 'menu'
 type SubMap = NonNullable<Location['subMap']>
 
-export default function LocationPanel({ onStartBattle, onOpenPanel }: LocationPanelProps) {
+export default function LocationPanel({ onStartBattle, onOpenPanel, onPause }: LocationPanelProps) {
   const currentLocationId = useGameStore((s) => s.currentLocationId)
   const currentSubLocationId = useGameStore((s) => s.currentSubLocationId)
   const travelTo = useGameStore((s) => s.travelTo)
@@ -100,6 +101,10 @@ export default function LocationPanel({ onStartBattle, onOpenPanel }: LocationPa
               <MenuColumn
                 onOpenPanel={(panel) => {
                   onOpenPanel(panel)
+                  setMode('scene')
+                }}
+                onPause={() => {
+                  onPause()
                   setMode('scene')
                 }}
               />
@@ -403,29 +408,33 @@ function ExitButtons({ exits, onTravel }: ExitButtonsProps) {
 
 interface MenuColumnProps {
   onOpenPanel: (panel: 'inventory' | 'quests' | 'status') => void
+  onPause: () => void
 }
 
-function MenuColumn({ onOpenPanel }: MenuColumnProps) {
+function MenuColumn({ onOpenPanel, onPause }: MenuColumnProps) {
   const menuItems = [
-    { id: 'inventory', marker: 'BAG', label: '背包', key: 'B' },
-    { id: 'quests', marker: 'LOG', label: '任务', key: 'Q' },
-    { id: 'status', marker: 'STAT', label: '状态', key: 'C' },
+    { id: 'inventory', marker: 'BAG', label: '背包', key: 'B', action: () => onOpenPanel('inventory') },
+    { id: 'quests', marker: 'LOG', label: '任务', key: 'Q', action: () => onOpenPanel('quests') },
+    { id: 'status', marker: 'STAT', label: '状态', key: 'C', action: () => onOpenPanel('status') },
+    { id: 'pause', marker: 'MENU', label: '暂停', key: 'ESC', action: onPause },
   ] as const
 
   return (
-    <div className="pixel-menu-column flex h-full flex-col justify-center gap-2">
-      <div className="pixel-label mb-1">ADVENTURE MENU</div>
-      {menuItems.map(({ id, marker, label, key }) => (
+    <div className="pixel-menu-column flex h-full min-w-0 flex-col justify-center">
+      <div className="pixel-label mb-3">ADVENTURE MENU</div>
+      <div className="pixel-menu-grid">
+      {menuItems.map(({ id, marker, label, key, action }) => (
         <button
           key={id}
-          onClick={() => onOpenPanel(id)}
-          className="pixel-interaction flex items-center gap-2 px-2 py-2 text-[11px] font-bold sm:gap-3 sm:px-3 sm:text-xs"
+          onClick={action}
+          className="pixel-interaction pixel-menu-tile flex min-w-0 flex-col items-start justify-between gap-2 px-3 py-3 text-left text-[11px] font-bold sm:text-xs"
         >
-          <span className="shrink-0" style={{ color: '#d6a845' }}>{marker}</span>
-          <span>{label}</span>
-          <span className="ml-auto text-[10px]" style={{ color: '#9b7b50' }}>[{key}]</span>
+          <span className="shrink-0 text-[10px] tracking-[0.16em]" style={{ color: '#d6a845' }}>{marker}</span>
+          <span className="text-sm tracking-[0.08em] sm:text-base">{label}</span>
+          <span className="text-[10px]" style={{ color: '#9b7b50' }}>[{key}]</span>
         </button>
       ))}
+      </div>
     </div>
   )
 }

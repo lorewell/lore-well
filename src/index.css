@@ -344,6 +344,20 @@ button {
   color: #9285c5;
 }
 
+.pixel-menu-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.pixel-menu-tile {
+  min-height: 74px;
+}
+
+.pixel-menu-tile:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
 @media (max-width: 760px) {
   .pixel-hud {
     gap: 8px;
@@ -357,5 +371,11 @@ button {
   .pixel-bottom-grid {
     grid-template-columns: minmax(104px, 120px) minmax(0, 1fr) 48px;
     min-height: 150px;
+  }
+}
+
+@media (min-width: 640px) {
+  .pixel-menu-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }

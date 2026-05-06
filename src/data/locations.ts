@@ -17,7 +17,10 @@ export const LOCATIONS: Record<string, Location> = {
           id: 'village_center',
           name: '中心广场',
           description: '落瀑村的中心广场，古老的石井旁老槐树枝叶繁茂。四条路分别通向村子各处，村民们三三两两聚集于此低声谈论。',
-          interactions: [],
+          interactions: [
+            { id: 'village_center_well', label: '古老石井', type: 'building', targetId: 'village_well' },
+            { id: 'village_center_notice', label: '告示板', type: 'building', targetId: 'village_notice_board' },
+          ],
           north: 'village_elder_home',
           west:  'village_inn',
           east:  'village_blacksmith',
@@ -40,6 +43,7 @@ export const LOCATIONS: Record<string, Location> = {
           description: '一栋朴素而整洁的石屋，窗台上摆着几本泛黄的古籍。长老艾尔文在此居住了数十年，守护着有关神殿的秘密。',
           interactions: [
             { id: 'village_elder', label: '长老 艾尔文', type: 'npc', targetId: 'elder' },
+            { id: 'village_elder_bookshelf', label: '旧书架', type: 'building', targetId: 'elder_bookshelf' },
           ],
           north: 'village_waterfall',
           west:  'village_chief_home',
@@ -52,6 +56,7 @@ export const LOCATIONS: Record<string, Location> = {
           description: '木质门梁上刻着格雷家族的徽记，厚重的橡木门显示出主人的地位。屋内透出暖黄的烛光，村长正在里面处理村务。',
           interactions: [
             { id: 'village_chief_npc', label: '村长 格雷', type: 'npc', targetId: 'village_chief' },
+            { id: 'village_chief_map', label: '墙上地图', type: 'building', targetId: 'chief_map' },
           ],
           east: 'village_elder_home',
         },
@@ -61,6 +66,7 @@ export const LOCATIONS: Record<string, Location> = {
           description: '村庄边缘的开阔地带，木栅栏已有几处腐朽倒塌。近来史莱姆频繁在此出没，村民们对此忧心忡忡。',
           interactions: [
             { id: 'village_slime', label: '附近的史莱姆', type: 'enemy', targetId: 'slime' },
+            { id: 'village_outskirts_fence', label: '破损栅栏', type: 'building', targetId: 'outskirts_fence' },
           ],
           west: 'village_elder_home',
         },
@@ -73,6 +79,7 @@ export const LOCATIONS: Record<string, Location> = {
           interactions: [
             { id: 'village_inn_npc', label: '老板娘 玛格', type: 'npc', targetId: 'innkeeper' },
             { id: 'village_inn_lina', label: '小莉娜', type: 'npc', targetId: 'lina' },
+            { id: 'village_inn_hearth', label: '壁炉', type: 'building', targetId: 'inn_hearth' },
           ],
           east: 'village_center',
         },
@@ -84,6 +91,7 @@ export const LOCATIONS: Record<string, Location> = {
           description: '叮叮当当的锤击声从铁匠铺里传出，炉膛里的火焰映红了托尔的脸。武器和护甲整齐地挂在墙上，等待着有缘人。',
           interactions: [
             { id: 'village_smith_npc', label: '铁匠 托尔', type: 'npc', targetId: 'blacksmith' },
+            { id: 'village_smith_anvil', label: '铁砧', type: 'building', targetId: 'smith_anvil' },
           ],
           west:  'village_center',
           south: 'village_grocer',
@@ -94,6 +102,7 @@ export const LOCATIONS: Record<string, Location> = {
           description: '梅娜那间摆满各色杂货的小铺子，药草、绳索、干粮堆得满满当当。老板娘总能第一时间打听到村里的消息。',
           interactions: [
             { id: 'village_grocer_npc', label: '杂货商 梅娜', type: 'npc', targetId: 'grocer' },
+            { id: 'village_grocer_herbs', label: '草药架', type: 'building', targetId: 'grocer_herbs' },
           ],
           north: 'village_blacksmith',
         },
@@ -103,7 +112,9 @@ export const LOCATIONS: Record<string, Location> = {
           id: 'village_south_gate',
           name: '村南路口',
           description: '通往村外的岔路口，一块风化的路标立在道旁，指向远方不同的方向。村庄的喧嚣在此渐渐淡去。',
-          interactions: [],
+          interactions: [
+            { id: 'village_south_signpost', label: '风化路牌', type: 'building', targetId: 'south_signpost' },
+          ],
           north:  'village_center',
           south:  'village_portal',
           exits: ['forest', 'temple_ruins', 'mine_cave'],
