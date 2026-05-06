@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { useNavigate } from 'react-router-dom'
 import * as Phaser from 'phaser'
 import MainMenuScene from '../game/scenes/MainMenuScene'
@@ -13,12 +13,11 @@ export default function MainMenuScreen() {
   const started = useGameStore((s) => s.started)
   const player = useGameStore((s) => s.player)
   const currentLocationId = useGameStore((s) => s.currentLocationId)
-  const locationName = LOCATIONS[currentLocationId]?.name ?? '未知'
+  const locationName = LOCATIONS[currentLocationId]?.name ?? '未知之地'
 
   const [showNameInput, setShowNameInput] = useState(false)
   const [nameValue, setNameValue] = useState('')
 
-  // 初始化 Phaser
   useEffect(() => {
     if (!canvasRef.current || gameRef.current) return
 
@@ -34,7 +33,7 @@ export default function MainMenuScreen() {
         mode: Phaser.Scale.RESIZE,
         autoCenter: Phaser.Scale.CENTER_BOTH,
       },
-      render: { antialias: true, pixelArt: false },
+      render: { antialias: true, pixelArt: true },
     })
 
     return () => {
@@ -58,139 +57,113 @@ export default function MainMenuScreen() {
   }
 
   return (
-    <div className="relative w-full h-full overflow-hidden">
-      {/* Phaser 画布容器 */}
+    <div className="pixel-root relative w-full h-full overflow-hidden">
       <div ref={canvasRef} className="absolute inset-0" />
 
-      {/* React UI 叠加层 */}
-      <div className="relative z-10 flex flex-col items-center justify-between h-full py-16 px-8">
-        {/* 标题区域 */}
-        <div className="flex flex-col items-center gap-4 mt-8">
-          <h1
-            className="text-7xl font-bold tracking-widest select-none"
-            style={{
-              color: '#e2d8f0',
-              textShadow: '0 0 40px #aa55ff, 0 0 80px #6600cc, 0 2px 4px rgba(0,0,0,0.8)',
-              letterSpacing: '0.15em',
-            }}
-          >
-            LORE WELL
-          </h1>
-          <p
-            className="text-sm tracking-[0.4em] uppercase"
-            style={{ color: '#9070b0', textShadow: '0 0 10px #6600cc' }}
-          >
-            深入传说之源
+      <div
+        className="absolute inset-0 z-[2]"
+        style={{
+          background:
+            'linear-gradient(180deg, rgba(9,12,17,0.15) 0%, rgba(6,8,8,0.62) 50%, rgba(4,3,2,0.94) 100%)',
+        }}
+      />
+
+      <main className="pixel-ui flex h-full flex-col px-5 py-6 sm:px-10 sm:py-9">
+        <section className="mt-4 max-w-4xl sm:mt-8">
+          <div className="pixel-label mb-3">AN OLD WELL CALLS FROM THE WOODS</div>
+          <h1 className="pixel-title text-5xl leading-none sm:text-7xl">LORE WELL</h1>
+          <p className="pixel-subtitle mt-4 text-xs sm:text-sm">
+            传说之井 · 失落记忆的冒险
           </p>
-        </div>
+        </section>
 
-        {/* 菜单按钮区 */}
-        <div className="flex flex-col items-center gap-4 w-full max-w-xs">
-          {!showNameInput ? (
-            <>
-              <MenuButton onClick={handleNewGame}>新的旅程</MenuButton>
-              {started && (
-                <>
-                  <MenuButton onClick={handleContinue} variant="secondary">
-                    继续冒险
-                  </MenuButton>
-                  {/* 存档摘要 */}
-                  <div
-                    className="w-full text-center text-xs py-1.5 px-4 rounded border"
-                    style={{ borderColor: '#2a1840', color: '#9070b0', background: 'rgba(0,0,0,0.3)' }}
-                  >
-                    {player.name} · LV {player.level} · {locationName}
-                  </div>
-                </>
-              )}
-              <MenuButton variant="ghost" onClick={() => {}}>
-                设置
-              </MenuButton>
-            </>
-          ) : (
-            <div className="flex flex-col items-center gap-4 w-full">
-              <p className="text-sm tracking-widest" style={{ color: '#c0a0e0' }}>
-                请输入你的名字
-              </p>
-              <input
-                autoFocus
-                value={nameValue}
-                onChange={(e) => setNameValue(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleConfirmName()}
-                placeholder="旅行者"
-                maxLength={12}
-                className="w-full text-center bg-transparent border-b-2 outline-none text-lg py-2 px-4 placeholder-purple-900"
-                style={{
-                  borderColor: '#6600cc',
-                  color: '#e2d8f0',
-                  caretColor: '#aa55ff',
-                }}
-              />
-              <MenuButton onClick={handleConfirmName}>踏上旅途</MenuButton>
-              <button
-                onClick={() => setShowNameInput(false)}
-                className="text-xs tracking-widest cursor-pointer hover:opacity-80 transition-opacity"
-                style={{ color: '#9070b0' }}
-              >
-                返回
-              </button>
-            </div>
-          )}
-        </div>
+        <section className="mt-auto grid w-full gap-5 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-end">
+          <div className="pixel-panel pixel-panel--parchment hidden max-w-2xl p-5 sm:block">
+            <div className="pixel-label mb-3">PROLOGUE</div>
+            <p className="text-sm leading-7" style={{ color: '#f0d8a0' }}>
+              暮光落在瀑布村的石阶上，古井深处传来断续的回声。你醒来时只记得一个名字：
+              Lore Well。森林、矿洞与神殿遗迹都指向同一个谜题。
+            </p>
+          </div>
 
-        {/* 底部版本号 */}
-        <p className="text-xs tracking-widest" style={{ color: '#4a3060' }}>
-          v0.3.0 · PROTOTYPE
-        </p>
-      </div>
+          <div className="pixel-panel p-4 sm:p-5">
+            {!showNameInput ? (
+              <div className="flex flex-col gap-4">
+                <MenuButton onClick={handleNewGame}>新的旅程</MenuButton>
+                {started && (
+                  <>
+                    <MenuButton onClick={handleContinue} variant="secondary">
+                      继续冒险
+                    </MenuButton>
+                    <div className="border-2 p-3" style={{ borderColor: '#59442a', background: 'rgba(7,8,8,0.72)' }}>
+                      <div className="pixel-label mb-2">LAST SAVE</div>
+                      <div className="flex items-center justify-between gap-3 text-xs" style={{ color: '#f2d89a' }}>
+                        <span className="truncate">{player.name}</span>
+                        <span className="shrink-0">LV {player.level}</span>
+                      </div>
+                      <div className="mt-2 text-[11px]" style={{ color: '#b68f59' }}>
+                        当前地点：{locationName}
+                      </div>
+                    </div>
+                  </>
+                )}
+                <MenuButton variant="ghost" onClick={() => {}}>
+                  设置
+                </MenuButton>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-4">
+                <div>
+                  <div className="pixel-label mb-3">NAME THE WANDERER</div>
+                  <input
+                    autoFocus
+                    value={nameValue}
+                    onChange={(e) => setNameValue(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleConfirmName()}
+                    placeholder="旅行者"
+                    maxLength={12}
+                    className="pixel-input w-full px-4 py-3 text-center text-sm outline-none"
+                  />
+                </div>
+                <MenuButton onClick={handleConfirmName}>踏上旅途</MenuButton>
+                <button
+                  onClick={() => setShowNameInput(false)}
+                  className="pixel-button pixel-button--ghost px-4 py-3 text-xs tracking-[0.18em]"
+                >
+                  返回
+                </button>
+              </div>
+            )}
+          </div>
+        </section>
+
+        <div className="mt-5 flex items-center justify-between text-[10px]" style={{ color: '#7b6242' }}>
+          <span>BUILD v0.9 PROTOTYPE</span>
+          <span>THE WELL REMEMBERS</span>
+        </div>
+      </main>
     </div>
   )
 }
 
-// ─── 菜单按钮组件 ────────────────────────────────────────────────────────────
-
 interface MenuButtonProps {
-  children: React.ReactNode
+  children: ReactNode
   onClick: () => void
   variant?: 'primary' | 'secondary' | 'ghost'
 }
 
 function MenuButton({ children, onClick, variant = 'primary' }: MenuButtonProps) {
-  const base =
-    'w-full py-3 px-8 text-sm tracking-[0.3em] uppercase font-medium transition-all duration-300 cursor-pointer select-none border'
-
-  const styles: Record<string, React.CSSProperties> = {
-    primary: {
-      background: 'linear-gradient(135deg, rgba(102,0,204,0.4), rgba(170,85,255,0.2))',
-      borderColor: '#6600cc',
-      color: '#e2d8f0',
-      boxShadow: '0 0 20px rgba(102,0,204,0.3)',
-    },
-    secondary: {
-      background: 'rgba(255,255,255,0.04)',
-      borderColor: '#3a2050',
-      color: '#c0a0e0',
-    },
-    ghost: {
-      background: 'transparent',
-      borderColor: 'transparent',
-      color: '#9070b0',
-    },
-  }
+  const variantClass =
+    variant === 'secondary'
+      ? 'pixel-button--secondary'
+      : variant === 'ghost'
+        ? 'pixel-button--ghost'
+        : ''
 
   return (
     <button
-      className={base}
-      style={styles[variant]}
+      className={`pixel-button ${variantClass} w-full px-6 py-3 text-sm font-bold tracking-[0.18em]`}
       onClick={onClick}
-      onMouseEnter={(e) => {
-        ;(e.currentTarget as HTMLButtonElement).style.filter = 'brightness(1.3)'
-        ;(e.currentTarget as HTMLButtonElement).style.transform = 'translateY(-1px)'
-      }}
-      onMouseLeave={(e) => {
-        ;(e.currentTarget as HTMLButtonElement).style.filter = ''
-        ;(e.currentTarget as HTMLButtonElement).style.transform = ''
-      }}
     >
       {children}
     </button>

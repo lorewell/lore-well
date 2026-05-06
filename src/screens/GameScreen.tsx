@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from 'react'
+import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useGameStore } from '../store/gameStore'
 import { GameManager } from '../game/GameManager'
@@ -13,71 +13,76 @@ import ShopPanel from '../components/ShopPanel'
 import { LOCATIONS } from '../data/locations'
 import { getShopByNpc } from '../data/shops'
 
-// ── 角色状态面板（内联，轻量） ──────────────────────────────────────────────
 function StatusPanel({ onClose }: { onClose: () => void }) {
   const player = useGameStore((s) => s.player)
   const gold = useGameStore((s) => s.gold)
   const { stats, baseStats, equipment, level, exp, expToNext } = player
+  const expPct = Math.max(0, Math.min(100, (exp / expToNext) * 100))
 
   const statRows = [
-    { label: 'ATK 攻击',  value: stats.atk,  base: baseStats.atk },
-    { label: 'DEF 防御',  value: stats.def,  base: baseStats.def },
-    { label: 'SPD 速度',  value: stats.spd,  base: baseStats.spd },
-    { label: 'HP 上限',   value: stats.maxHp, base: baseStats.maxHp },
-    { label: 'MP 上限',   value: stats.maxMp, base: baseStats.maxMp },
+    { label: '攻击', value: stats.atk, base: baseStats.atk },
+    { label: '防御', value: stats.def, base: baseStats.def },
+    { label: '速度', value: stats.spd, base: baseStats.spd },
+    { label: '生命上限', value: stats.maxHp, base: baseStats.maxHp },
+    { label: '魔力上限', value: stats.maxMp, base: baseStats.maxMp },
   ]
 
   const equipSlots = [
     { key: 'weapon' as const, label: '武器' },
-    { key: 'armor'  as const, label: '防具' },
+    { key: 'armor' as const, label: '护甲' },
     { key: 'accessory' as const, label: '饰品' },
   ]
 
   return (
-    <div className="absolute inset-0 z-40 flex items-center justify-center"
-      style={{ background: 'rgba(0,0,0,0.6)' }}
+    <div
+      className="absolute inset-0 z-40 flex items-center justify-center px-4"
+      style={{ background: 'rgba(0, 0, 0, 0.64)' }}
       onClick={onClose}
     >
-      <div
-        className="relative p-6 min-w-72 max-w-sm w-full mx-4"
-        style={{ background: 'rgba(12,6,24,0.97)', border: '1px solid #3a2050' }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* 标题 */}
-        <div className="flex items-baseline justify-between mb-4">
-          <div>
-            <h2 className="text-base font-semibold tracking-widest" style={{ color: '#e2d8f0' }}>
+      <div className="pixel-panel w-full max-w-md p-5" onClick={(e) => e.stopPropagation()}>
+        <div className="mb-5 flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            <div className="pixel-label mb-2">CHARACTER</div>
+            <h2 className="truncate text-lg font-bold tracking-[0.14em]" style={{ color: '#f8e7b7' }}>
               {player.name}
             </h2>
-            <span className="text-[11px] tracking-widest" style={{ color: '#6a5080' }}>
-              Lv.{level} · {gold} G
-            </span>
+            <p className="mt-1 text-xs" style={{ color: '#b68f59' }}>
+              LV {level} · {gold} G
+            </p>
           </div>
-          <button onClick={onClose} className="text-lg cursor-pointer" style={{ color: '#5a4070' }}>✕</button>
+          <button onClick={onClose} className="pixel-button px-3 py-2 text-xs font-bold">
+            CLOSE
+          </button>
         </div>
 
-        {/* EXP 条 */}
-        <div className="mb-4">
-          <div className="flex justify-between text-[10px] mb-0.5" style={{ color: '#6a5080' }}>
-            <span>EXP</span><span>{exp} / {expToNext}</span>
+        <div className="mb-5">
+          <div className="mb-2 flex justify-between text-[10px]" style={{ color: '#b68f59' }}>
+            <span>EXP</span>
+            <span>{exp} / {expToNext}</span>
           </div>
-          <div className="h-1 w-full" style={{ background: '#1e1030' }}>
-            <div className="h-full" style={{ width: `${(exp / expToNext) * 100}%`, background: '#6040a0' }} />
+          <div className="pixel-meter h-3">
+            <div
+              className="pixel-meter__fill"
+              style={{ width: `${expPct}%`, '--meter-color': 'var(--pixel-gold)' } as CSSProperties}
+            />
           </div>
         </div>
 
-        {/* 属性 */}
-        <div className="mb-4">
-          <p className="text-[9px] tracking-widest mb-2" style={{ color: '#4a3060' }}>基础属性</p>
-          <div className="flex flex-col gap-1">
+        <div className="mb-5">
+          <div className="pixel-label mb-3">ATTRIBUTES</div>
+          <div className="grid gap-2">
             {statRows.map(({ label, value, base }) => {
               const bonus = value - base
               return (
-                <div key={label} className="flex items-center justify-between text-xs">
-                  <span style={{ color: '#7a5898' }}>{label}</span>
-                  <span style={{ color: '#c0a0e0' }}>
+                <div
+                  key={label}
+                  className="grid grid-cols-[88px_1fr] border-2 px-3 py-2 text-xs"
+                  style={{ borderColor: '#2e3938', background: 'rgba(8, 10, 10, 0.5)' }}
+                >
+                  <span style={{ color: '#b68f59' }}>{label}</span>
+                  <span className="text-right font-bold" style={{ color: '#f8e7b7' }}>
                     {value}
-                    {bonus > 0 && <span style={{ color: '#80c080', fontSize: '10px' }}> (+{bonus})</span>}
+                    {bonus > 0 && <span style={{ color: '#73c66d' }}> +{bonus}</span>}
                   </span>
                 </div>
               )
@@ -85,15 +90,21 @@ function StatusPanel({ onClose }: { onClose: () => void }) {
           </div>
         </div>
 
-        {/* 装备 */}
         <div>
-          <p className="text-[9px] tracking-widest mb-2" style={{ color: '#4a3060' }}>当前装备</p>
-          <div className="flex flex-col gap-1">
+          <div className="pixel-label mb-3">EQUIPMENT</div>
+          <div className="grid gap-2">
             {equipSlots.map(({ key, label }) => (
-              <div key={key} className="flex items-center justify-between text-xs">
-                <span style={{ color: '#4a3060' }}>{label}</span>
-                <span style={{ color: equipment[key] ? '#c0a0e0' : '#2a1840' }}>
-                  {equipment[key]?.name ?? '— 未装备 —'}
+              <div
+                key={key}
+                className="grid grid-cols-[64px_1fr] border-2 px-3 py-2 text-xs"
+                style={{ borderColor: '#3d3324', background: 'rgba(25, 17, 10, 0.46)' }}
+              >
+                <span style={{ color: '#b68f59' }}>{label}</span>
+                <span
+                  className="truncate text-right font-bold"
+                  style={{ color: equipment[key] ? '#f8e7b7' : '#6d5434' }}
+                >
+                  {equipment[key]?.name ?? '未装备'}
                 </span>
               </div>
             ))}
@@ -125,19 +136,23 @@ export default function GameScreen() {
     setActivePanel((prev) => (prev === panel ? 'none' : panel))
   }, [])
 
-  // 未开始游戏则跳回菜单
   useEffect(() => {
     if (!started) {
       navigate('/')
     }
   }, [started, navigate])
 
-  // 键盘快捷键
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        if (paused) { setPaused(false); return }
-        if (activePanel !== 'none') { setActivePanel('none'); return }
+        if (paused) {
+          setPaused(false)
+          return
+        }
+        if (activePanel !== 'none') {
+          setActivePanel('none')
+          return
+        }
         if (!inCombat) setPaused(true)
       }
       if (inCombat || paused) return
@@ -148,7 +163,6 @@ export default function GameScreen() {
     return () => window.removeEventListener('keydown', handler)
   }, [inCombat, paused, activePanel, togglePanel])
 
-  // 初始化 Phaser
   useEffect(() => {
     if (!canvasRef.current) return
     GameManager.init(canvasRef.current)
@@ -170,7 +184,6 @@ export default function GameScreen() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // 地点变化时通知 Phaser
   useEffect(() => {
     const loc = LOCATIONS[currentLocationId]
     if (loc) GameManager.changeLocation(loc.backgroundKey)
@@ -179,56 +192,47 @@ export default function GameScreen() {
   if (!started) return null
 
   return (
-    <div
-      className="relative w-full h-full overflow-hidden"
-      style={{ boxShadow: 'inset 0 0 0 2px rgba(58,32,80,0.5)' }}
-    >
-      {/* Phaser 画布容器 */}
-      <div ref={canvasRef} className="absolute inset-0" />
+    <div className="pixel-root relative h-full w-full overflow-hidden">
+      <div ref={canvasRef} className="absolute inset-0 z-0" />
 
-      {/* React UI 层 */}
-      {!inCombat ? (
-        <>
-          <HUD />
-          {!activeDialogue && (
-            <LocationPanel
-              onStartBattle={() => setInCombat(true)}
-              onOpenPanel={(panel) => setActivePanel(panel)}
-            />
-          )}
-          <DialogBox />
+      <div className="pixel-ui absolute inset-0">
+        {!inCombat ? (
+          <>
+            <HUD />
+            {!activeDialogue && (
+              <LocationPanel
+                onStartBattle={() => setInCombat(true)}
+                onOpenPanel={(panel) => setActivePanel(panel)}
+              />
+            )}
+            <DialogBox />
 
-          {/* 面板覆盖层 */}
-          {activePanel === 'inventory' && (
-            <InventoryPanel onClose={() => setActivePanel('none')} />
-          )}
-          {activePanel === 'quests' && (
-            <QuestLog onClose={() => setActivePanel('none')} />
-          )}
-          {activePanel === 'status' && (
-            <StatusPanel onClose={() => setActivePanel('none')} />
-          )}
-        </>
-      ) : (
-        <CombatPanel onBattleEnd={() => setInCombat(false)} />
-      )}
+            {activePanel === 'inventory' && (
+              <InventoryPanel onClose={() => setActivePanel('none')} />
+            )}
+            {activePanel === 'quests' && (
+              <QuestLog onClose={() => setActivePanel('none')} />
+            )}
+            {activePanel === 'status' && (
+              <StatusPanel onClose={() => setActivePanel('none')} />
+            )}
+          </>
+        ) : (
+          <CombatPanel onBattleEnd={() => setInCombat(false)} />
+        )}
 
-      {/* 返回主菜单 → 改为暂停按钮 */}
-      {!inCombat && (
-        <button
-          onClick={() => setPaused(true)}
-          className="absolute top-3 right-4 text-[10px] tracking-widest opacity-30 hover:opacity-70 transition-opacity cursor-pointer"
-          style={{ color: '#9070b0' }}
-        >
-          ≡ MENU
-        </button>
-      )}
+        {!inCombat && (
+          <button
+            onClick={() => setPaused(true)}
+            className="pixel-button absolute right-4 top-32 z-30 px-3 py-2 text-[10px] font-bold tracking-[0.14em] opacity-80"
+          >
+            PAUSE
+          </button>
+        )}
 
-      {/* 暂停菜单 */}
-      {paused && <PauseMenu onClose={() => setPaused(false)} />}
-
-      {/* 商店面板 */}
-      {activeShop && <ShopPanel shop={activeShop} onClose={closeShop} />}
+        {paused && <PauseMenu onClose={() => setPaused(false)} />}
+        {activeShop && <ShopPanel shop={activeShop} onClose={closeShop} />}
+      </div>
     </div>
   )
 }
