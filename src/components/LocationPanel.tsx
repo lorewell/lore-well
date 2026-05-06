@@ -3,7 +3,7 @@ import { useGameStore } from '../store/gameStore'
 import { LOCATIONS } from '../data/locations'
 import { ENEMIES } from '../data/enemies'
 import { ITEMS } from '../data/items'
-import type { Interaction, SubLocation } from '../types'
+import type { Interaction, Location, SubLocation } from '../types'
 import { GameManager } from '../game/GameManager'
 
 interface LocationPanelProps {
@@ -12,6 +12,7 @@ interface LocationPanelProps {
 }
 
 type PanelMode = 'scene' | 'menu'
+type SubMap = NonNullable<Location['subMap']>
 
 export default function LocationPanel({ onStartBattle, onOpenPanel }: LocationPanelProps) {
   const currentLocationId = useGameStore((s) => s.currentLocationId)
@@ -80,7 +81,7 @@ export default function LocationPanel({ onStartBattle, onOpenPanel }: LocationPa
             onMove={travelToSubLocation}
           />
 
-          <section className="min-w-0 border-x-2 px-4 py-3 sm:px-5" style={{ borderColor: '#172025' }}>
+          <section className="pixel-scene-column min-w-0 border-x-2 px-3 py-3 sm:px-5" style={{ borderColor: '#172025' }}>
             {mode === 'scene' ? (
               <SceneColumn
                 subLoc={subLoc}
@@ -152,7 +153,7 @@ export default function LocationPanel({ onStartBattle, onOpenPanel }: LocationPa
 }
 
 function buildSubMapLayout(
-  subMap: NonNullable<ReturnType<typeof getSubMap>>,
+  subMap: SubMap,
   currentNodeId: string,
 ) {
   const nodeCoords: Record<string, { col: number; row: number }> = {}
@@ -208,13 +209,9 @@ function buildSubMapLayout(
   }
 }
 
-function getSubMap() {
-  return LOCATIONS.village.subMap
-}
-
 interface MapColumnProps {
   locationName: string
-  subMap: NonNullable<ReturnType<typeof getSubMap>>
+  subMap: SubMap
   layout: ReturnType<typeof buildSubMapLayout>
   currentNodeId: string
   onMove: (nodeId: string) => void
@@ -224,7 +221,7 @@ function MapColumn({ locationName, subMap, layout, currentNodeId, onMove }: MapC
   const { nodeCoords, minCol, minRow, cell, gap, width, height } = layout
 
   return (
-    <aside className="flex min-w-0 flex-col items-center justify-center px-3 py-3">
+    <aside className="pixel-map-column flex min-w-0 flex-col items-center justify-center px-3 py-3">
       <div className="pixel-label mb-3 text-center">{locationName}</div>
       <div className="relative" style={{ width, height }}>
         <svg className="absolute inset-0 pointer-events-none" width={width} height={height} style={{ overflow: 'visible' }}>
@@ -304,16 +301,16 @@ function SceneColumn({
     <div className="flex h-full min-w-0 flex-col">
       <div className="mb-3">
         <div className="pixel-label mb-2">SCENE</div>
-        <h2 className="truncate text-base font-bold tracking-[0.13em]" style={{ color: '#f8e7b7' }}>
+        <h2 className="truncate text-sm font-bold tracking-[0.13em] sm:text-base" style={{ color: '#f8e7b7' }}>
           {subLoc.name}
         </h2>
-        <p className="mt-1 line-clamp-2 text-xs leading-5" style={{ color: '#c9aa76' }}>
+        <p className="mt-1 line-clamp-2 text-[11px] leading-5 sm:text-xs" style={{ color: '#c9aa76' }}>
           {subLoc.description}
         </p>
       </div>
 
       {interactions.length > 0 ? (
-        <div className="grid gap-2 sm:grid-cols-2">
+        <div className="pixel-interactions-grid grid gap-2 sm:grid-cols-2">
           {interactions.map((inter) => {
             const consumed = consumedInteractions.includes(inter.id)
             const disabled = consumed || inter.disabled || inter.type === 'portal'
@@ -359,7 +356,7 @@ function InteractionButton({ interaction, consumed, disabled, onClick }: Interac
     <button
       onClick={() => !isDisabled && onClick()}
       disabled={isDisabled}
-      className={`pixel-interaction ${typeClass} flex min-w-0 items-center gap-2 px-3 py-2 text-left text-xs`}
+      className={`pixel-interaction ${typeClass} flex min-w-0 items-center gap-2 px-2 py-2 text-left text-[11px] sm:px-3 sm:text-xs`}
     >
       <span className="shrink-0 text-[10px] font-bold" style={{ color: markerColor(interaction.type) }}>
         {markerText(interaction.type)}
@@ -386,7 +383,7 @@ interface ExitButtonsProps {
 
 function ExitButtons({ exits, onTravel }: ExitButtonsProps) {
   return (
-    <div className="mt-auto flex flex-wrap gap-2 pt-3">
+    <div className="pixel-exit-row mt-auto flex flex-wrap gap-2 pt-3">
       {exits.map((exitId) => {
         const dest = LOCATIONS[exitId]
         if (!dest) return null
@@ -394,7 +391,7 @@ function ExitButtons({ exits, onTravel }: ExitButtonsProps) {
           <button
             key={exitId}
             onClick={() => onTravel(exitId)}
-            className="pixel-button pixel-button--secondary px-3 py-1.5 text-[11px] font-bold tracking-[0.12em]"
+            className="pixel-button pixel-button--secondary px-2 py-1.5 text-[10px] font-bold tracking-[0.08em] sm:px-3 sm:text-[11px] sm:tracking-[0.12em]"
           >
             前往 {dest.name}
           </button>
@@ -416,13 +413,13 @@ function MenuColumn({ onOpenPanel }: MenuColumnProps) {
   ] as const
 
   return (
-    <div className="flex h-full flex-col justify-center gap-2">
+    <div className="pixel-menu-column flex h-full flex-col justify-center gap-2">
       <div className="pixel-label mb-1">ADVENTURE MENU</div>
       {menuItems.map(({ id, marker, label, key }) => (
         <button
           key={id}
           onClick={() => onOpenPanel(id)}
-          className="pixel-interaction flex items-center gap-3 px-3 py-2 text-xs font-bold"
+          className="pixel-interaction flex items-center gap-2 px-2 py-2 text-[11px] font-bold sm:gap-3 sm:px-3 sm:text-xs"
         >
           <span className="shrink-0" style={{ color: '#d6a845' }}>{marker}</span>
           <span>{label}</span>
@@ -440,11 +437,11 @@ interface ModeColumnProps {
 
 function ModeColumn({ mode, onToggle }: ModeColumnProps) {
   return (
-    <aside className="flex flex-col items-center justify-end gap-2 px-2 py-3">
+    <aside className="pixel-mode-column flex flex-col items-center justify-end gap-2 px-2 py-3">
       <button
         onClick={onToggle}
         title={mode === 'scene' ? '打开菜单' : '返回场景'}
-        className="pixel-button flex h-11 w-11 items-center justify-center text-sm font-black"
+        className="pixel-button flex h-10 w-10 items-center justify-center text-[10px] font-black sm:h-11 sm:w-11 sm:text-sm"
       >
         {mode === 'scene' ? 'MENU' : 'BACK'}
       </button>
