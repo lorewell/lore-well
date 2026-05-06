@@ -145,6 +145,10 @@ export default function GameScreen() {
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
+        if (activeShopNpcId) {
+          closeShop()
+          return
+        }
         if (paused) {
           setPaused(false)
           return
@@ -158,10 +162,11 @@ export default function GameScreen() {
       if (inCombat || paused) return
       if (e.key === 'b' || e.key === 'B') togglePanel('inventory')
       if (e.key === 'q' || e.key === 'Q') togglePanel('quests')
+      if (e.key === 'c' || e.key === 'C') togglePanel('status')
     }
     window.addEventListener('keydown', handler)
     return () => window.removeEventListener('keydown', handler)
-  }, [inCombat, paused, activePanel, togglePanel])
+  }, [inCombat, paused, activePanel, activeShopNpcId, closeShop, togglePanel])
 
   useEffect(() => {
     if (!canvasRef.current) return
@@ -224,7 +229,8 @@ export default function GameScreen() {
         {!inCombat && (
           <button
             onClick={() => setPaused(true)}
-            className="pixel-button absolute right-4 top-32 z-30 px-3 py-2 text-[10px] font-bold tracking-[0.14em] opacity-80"
+            className="pixel-button absolute right-4 z-30 px-3 py-2 text-[10px] font-bold tracking-[0.14em] opacity-80"
+            style={{ top: 'calc(max(12px, env(safe-area-inset-top)) + 146px)' }}
           >
             PAUSE
           </button>

@@ -57,7 +57,7 @@ export default function MainMenuScreen() {
   }
 
   return (
-    <div className="pixel-root relative w-full h-full overflow-hidden">
+    <div className="pixel-root relative w-full overflow-hidden" style={{ minHeight: '100dvh', height: '100dvh' }}>
       <div ref={canvasRef} className="absolute inset-0" />
 
       <div
@@ -68,7 +68,7 @@ export default function MainMenuScreen() {
         }}
       />
 
-      <main className="pixel-ui flex h-full flex-col px-5 py-6 sm:px-10 sm:py-9">
+      <main className="pixel-ui relative flex h-full flex-col px-5 py-6 sm:px-10 sm:py-9">
         <section className="mt-4 max-w-4xl sm:mt-8">
           <div className="pixel-label mb-3">AN OLD WELL CALLS FROM THE WOODS</div>
           <h1 className="pixel-title text-5xl leading-none sm:text-7xl">LORE WELL</h1>
@@ -137,7 +137,7 @@ export default function MainMenuScreen() {
           </div>
         </section>
 
-        <div className="mt-5 flex items-center justify-between text-[10px]" style={{ color: '#7b6242' }}>
+        <div className="mt-4 flex flex-col items-start gap-1 text-[9px] sm:mt-5 sm:flex-row sm:items-center sm:justify-between sm:gap-2 sm:text-[10px]" style={{ color: '#7b6242' }}>
           <span>BUILD v0.9 PROTOTYPE</span>
           <span>THE WELL REMEMBERS</span>
         </div>
