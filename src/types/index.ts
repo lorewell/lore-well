@@ -76,6 +76,51 @@ export interface Enemy {
 
 export type InteractionType = 'npc' | 'item' | 'building' | 'enemy' | 'portal'
 
+// ─── 对话：动作 ──────────────────────────────────────────────────────────────
+
+/**
+ * 声明式对话动作 —— 在选项上声明，DialogBox 统一分发，无需改组件即可新增效果。
+ * 扩展点：在 gameStore.dispatchDialogueAction 中处理新 type 即可。
+ */
+export type DialogueAction =
+  | { type: 'restoreHpMp' }
+  | { type: 'openShop' }
+  | { type: 'addItem'; itemId: string; qty?: number }
+  | { type: 'activateQuest'; questId: string }
+  | { type: 'consumeInteraction'; interactionId: string }
+  | { type: 'custom'; key: string }   // 兜底：任意自定义 key，在 store 侧处理
+
+// ─── 对话：条件 ──────────────────────────────────────────────────────────────
+
+/**
+ * 声明式对话条件 —— 节点或选项满足条件时才可见 / 可到达。
+ * 在 DialogBox 中通过 evaluateCondition() 求值。
+ */
+export type DialogueCondition =
+  | { type: 'hasItem'; itemId: string }
+  | { type: 'questStatus'; questId: string; status: QuestStatus }
+  | { type: 'not'; condition: DialogueCondition }
+  | { type: 'and'; conditions: DialogueCondition[] }
+  | { type: 'or'; conditions: DialogueCondition[] }
+
+export interface DialogueOption {
+  text: string
+  next?: string
+  /** 选此项时触发的动作（可选） */
+  action?: DialogueAction
+  /** 满足条件才显示此选项；缺省则始终显示 */
+  condition?: DialogueCondition
+}
+
+export interface DialogueNode {
+  id: string
+  text: string
+  /** 满足条件才能到达此节点；缺省则始终可到达 */
+  condition?: DialogueCondition
+  /** 选项为空时，由 UI 提供结束对话按钮 */
+  options?: DialogueOption[]
+}
+
 export interface NPC {
   id: string
   name: string
@@ -88,13 +133,11 @@ export interface NPC {
   subLocationId?: string
   /** 交互列表显示的按钮文本，不填则使用 name */
   interactionLabel?: string
-}
-
-export interface DialogueNode {
-  id: string
-  text: string
-  /** 选项为空时，由 UI 提供结束对话按钮 */
-  options?: Array<{ text: string; next?: string }>
+  /**
+   * 打开对话时自动触发的动作列表（替代 gameStore.openDialogue 中的硬编码 if）。
+   * 每次调用 openDialogue 时均会依序分发。
+   */
+  onOpen?: DialogueAction[]
 }
 
 export interface Interaction {

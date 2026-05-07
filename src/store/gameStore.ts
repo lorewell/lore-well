@@ -16,7 +16,8 @@ import { PLAYER_TEMPLATE } from '../data/characters'
 import { LOCATIONS, STARTING_LOCATION } from '../data/locations'
 import { INITIAL_QUESTS } from '../data/quests'
 import { ITEMS } from '../data/items'
-import { NPCS } from '../data/npcs'
+import { NPCS } from '../data/dialogues'
+import type { DialogueAction } from '../types'
 
 // ─── 存档版本 ────────────────────────────────────────────────────────────────
 const SAVE_VERSION = 4
@@ -110,6 +111,8 @@ interface GameState {
   openDialogue: (npcId: string) => void
   advanceDialogue: (nodeId: string) => void
   closeDialogue: () => void
+  /** 统一分发对话动作（由 DialogBox 调用，无需在组件层判断 npcId） */
+  dispatchDialogueAction: (action: DialogueAction, npcId: string) => void
 
   // 战斗
   startBattle: (enemy: Enemy) => void
@@ -314,23 +317,44 @@ export const useGameStore = create<GameState>()(
       // ── 对话 ────────────────────────────────────────────────────────────────
       openDialogue: (npcId) => {
         set({ activeDialogue: { npcId, nodeId: 'greeting' } })
-        // 先激活任务，再自动完成目标，确保任务存在后才能勾选
-        if (npcId === 'elder') {
-          get().activateQuest('quest_elder')
-          get().activateQuest('quest_forest')
+        // 执行 NPC 数据层声明的 onOpen 动作（数据驱动，无需在此硬编码）
+        const npc = NPCS[npcId]
+        if (npc?.onOpen) {
+          for (const action of npc.onOpen) {
+            get().dispatchDialogueAction(action, npcId)
+          }
         }
+        // 若铁匠任务被激活，立即检查玩家是否已持有矿石
         if (npcId === 'blacksmith') {
-          get().activateQuest('quest_blacksmith')
-          // 若玩家先拿矿石再接任务，激活后立即检查，确保 get_ore 能自动完成
           get()._autoCompleteObjectives({ type: 'have_item', itemId: 'iron_ore' })
         }
-        // 戒指发现事件（一次性）：发放道具 + 激活支线 + 消耗该交互点
-        if (npcId === 'waterfall_ring_event') {
-          get().addItem(ITEMS['mysterious_ring'], 1)
-          get().activateQuest('quest_ring_origin')
-          get().consumeInteraction('waterfall_pool_ring')
-        }
         get()._autoCompleteObjectives({ type: 'talk_npc', npcId })
+      },
+
+      // ── 统一分发对话动作 ────────────────────────────────────────────────────
+      dispatchDialogueAction: (action, npcId) => {
+        switch (action.type) {
+          case 'restoreHpMp':
+            get().restoreHpMp()
+            break
+          case 'openShop':
+            get().openShop(npcId)
+            break
+          case 'addItem': {
+            const item = ITEMS[action.itemId]
+            if (item) get().addItem(item, action.qty ?? 1)
+            break
+          }
+          case 'activateQuest':
+            get().activateQuest(action.questId)
+            break
+          case 'consumeInteraction':
+            get().consumeInteraction(action.interactionId)
+            break
+          case 'custom':
+            // 自定义 key 由外部扩展处理，此处不操作
+            break
+        }
       },
 
       advanceDialogue: (nodeId) => {
