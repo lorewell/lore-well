@@ -54,37 +54,24 @@ export default function DialogBox() {
   }
 
   return (
-    <div
-      ref={boxRef}
-      className="absolute bottom-0 left-0 right-0"
-      style={{
-        background: 'linear-gradient(to top, rgba(0,0,0,0.96) 68%, transparent 100%)',
-        borderTop: '1px solid #3a1a5a',
-        minHeight: '160px',
-      }}
-    >
+    <div ref={boxRef} className="pixel-bottom-shell">
       <div
-        className="flex"
-        style={{
-          paddingBottom: 'max(16px, env(safe-area-inset-bottom))',
-          paddingLeft: 'max(12px, env(safe-area-inset-left))',
-          paddingRight: 'max(12px, env(safe-area-inset-right))',
-          minHeight: '160px',
-        }}
+        className="pixel-panel flex"
+        style={{ minHeight: '164px' }}
       >
         {/* NPC 名字竖栏 */}
         <div
           className="shrink-0 flex flex-col justify-center pt-3 pb-3 pr-3"
-          style={{ width: 'clamp(90px, 14vw, 120px)', borderRight: '1px solid #2a1040' }}
+          style={{ width: 'clamp(90px, 14vw, 120px)', borderRight: '2px solid #1d2932' }}
         >
-          <span className="text-[9px] tracking-widest mb-1" style={{ color: '#4a3060' }}>对话中</span>
-          <span className="text-xs font-medium leading-tight" style={{ color: '#aa55ff' }}>{npc.name}</span>
+          <span className="text-[9px] tracking-widest mb-1" style={{ color: '#3b4a4c' }}>对话中</span>
+          <span className="text-xs font-medium leading-tight" style={{ color: 'var(--pixel-violet)' }}>{npc.name}</span>
         </div>
 
         {/* 对话内容区 */}
         <div className="flex-1 min-w-0 flex flex-col justify-center pt-3 pb-3 pl-4 pr-2">
           {/* 对话文本 */}
-          <p className="text-xs leading-relaxed mb-3" style={{ color: '#e2d8f0' }}>
+          <p className="text-xs leading-relaxed mb-3" style={{ color: '#e7d09a' }}>
             {node.text}
           </p>
 
@@ -97,11 +84,11 @@ export default function DialogBox() {
                 className="text-left text-xs px-2.5 py-1.5 border cursor-pointer transition-all duration-150"
                 style={{
                   background: 'rgba(255,255,255,0.04)',
-                  borderColor: '#2a1040',
-                  color: '#c0a0e0',
+                  borderColor: '#3b4a4c',
+                  color: '#e7d09a',
                 }}
-                onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(170,85,255,0.12)' }}
-                onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.04)' }}
+                onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--pixel-gold)' }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.borderColor = '#3b4a4c' }}
               >
                 ▶ {opt.text}
               </button>
@@ -112,11 +99,11 @@ export default function DialogBox() {
                 className="text-left text-xs px-2.5 py-1.5 border cursor-pointer transition-all duration-150"
                 style={{
                   background: 'transparent',
-                  borderColor: '#1e1030',
-                  color: '#4a3060',
+                  borderColor: '#263032',
+                  color: '#6d5434',
                 }}
-                onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.color = '#9070b0' }}
-                onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.color = '#4a3060' }}
+                onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.color = '#b68f59' }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.color = '#6d5434' }}
               >
                 ▶ 没事了。
               </button>
@@ -127,11 +114,11 @@ export default function DialogBox() {
                 className="text-left text-xs px-2.5 py-1.5 border cursor-pointer transition-all duration-150"
                 style={{
                   background: 'rgba(255,255,255,0.04)',
-                  borderColor: '#2a1040',
-                  color: '#c0a0e0',
+                  borderColor: '#3b4a4c',
+                  color: '#e7d09a',
                 }}
-                onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(170,85,255,0.12)' }}
-                onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.04)' }}
+                onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--pixel-gold)' }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.borderColor = '#3b4a4c' }}
               >
                 ▶ 结束对话
               </button>
