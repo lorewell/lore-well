@@ -64,9 +64,9 @@ export const LOCATIONS: Record<string, Location> = {
         village_outskirts: {
           id: 'village_outskirts',
           name: '村子外围',
-          description: '村庄边缘的开阔地带，木栅栏已有几处腐朽倒塌。近来史莱姆频繁在此出没，村民们对此忧心忡忡。',
+          description: '村庄边缘的开阔地带，木栅栏已有几处腐朽倒塌。近来哥布林频繁在此出没，村民们对此忧心忡忡。',
           interactions: [
-            { id: 'village_slime', label: '附近的史莱姆', type: 'enemy', targetId: 'slime' },
+            { id: 'village_slime', label: '附近的哥布林', type: 'enemy', targetId: 'goblin' },
             { id: 'village_outskirts_fence', label: '破损栅栏', type: 'building', targetId: 'outskirts_fence' },
           ],
           west: 'village_elder_home',

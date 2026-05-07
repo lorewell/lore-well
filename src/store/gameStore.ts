@@ -321,6 +321,8 @@ export const useGameStore = create<GameState>()(
         }
         if (npcId === 'blacksmith') {
           get().activateQuest('quest_blacksmith')
+          // 若玩家先拿矿石再接任务，激活后立即检查，确保 get_ore 能自动完成
+          get()._autoCompleteObjectives({ type: 'have_item', itemId: 'iron_ore' })
         }
         // 戒指发现事件（一次性）：发放道具 + 激活支线 + 消耗该交互点
         if (npcId === 'waterfall_ring_event') {

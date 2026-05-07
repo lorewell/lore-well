@@ -99,7 +99,6 @@ export const INITIAL_QUESTS: Quest[] = [
     status: 'locked',
     objectives: [
       { id: 'get_ore', description: '获得铁矿石', completed: false, trigger: { type: 'have_item', itemId: 'iron_ore' } },
-      { id: 'return_to_smith', description: '带铁矿石回去找铁匠托尔', completed: false, trigger: { type: 'talk_npc', npcId: 'blacksmith' } },
     ],
     reward: { exp: 120, gold: 80, items: [{ itemId: 'steel_sword', qty: 1 }] },
   },
