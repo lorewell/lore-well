@@ -147,6 +147,62 @@ export const ITEMS: Record<string, Item> = {
     stackable: true,
   },
 
+  // ── 合成装备（仅可通过铁匠合成，无法在商店购买） ─────────────────────────
+  hunters_blade: {
+    id: 'hunters_blade',
+    name: '猎人之刃',
+    description: '以狼牙和哥布林牙镶嵌铁剑打造，攻击力与速度兼备，是适合浅层探索的均衡武器。',
+    type: 'equipment',
+    equipSlot: 'weapon',
+    statBonus: { atk: 16, spd: 5 },
+    stackable: false,
+  },
+  venom_edge: {
+    id: 'venom_edge',
+    name: '毒蛛战刃',
+    description: '以蜘蛛丝缠绕刃身，史莱姆胶渗入其中，异常锋利且出手迅速。',
+    type: 'equipment',
+    equipSlot: 'weapon',
+    statBonus: { atk: 14, spd: 10 },
+    stackable: false,
+  },
+  runic_staff: {
+    id: 'runic_staff',
+    name: '符文法杖',
+    description: '以石像核心为法杖核心，再以诅咒灰烬镌刻符文，大幅强化法力与攻击。',
+    type: 'equipment',
+    equipSlot: 'weapon',
+    statBonus: { atk: 12, maxMp: 60 },
+    stackable: false,
+  },
+  silk_armor: {
+    id: 'silk_armor',
+    name: '蛛丝软甲',
+    description: '以洞穴蛛丝编织、史莱姆胶强化的轻型软甲，防御出色且不影响行动速度。',
+    type: 'equipment',
+    equipSlot: 'armor',
+    statBonus: { def: 13, spd: 4 },
+    stackable: false,
+  },
+  stone_plate: {
+    id: 'stone_plate',
+    name: '石板铠甲',
+    description: '以石像核心熔铸、铁矿石为骨架打造的重甲，防御力极强，是正面硬抗的最佳选择。',
+    type: 'equipment',
+    equipSlot: 'armor',
+    statBonus: { def: 24, maxHp: 30 },
+    stackable: false,
+  },
+  cursed_talisman: {
+    id: 'cursed_talisman',
+    name: '诅咒符牌',
+    description: '以诅咒灰烬和石像核心炼制的饰品，散发着不安的魔力，大幅增强攻击与法力。',
+    type: 'equipment',
+    equipSlot: 'accessory',
+    statBonus: { atk: 10, maxMp: 30 },
+    stackable: false,
+  },
+
   // ── 任务道具 ─────────────────────────────────────────────────────────────────
   ancient_key: {
     id: 'ancient_key',

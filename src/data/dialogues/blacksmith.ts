@@ -19,6 +19,11 @@ export const blacksmithNPC: NPC = {
           next: 'shop',
           action: { type: 'openShop' },
         },
+        {
+          text: '我想打造特殊装备。',
+          next: 'craft',
+          action: { type: 'openCraft' },
+        },
         { text: '新手该准备什么装备？', next: 'starter_gear' },
         { text: '矿洞最近怎么了？', next: 'mine_trouble' },
         { text: '你听说哥布林的事了吗？', next: 'goblin_news' },
@@ -33,6 +38,10 @@ export const blacksmithNPC: NPC = {
     {
       id: 'shop',
       text: '行，你自己选吧。好货不便宜，便宜没好货。',
+    },
+    {
+      id: 'craft',
+      text: '合成装备需要特定材料，把材料备齐了拿来找我。材料都是野外怪物身上掉的，多打打就有了。',
     },
     {
       id: 'starter_gear',

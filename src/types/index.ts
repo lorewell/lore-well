@@ -92,6 +92,7 @@ export type InteractionType = 'npc' | 'item' | 'building' | 'enemy' | 'portal'
 export type DialogueAction =
   | { type: 'restoreHpMp' }
   | { type: 'openShop' }
+  | { type: 'openCraft' }
   | { type: 'addItem'; itemId: string; qty?: number }
   | { type: 'activateQuest'; questId: string }
   | { type: 'consumeInteraction'; interactionId: string }
@@ -228,6 +229,24 @@ export interface Quest {
   status: QuestStatus
   objectives: QuestObjective[]
   reward?: QuestReward
+}
+
+// ─── 合成 ────────────────────────────────────────────────────────────────────
+
+export interface CraftIngredient {
+  itemId: string
+  qty: number
+}
+
+export interface CraftRecipe {
+  id: string
+  resultItemId: string
+  /** 合成费用（金币），可为 0 */
+  goldCost: number
+  ingredients: CraftIngredient[]
+  /** 解锁条件：需要达到的等级，默认 1 */
+  requiredLevel?: number
+  description?: string
 }
 
 // ─── 战斗 ────────────────────────────────────────────────────────────────────

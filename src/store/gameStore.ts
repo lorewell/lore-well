@@ -16,6 +16,7 @@ import { PLAYER_TEMPLATE } from '../data/characters'
 import { LOCATIONS, STARTING_LOCATION } from '../data/locations'
 import { INITIAL_QUESTS } from '../data/quests'
 import { ITEMS } from '../data/items'
+import { CRAFT_RECIPES } from '../data/recipes'
 import { NPCS } from '../data/dialogues'
 import type { DialogueAction } from '../types'
 
@@ -87,6 +88,8 @@ interface GameState {
   battle: BattleState
   activeDialogue: { npcId: string; nodeId: string } | null
   activeShopNpcId: string | null
+  /** 当前开放合成界面的 NPC id（null 表示未开放） */
+  activeCraftNpcId: string | null
   /** NPC 当前位置快照，可在运行时更改 */
   npcLocations: Record<string, NpcLocationEntry>
 
@@ -133,6 +136,12 @@ interface GameState {
   buyItem: (itemId: string, price: number) => boolean
   sellItem: (itemId: string, price: number) => boolean
 
+  // 合成
+  openCraft: (npcId: string) => void
+  closeCraft: () => void
+  /** 尝试合成配方，返回错误信息或 null（成功） */
+  craftItem: (recipeId: string) => string | null
+
   // 复活
   respawnAtVillage: () => void
 
@@ -155,6 +164,7 @@ export const useGameStore = create<GameState>()(
       quests: structuredClone(INITIAL_QUESTS),
       activeDialogue: null,
       activeShopNpcId: null,
+      activeCraftNpcId: null,
       npcLocations: buildInitialNpcLocations(),
 
       battle: {
@@ -183,6 +193,7 @@ export const useGameStore = create<GameState>()(
           quests: structuredClone(INITIAL_QUESTS),
           activeDialogue: { npcId: 'lina_prologue', nodeId: 'greeting' },
           activeShopNpcId: null,
+          activeCraftNpcId: null,
           npcLocations: buildInitialNpcLocations(),
           battle: {
             active: false,
@@ -341,6 +352,9 @@ export const useGameStore = create<GameState>()(
             break
           case 'openShop':
             get().openShop(npcId)
+            break
+          case 'openCraft':
+            get().openCraft(npcId)
             break
           case 'addItem': {
             const item = ITEMS[action.itemId]
@@ -656,6 +670,47 @@ export const useGameStore = create<GameState>()(
         get().removeItem(itemId, 1)
         set((s) => ({ gold: s.gold + price }))
         return true
+      },
+
+      // ── 合成：打开 ─────────────────────────────────────────────────────────
+      openCraft: (npcId) => {
+        set({ activeCraftNpcId: npcId })
+      },
+
+      // ── 合成：关闭 ─────────────────────────────────────────────────────────
+      closeCraft: () => {
+        set({ activeCraftNpcId: null })
+      },
+
+      // ── 合成：执行 ─────────────────────────────────────────────────────────
+      craftItem: (recipeId) => {
+        const recipe = CRAFT_RECIPES.find((r) => r.id === recipeId)
+        if (!recipe) return '配方不存在'
+        const { gold, inventory, player } = get()
+        const level = player.level
+        if ((recipe.requiredLevel ?? 1) > level) {
+          return `需要达到 LV${recipe.requiredLevel} 才能合成`
+        }
+        if (gold < recipe.goldCost) {
+          return `金币不足（需要 ${recipe.goldCost} G）`
+        }
+        for (const ing of recipe.ingredients) {
+          const slot = inventory.find((i) => i.item.id === ing.itemId)
+          const have = slot?.quantity ?? 0
+          if (have < ing.qty) {
+            const name = slot?.item.name ?? ing.itemId
+            return `《${name}》不足（需要 ${ing.qty}，拥有 ${have}）`
+          }
+        }
+        for (const ing of recipe.ingredients) {
+          get().removeItem(ing.itemId, ing.qty)
+        }
+        if (recipe.goldCost > 0) {
+          set((s) => ({ gold: s.gold - recipe.goldCost }))
+        }
+        const resultItem = ITEMS[recipe.resultItemId]
+        if (resultItem) get().addItem(resultItem, 1)
+        return null
       },
 
       // ── NPC 位置移动 ─────────────────────────────────────────────────────────

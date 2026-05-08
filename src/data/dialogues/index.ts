@@ -29,6 +29,11 @@ export {
   grocerHerbsNPC,
   southSignpostNPC,
   outskirtsFenceNPC,
+  ashValleySignNPC,
+  hunterNotesNPC,
+  boundaryStoneNPC,
+  runeTreeNPC,
+  mineWarningNPC,
 } from './scenery'
 
 // ── 聚合为 Record（保持与旧 NPCS 相同的访问方式）─────────────────────────
@@ -54,6 +59,11 @@ import {
   grocerHerbsNPC,
   southSignpostNPC,
   outskirtsFenceNPC,
+  ashValleySignNPC,
+  hunterNotesNPC,
+  boundaryStoneNPC,
+  runeTreeNPC,
+  mineWarningNPC,
 } from './scenery'
 
 const ALL_NPCS: NPC[] = [
@@ -76,6 +86,11 @@ const ALL_NPCS: NPC[] = [
   grocerHerbsNPC,
   southSignpostNPC,
   outskirtsFenceNPC,
+  ashValleySignNPC,
+  hunterNotesNPC,
+  boundaryStoneNPC,
+  runeTreeNPC,
+  mineWarningNPC,
 ]
 
 export const NPCS: Record<string, NPC> = Object.fromEntries(

@@ -10,6 +10,7 @@ import InventoryPanel from '../components/InventoryPanel'
 import QuestLog from '../components/QuestLog'
 import PauseMenu from '../components/PauseMenu'
 import ShopPanel from '../components/ShopPanel'
+import CraftPanel from '../components/CraftPanel'
 import MapModal from '../components/MapModal'
 import { LOCATIONS } from '../data/locations'
 import { getShopByNpc } from '../data/shops'
@@ -131,6 +132,8 @@ export default function GameScreen() {
   const activeShopNpcId = useGameStore((s) => s.activeShopNpcId)
   const closeShop = useGameStore((s) => s.closeShop)
   const activeShop = activeShopNpcId ? getShopByNpc(activeShopNpcId) : undefined
+  const activeCraftNpcId = useGameStore((s) => s.activeCraftNpcId)
+  const closeCraft = useGameStore((s) => s.closeCraft)
   const activeDialogue = useGameStore((s) => s.activeDialogue)
 
   const togglePanel = useCallback((panel: ActivePanel) => {
@@ -146,6 +149,10 @@ export default function GameScreen() {
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
+        if (activeCraftNpcId) {
+          closeCraft()
+          return
+        }
         if (activeShopNpcId) {
           closeShop()
           return
@@ -168,7 +175,7 @@ export default function GameScreen() {
     }
     window.addEventListener('keydown', handler)
     return () => window.removeEventListener('keydown', handler)
-  }, [inCombat, paused, activePanel, activeShopNpcId, closeShop, togglePanel])
+  }, [inCombat, paused, activePanel, activeShopNpcId, activeCraftNpcId, closeShop, closeCraft, togglePanel])
 
   useEffect(() => {
     if (!canvasRef.current) return
@@ -234,6 +241,7 @@ export default function GameScreen() {
 
         {paused && <PauseMenu onClose={() => setPaused(false)} />}
         {activeShop && <ShopPanel shop={activeShop} onClose={closeShop} />}
+        {activeCraftNpcId && <CraftPanel onClose={closeCraft} />}
       </div>
     </div>
   )
