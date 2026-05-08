@@ -175,6 +175,48 @@ export default function CombatPanel({ onBattleEnd }: CombatPanelProps) {
               <p className="text-lg tracking-widest font-medium" style={{ color: '#ffcc44' }}>
                 ✦ 胜利 ✦
               </p>
+
+              {/* 战利品展示 */}
+              <div
+                className="w-full border-2 px-3 py-2"
+                style={{ borderColor: '#3a2a5a', background: 'rgba(20,10,40,0.6)' }}
+              >
+                <div className="mb-2 text-[10px] tracking-widest" style={{ color: '#7a5a90' }}>
+                  REWARDS
+                </div>
+                <div className="flex items-center gap-2 mb-1.5 text-xs" style={{ color: '#f1c45d' }}>
+                  <span style={{ color: '#7a5a90' }}>EXP</span>
+                  <span className="font-bold">+{battle.enemy?.expReward ?? 0}</span>
+                  <span className="ml-3" style={{ color: '#7a5a90' }}>GOLD</span>
+                  <span className="font-bold">+{battle.enemy?.goldReward ?? 0}</span>
+                </div>
+                {battle.loot.length > 0 ? (
+                  <div className="flex flex-col gap-1 mt-2 border-t pt-2" style={{ borderColor: '#2a1a4a' }}>
+                    {battle.loot.map((inv, i) => (
+                      <div key={i} className="flex items-center gap-2 text-xs" style={{ color: '#c0a8e8' }}>
+                        <span
+                          className="text-[9px] px-1 border"
+                          style={{
+                            borderColor: inv.item.type === 'equipment' ? '#6a5a3a' : inv.item.type === 'quest' ? '#3a5a6a' : '#3a3a5a',
+                            color: inv.item.type === 'equipment' ? '#d6a845' : inv.item.type === 'quest' ? '#74c2a8' : '#9080c0',
+                          }}
+                        >
+                          {inv.item.type === 'equipment' ? 'EQUIP' : inv.item.type === 'quest' ? 'QUEST' : 'ITEM'}
+                        </span>
+                        <span>{inv.item.name}</span>
+                        {inv.quantity > 1 && (
+                          <span className="ml-auto text-[10px]" style={{ color: '#7a6090' }}>×{inv.quantity}</span>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-[10px] mt-1.5 border-t pt-1.5" style={{ borderColor: '#2a1a4a', color: '#5a4a70' }}>
+                    无物品掉落
+                  </p>
+                )}
+              </div>
+
               <button
                 onClick={handleClose}
                 className="px-8 py-2.5 text-sm tracking-widest border cursor-pointer hover:brightness-125 transition-all"

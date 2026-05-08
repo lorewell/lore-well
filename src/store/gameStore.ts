@@ -165,6 +165,7 @@ export const useGameStore = create<GameState>()(
         enemyStats: null,
         turnLog: [],
         round: 0,
+        loot: [],
       },
 
       // ── 开始新游戏 ──────────────────────────────────────────────────────────
@@ -191,6 +192,7 @@ export const useGameStore = create<GameState>()(
             enemyStats: null,
             turnLog: [],
             round: 0,
+            loot: [],
           },
         })
         // 序章对话自动激活初始任务
@@ -382,6 +384,7 @@ export const useGameStore = create<GameState>()(
             enemyStats: structuredClone(enemy.stats),
             turnLog: [`与【${enemy.name}】的战斗开始！`],
             round: 1,
+            loot: [],
           },
         })
       },
@@ -443,14 +446,19 @@ export const useGameStore = create<GameState>()(
             set((s) => ({ gold: s.gold + gold }))
             log.push(`获得了 ${gold} 金币！`)
           }
+          const loot: import('../types').InventoryItem[] = []
           for (const drop of (Array.isArray(battle.enemy.dropTable) ? battle.enemy.dropTable : [])) {
             if (Math.random() < drop.chance) {
-              state.addItem(drop.item)
-              log.push(`获得了【${drop.item.name}】！`)
+              const min = drop.minQty ?? 1
+              const max = drop.maxQty ?? 1
+              const qty = min === max ? min : min + Math.floor(Math.random() * (max - min + 1))
+              state.addItem(drop.item, qty)
+              loot.push({ item: drop.item, quantity: qty })
+              log.push(`获得了【${drop.item.name}】${qty > 1 ? ` x${qty}` : ''}！`)
             }
           }
           get()._autoCompleteObjectives({ type: 'defeat_enemy', enemyId: battle.enemy.id })
-          set({ battle: { ...battle, playerStats: ps, enemyStats: es, phase: 'victory', turnLog: log } })
+          set({ battle: { ...battle, playerStats: ps, enemyStats: es, phase: 'victory', turnLog: log, loot } })
           return
         }
 
@@ -506,6 +514,7 @@ export const useGameStore = create<GameState>()(
               enemyStats: null,
               turnLog: [],
               round: 0,
+              loot: [],
             },
           }
         })

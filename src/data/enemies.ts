@@ -9,6 +9,10 @@ export const ENEMIES: Record<string, Enemy> = {
     skills: [],
     expReward: 20,
     goldReward: 5,
+    dropTable: [
+      { item: ITEMS.slime_jelly, chance: 0.8, minQty: 1, maxQty: 3 },
+      { item: ITEMS.health_potion, chance: 0.15 },
+    ],
     sprite: 'enemy_slime',
   },
   goblin: {
@@ -27,6 +31,7 @@ export const ENEMIES: Record<string, Enemy> = {
     expReward: 45,
     goldReward: 15,
     dropTable: [
+      { item: ITEMS.goblin_tooth, chance: 0.7, minQty: 1, maxQty: 2 },
       { item: ITEMS.health_potion, chance: 0.3 },
       { item: ITEMS.iron_sword, chance: 0.1 },
       { item: ITEMS.goblin_emblem, chance: 0.2 },
@@ -48,7 +53,11 @@ export const ENEMIES: Record<string, Enemy> = {
     ],
     expReward: 70,
     goldReward: 20,
-    dropTable: [{ item: ITEMS.leather_armor, chance: 0.15 }],
+    dropTable: [
+      { item: ITEMS.wolf_fang, chance: 0.65, minQty: 1, maxQty: 2 },
+      { item: ITEMS.leather_armor, chance: 0.15 },
+      { item: ITEMS.health_potion, chance: 0.25 },
+    ],
     sprite: 'enemy_wolf',
   },
   cave_spider: {
@@ -67,8 +76,9 @@ export const ENEMIES: Record<string, Enemy> = {
     expReward: 40,
     goldReward: 10,
     dropTable: [
+      { item: ITEMS.spider_silk, chance: 0.75, minQty: 1, maxQty: 3 },
       { item: ITEMS.mana_potion, chance: 0.25 },
-      { item: ITEMS.iron_ore, chance: 0.5 },
+      { item: ITEMS.iron_ore, chance: 0.3, minQty: 1, maxQty: 2 },
     ],
     sprite: 'enemy_spider',
   },
@@ -88,6 +98,7 @@ export const ENEMIES: Record<string, Enemy> = {
     expReward: 60,
     goldReward: 18,
     dropTable: [
+      { item: ITEMS.cursed_ash, chance: 0.7, minQty: 1, maxQty: 2 },
       { item: ITEMS.mana_potion, chance: 0.4 },
       { item: ITEMS.magic_staff, chance: 0.05 },
     ],
@@ -109,8 +120,10 @@ export const ENEMIES: Record<string, Enemy> = {
     expReward: 150,
     goldReward: 50,
     dropTable: [
+      { item: ITEMS.stone_core, chance: 0.5, minQty: 1, maxQty: 2 },
       { item: ITEMS.chain_mail, chance: 0.12 },
       { item: ITEMS.elixir, chance: 0.3 },
+      { item: ITEMS.iron_ore, chance: 0.6, minQty: 2, maxQty: 4 },
     ],
     sprite: 'enemy_golem',
   },

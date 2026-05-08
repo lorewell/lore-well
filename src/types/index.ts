@@ -61,6 +61,13 @@ export interface Character {
   portrait?: string     // 立绘资源 key
 }
 
+export interface DropEntry {
+  item: Item
+  chance: number
+  minQty?: number   // 最小掉落数量，默认 1
+  maxQty?: number   // 最大掉落数量，默认 1
+}
+
 export interface Enemy {
   id: string
   name: string
@@ -68,7 +75,7 @@ export interface Enemy {
   skills: Skill[]
   expReward: number
   goldReward: number
-  dropTable?: Array<{ item: Item; chance: number }>
+  dropTable?: DropEntry[]
   sprite?: string       // Phaser 精灵 key
 }
 
@@ -243,6 +250,7 @@ export interface BattleState {
   enemyStats: Stats | null
   turnLog: string[]
   round: number
+  loot: InventoryItem[]  // 本场战斗掉落的物品
 }
 
 // ─── 玩家存档 ────────────────────────────────────────────────────────────────

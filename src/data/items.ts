@@ -104,6 +104,48 @@ export const ITEMS: Record<string, Item> = {
     type: 'misc',
     stackable: true,
   },
+  slime_jelly: {
+    id: 'slime_jelly',
+    name: '史莱姆胶',
+    description: '史莱姆体内分泌的黏液，质地柔软，散发着淡淡的腥气，据说可以用于炼制药水。',
+    type: 'misc',
+    stackable: true,
+  },
+  wolf_fang: {
+    id: 'wolf_fang',
+    name: '狼牙',
+    description: '森林狼锋利的犬齿，被冒险者用来制作饰品或出售给炼金商人。',
+    type: 'misc',
+    stackable: true,
+  },
+  spider_silk: {
+    id: 'spider_silk',
+    name: '蜘蛛丝',
+    description: '洞穴蜘蛛吐出的坚韧蛛丝，强度惊人，可用于编织轻甲材料。',
+    type: 'misc',
+    stackable: true,
+  },
+  goblin_tooth: {
+    id: 'goblin_tooth',
+    name: '哥布林牙',
+    description: '哥布林的小尖牙，材质粗粝，某些商人愿意低价收购。',
+    type: 'misc',
+    stackable: true,
+  },
+  stone_core: {
+    id: 'stone_core',
+    name: '石像核心',
+    description: '石像鬼体内蕴含魔力的岩石核心，散发着微弱的热量，是珍贵的炼金材料。',
+    type: 'misc',
+    stackable: true,
+  },
+  cursed_ash: {
+    id: 'cursed_ash',
+    name: '诅咒灰烬',
+    description: '哥布林法师释放魔法留下的灰烬，带有残余的魔力波动。',
+    type: 'misc',
+    stackable: true,
+  },
 
   // ── 任务道具 ─────────────────────────────────────────────────────────────────
   ancient_key: {
