@@ -10,6 +10,7 @@ import InventoryPanel from '../components/InventoryPanel'
 import QuestLog from '../components/QuestLog'
 import PauseMenu from '../components/PauseMenu'
 import ShopPanel from '../components/ShopPanel'
+import MapModal from '../components/MapModal'
 import { LOCATIONS } from '../data/locations'
 import { getShopByNpc } from '../data/shops'
 
@@ -115,7 +116,7 @@ function StatusPanel({ onClose }: { onClose: () => void }) {
   )
 }
 
-type ActivePanel = 'none' | 'inventory' | 'quests' | 'status'
+type ActivePanel = 'none' | 'inventory' | 'quests' | 'status' | 'map'
 
 export default function GameScreen() {
   const canvasRef = useRef<HTMLDivElement>(null)
@@ -163,6 +164,7 @@ export default function GameScreen() {
       if (e.key === 'b' || e.key === 'B') togglePanel('inventory')
       if (e.key === 'q' || e.key === 'Q') togglePanel('quests')
       if (e.key === 'c' || e.key === 'C') togglePanel('status')
+      if (e.key === 'm' || e.key === 'M') togglePanel('map')
     }
     window.addEventListener('keydown', handler)
     return () => window.removeEventListener('keydown', handler)
@@ -221,6 +223,9 @@ export default function GameScreen() {
             )}
             {activePanel === 'status' && (
               <StatusPanel onClose={() => setActivePanel('none')} />
+            )}
+            {activePanel === 'map' && (
+              <MapModal onClose={() => setActivePanel('none')} />
             )}
           </>
         ) : (

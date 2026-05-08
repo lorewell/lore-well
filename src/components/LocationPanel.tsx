@@ -4,23 +4,21 @@ import { LOCATIONS } from '../data/locations'
 import { ENEMIES } from '../data/enemies'
 import { ITEMS } from '../data/items'
 import { NPCS } from '../data/npcs'
-import type { Interaction, Location, SubLocation } from '../types'
+import type { Interaction, SubLocation } from '../types'
 import { GameManager } from '../game/GameManager'
 
 interface LocationPanelProps {
   onStartBattle: () => void
-  onOpenPanel: (panel: 'inventory' | 'quests' | 'status') => void
+  onOpenPanel: (panel: 'inventory' | 'quests' | 'status' | 'map') => void
   onPause: () => void
 }
 
 type PanelMode = 'scene' | 'menu'
-type SubMap = NonNullable<Location['subMap']>
 
 export default function LocationPanel({ onStartBattle, onOpenPanel, onPause }: LocationPanelProps) {
   const currentLocationId = useGameStore((s) => s.currentLocationId)
   const currentSubLocationId = useGameStore((s) => s.currentSubLocationId)
   const travelTo = useGameStore((s) => s.travelTo)
-  const travelToSubLocation = useGameStore((s) => s.travelToSubLocation)
   const openDialogue = useGameStore((s) => s.openDialogue)
   const startBattle = useGameStore((s) => s.startBattle)
   const addItem = useGameStore((s) => s.addItem)
@@ -86,7 +84,6 @@ export default function LocationPanel({ onStartBattle, onOpenPanel, onPause }: L
   }
 
   if (subMap && subLoc && effectiveSubId) {
-    const map = buildSubMapLayout(subMap, effectiveSubId)
     const dynamicInteractions = [
       ...getNpcInteractions(currentLocationId, effectiveSubId),
       ...subLoc.interactions,
@@ -95,15 +92,7 @@ export default function LocationPanel({ onStartBattle, onOpenPanel, onPause }: L
     return (
       <div className="pixel-bottom-shell">
         <div className="pixel-panel pixel-bottom-grid overflow-hidden">
-          <MapColumn
-            locationName={location.name}
-            subMap={subMap}
-            layout={map}
-            currentNodeId={effectiveSubId}
-            onMove={travelToSubLocation}
-          />
-
-          <section className="pixel-scene-column min-w-0 border-x-2 px-3 py-3 sm:px-5" style={{ borderColor: '#172025' }}>
+          <section className="pixel-scene-column min-w-0 border-r-2 px-3 py-3 sm:px-5" style={{ borderColor: '#172025' }}>
             {mode === 'scene' ? (
               <SceneColumn
                 subLoc={subLoc}
@@ -175,134 +164,6 @@ export default function LocationPanel({ onStartBattle, onOpenPanel, onPause }: L
         )}
       </div>
     </div>
-  )
-}
-
-function buildSubMapLayout(
-  subMap: SubMap,
-  currentNodeId: string,
-) {
-  const nodeCoords: Record<string, { col: number; row: number }> = {}
-  const dirDelta = {
-    north: { dc: 0, dr: -1 },
-    south: { dc: 0, dr: 1 },
-    west: { dc: -1, dr: 0 },
-    east: { dc: 1, dr: 0 },
-  }
-  const queue: Array<{ id: string; col: number; row: number }> = [
-    { id: subMap.startNodeId, col: 0, row: 0 },
-  ]
-  nodeCoords[subMap.startNodeId] = { col: 0, row: 0 }
-
-  while (queue.length > 0) {
-    const cur = queue.shift()!
-    const node = subMap.nodes[cur.id]
-    for (const dir of ['north', 'south', 'east', 'west'] as const) {
-      const nextId = node[dir]
-      if (nextId && !nodeCoords[nextId]) {
-        const { dc, dr } = dirDelta[dir]
-        nodeCoords[nextId] = { col: cur.col + dc, row: cur.row + dr }
-        queue.push({ id: nextId, col: cur.col + dc, row: cur.row + dr })
-      }
-    }
-  }
-
-  if (!nodeCoords[currentNodeId]) {
-    nodeCoords[currentNodeId] = nodeCoords[subMap.startNodeId]
-  }
-
-  const cols = Object.values(nodeCoords).map((c) => c.col)
-  const rows = Object.values(nodeCoords).map((c) => c.row)
-  const minCol = Math.min(...cols)
-  const maxCol = Math.max(...cols)
-  const minRow = Math.min(...rows)
-  const maxRow = Math.max(...rows)
-  const gridW = maxCol - minCol + 1
-  const gridH = maxRow - minRow + 1
-  const gap = 4
-  const cellByW = Math.floor((112 - (gridW - 1) * gap) / gridW)
-  const cellByH = Math.floor((132 - (gridH - 1) * gap) / gridH)
-  const cell = Math.max(18, Math.min(31, cellByW, cellByH))
-
-  return {
-    nodeCoords,
-    minCol,
-    minRow,
-    cell,
-    gap,
-    width: gridW * cell + (gridW - 1) * gap,
-    height: gridH * cell + (gridH - 1) * gap,
-  }
-}
-
-interface MapColumnProps {
-  locationName: string
-  subMap: SubMap
-  layout: ReturnType<typeof buildSubMapLayout>
-  currentNodeId: string
-  onMove: (nodeId: string) => void
-}
-
-function MapColumn({ locationName, subMap, layout, currentNodeId, onMove }: MapColumnProps) {
-  const { nodeCoords, minCol, minRow, cell, gap, width, height } = layout
-
-  return (
-    <aside className="pixel-map-column flex min-w-0 flex-col items-center justify-center px-3 py-3">
-      <div className="pixel-label mb-3 text-center">{locationName}</div>
-      <div className="relative" style={{ width, height }}>
-        <svg className="absolute inset-0 pointer-events-none" width={width} height={height} style={{ overflow: 'visible' }}>
-          {Object.entries(subMap.nodes).map(([id, node]) => {
-            const from = nodeCoords[id]
-            if (!from) return null
-            return (['east', 'south'] as const).map((dir) => {
-              const toId = node[dir]
-              if (!toId) return null
-              const to = nodeCoords[toId]
-              if (!to) return null
-              const x1 = (from.col - minCol) * (cell + gap) + cell / 2
-              const y1 = (from.row - minRow) * (cell + gap) + cell / 2
-              const x2 = (to.col - minCol) * (cell + gap) + cell / 2
-              const y2 = (to.row - minRow) * (cell + gap) + cell / 2
-              return (
-                <line
-                  key={`${id}-${dir}`}
-                  x1={x1}
-                  y1={y1}
-                  x2={x2}
-                  y2={y2}
-                  stroke="#73613e"
-                  strokeWidth="2"
-                  shapeRendering="crispEdges"
-                />
-              )
-            })
-          })}
-        </svg>
-
-        {Object.entries(subMap.nodes).map(([id, node]) => {
-          const coord = nodeCoords[id]
-          if (!coord) return null
-          const isCurrent = id === currentNodeId
-          const isPortalNode = node.interactions.some((i) => i.type === 'portal')
-          const left = (coord.col - minCol) * (cell + gap)
-          const top = (coord.row - minRow) * (cell + gap)
-
-          return (
-            <button
-              key={id}
-              onClick={() => onMove(id)}
-              title={node.name}
-              className={`pixel-map-node absolute flex items-center justify-center text-[9px] font-bold ${
-                isCurrent ? 'is-current' : ''
-              } ${isPortalNode ? 'is-portal' : ''}`}
-              style={{ left, top, width: cell, height: cell }}
-            >
-              {node.exits && node.exits.length > 0 ? '>' : isPortalNode ? '<>' : node.name.slice(0, 1)}
-            </button>
-          )
-        })}
-      </div>
-    </aside>
   )
 }
 
@@ -428,7 +289,7 @@ function ExitButtons({ exits, onTravel }: ExitButtonsProps) {
 }
 
 interface MenuColumnProps {
-  onOpenPanel: (panel: 'inventory' | 'quests' | 'status') => void
+  onOpenPanel: (panel: 'inventory' | 'quests' | 'status' | 'map') => void
   onPause: () => void
 }
 
@@ -437,6 +298,7 @@ function MenuColumn({ onOpenPanel, onPause }: MenuColumnProps) {
     { id: 'inventory', marker: 'BAG', label: '背包', key: 'B', action: () => onOpenPanel('inventory') },
     { id: 'quests', marker: 'LOG', label: '任务', key: 'Q', action: () => onOpenPanel('quests') },
     { id: 'status', marker: 'STAT', label: '状态', key: 'C', action: () => onOpenPanel('status') },
+    { id: 'map', marker: 'MAP', label: '地图', key: 'M', action: () => onOpenPanel('map') },
     { id: 'pause', marker: 'MENU', label: '暂停', key: 'ESC', action: onPause },
   ] as const
 
