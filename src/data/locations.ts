@@ -181,6 +181,7 @@ export const LOCATIONS: Record<string, Location> = {
           interactions: [
             { id: 'camp_wolf_pack',    label: '侵占营地的狼群', type: 'enemy',    targetId: 'forest_wolf' },
             { id: 'camp_hunter_notes', label: '猎人的残页',     type: 'building', targetId: 'hunter_notes' },
+            { id: 'camp_hunter_toby',  label: '受伤的猎人',     type: 'npc',      targetId: 'hunter_toby' },
           ],
           south: 'ash_valley_gate',
           north: 'misty_forest_path',

@@ -14,6 +14,7 @@ export { elderNPC } from './elder'
 export { villageChiefNPC } from './village_chief'
 export { blacksmithNPC } from './blacksmith'
 export { grocerNPC } from './grocer'
+export { hunterNPC } from './hunter'
 export {
   waterfallNPC,
   waterfallPoolNPC,
@@ -44,6 +45,7 @@ import { elderNPC } from './elder'
 import { villageChiefNPC } from './village_chief'
 import { blacksmithNPC } from './blacksmith'
 import { grocerNPC } from './grocer'
+import { hunterNPC } from './hunter'
 import {
   waterfallNPC,
   waterfallPoolNPC,
@@ -74,7 +76,7 @@ const ALL_NPCS: NPC[] = [
   villageChiefNPC,
   blacksmithNPC,
   grocerNPC,
-  waterfallNPC,
+  hunterNPC,
   waterfallPoolNPC,
   waterfallRingEventNPC,
   villageWellNPC,

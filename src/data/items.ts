@@ -225,4 +225,11 @@ export const ITEMS: Record<string, Item> = {
     type: 'quest',
     stackable: false,
   },
+  hunter_wristband: {
+    id: 'hunter_wristband',
+    name: '托比的腕环',
+    description: '一只磨损的皮质腕环，由猎人托比托付，用于向其同伴莱斯证明你的身份。',
+    type: 'quest',
+    stackable: false,
+  },
 }

@@ -102,6 +102,34 @@ export const INITIAL_QUESTS: Quest[] = [
     ],
     reward: { exp: 120, gold: 80, items: [{ itemId: 'steel_sword', qty: 1 }] },
   },
+  // ── 猎人支线：同伴的下落 ─────────────────────────────────────────────────
+  {
+    id: 'quest_hunter_companion',
+    title: '同伴的下落',
+    description: '受伤困在残营废地的猎人托比请你前往矿壁深坑，寻找他失踪四天的同伴莱斯的下落。托比递给你一只皮质腕环——莱斯认识它。',
+    status: 'locked',
+    objectives: [
+      {
+        id: 'get_wristband',
+        description: '接过托比的腕环',
+        completed: false,
+        trigger: { type: 'have_item', itemId: 'hunter_wristband' },
+      },
+      {
+        id: 'visit_mine_pit',
+        description: '前往矿壁深坑，寻找莱斯的线索',
+        completed: false,
+        trigger: { type: 'visit_location', subLocationId: 'mine_pit' },
+      },
+      {
+        id: 'return_to_toby',
+        description: '回到残营废地，向托比汇报',
+        completed: false,
+        trigger: { type: 'talk_npc', npcId: 'hunter_toby' },
+      },
+    ],
+    reward: { exp: 120, gold: 40 },
+  },
   // ── 彩蛋支线：戒指的秘密（后期任务，仅第一步可见）────────────────────────
   {
     id: 'quest_ring_origin',
