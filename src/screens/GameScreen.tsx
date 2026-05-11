@@ -206,7 +206,10 @@ export default function GameScreen() {
   if (!started) return null
 
   return (
-    <div className="pixel-root relative h-full w-full overflow-hidden">
+    <div
+      className="pixel-root relative h-full w-full overflow-hidden"
+      onPointerDown={() => GameManager.resumeAudio()}
+    >
       <div ref={canvasRef} className="absolute inset-0 z-0" />
 
       <div className="pixel-ui absolute inset-0">

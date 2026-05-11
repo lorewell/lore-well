@@ -17,62 +17,95 @@ export default class PreloadScene extends Phaser.Scene {
     // this.load.image('bg_village', 'assets/bg/village.jpg')
     // this.load.atlas('characters', 'assets/characters.png', 'assets/characters.json')
 
-    // 当前使用生成的占位纹理，无需异步加载
-    // load.on('complete') 在没有任何 load 任务时会同步触发
     this.load.on('complete', () => this.scene.start('LocationScene'))
   }
 
   create() {
-    // preload 完成后 create 被调用，此处生成所有占位纹理
     this.createPlaceholderTextures()
-    // 手动触发 complete（因为没有任何实际 load 任务）
     this.scene.start('LocationScene')
   }
 
   /**
-   * 生成纯色占位纹理
-   * 真实资源就绪后删除此方法，并在 preload() 中加载图片
+   * 生成带渐变效果的占位纹理，各地点视觉风格各异
    */
   private createPlaceholderTextures() {
-    const locations: Array<{ key: string; color: number; label: string }> = [
-      { key: 'bg_village',     color: 0x1a3a1a, label: '晨曦村' },
-      { key: 'bg_forest',      color: 0x0a1a0a, label: '幽暗森林' },
-      { key: 'bg_forest_deep', color: 0x050a05, label: '森林深处' },
-      { key: 'bg_temple',      color: 0x1a1020, label: '古代神殿' },
-      { key: 'bg_mine',        color: 0x0a0a0f, label: '废弃矿洞' },
+    const W = 1280, H = 720
+
+    interface LocDef {
+      key: string
+      topColor: number
+      botColor: number
+      label: string
+      accentColor: number
+    }
+
+    const locations: LocDef[] = [
+      { key: 'bg_village',     topColor: 0x1a3520, botColor: 0x0a1c10, label: '落瀑村',   accentColor: 0xffe080 },
+      { key: 'bg_forest',      topColor: 0x0c2210, botColor: 0x041008, label: '幽暗森林', accentColor: 0x44cc44 },
+      { key: 'bg_forest_deep', topColor: 0x060c18, botColor: 0x020408, label: '森林深处', accentColor: 0x3366dd },
+      { key: 'bg_temple',      topColor: 0x180c2c, botColor: 0x080818, label: '古代神殿', accentColor: 0xbb66ff },
+      { key: 'bg_mine',        topColor: 0x0c0c14, botColor: 0x040408, label: '废弃矿洞', accentColor: 0xff8844 },
     ]
 
     for (const loc of locations) {
       if (this.textures.exists(loc.key)) continue
-      const gfx = this.make.graphics({ x: 0, y: 0 })
-      gfx.fillStyle(loc.color, 1)
-      gfx.fillRect(0, 0, 1280, 720)
-      // 地点名称水印，方便开发期间辨认
-      gfx.generateTexture(loc.key, 1280, 720)
+
+      const rt = this.add.renderTexture(0, 0, W, H)
+
+      // 渐变背景
+      const gfx = this.add.graphics()
+      gfx.fillGradientStyle(
+        loc.topColor, loc.topColor,
+        loc.botColor, loc.botColor,
+        1,
+      )
+      gfx.fillRect(0, 0, W, H)
+      rt.draw(gfx, 0, 0)
       gfx.destroy()
 
-      // 在纹理上叠加文字（开发用）
-      this.add
-        .text(640, 360, loc.label, {
-          fontSize: '48px',
-          color: '#ffffff',
-        })
-        .setAlpha(0.08)
-        .setOrigin(0.5)
-        .setVisible(false) // 只用于标记，不显示到场景中
+      // 地平线光带
+      const glowGfx = this.add.graphics()
+      glowGfx.fillStyle(loc.accentColor, 0.06)
+      glowGfx.fillRect(0, H * 0.55, W, H * 0.15)
+      rt.draw(glowGfx, 0, 0)
+      glowGfx.destroy()
+
+      // 装饰点阵（模拟星/叶/粒子）
+      const dotGfx = this.add.graphics()
+      dotGfx.fillStyle(loc.accentColor, 0.25)
+      for (let i = 0; i < 40; i++) {
+        const px = Math.random() * W
+        const py = Math.random() * H * 0.75
+        const pr = 1 + Math.random() * 2.5
+        dotGfx.fillCircle(px, py, pr)
+      }
+      rt.draw(dotGfx, 0, 0)
+      dotGfx.destroy()
+
+      rt.saveTexture(loc.key)
+      rt.destroy()
     }
 
-    // 敌人占位纹理（后期替换为精灵图集）
-    const enemies: Array<{ key: string; color: number }> = [
-      { key: 'enemy_slime',  color: 0x44aa44 },
-      { key: 'enemy_goblin', color: 0xaa6622 },
-      { key: 'enemy_wolf',   color: 0x888888 },
+    // 敌人占位纹理
+    interface EnemyDef { key: string; color: number; shape: 'circle' | 'diamond' }
+    const enemies: EnemyDef[] = [
+      { key: 'enemy_slime',  color: 0x44cc44, shape: 'circle' },
+      { key: 'enemy_goblin', color: 0xcc6622, shape: 'diamond' },
+      { key: 'enemy_wolf',   color: 0x888899, shape: 'diamond' },
     ]
     for (const e of enemies) {
       if (this.textures.exists(e.key)) continue
       const g = this.make.graphics({ x: 0, y: 0 })
       g.fillStyle(e.color, 1)
-      g.fillCircle(40, 40, 40)
+      if (e.shape === 'circle') {
+        g.fillCircle(40, 40, 38)
+        g.lineStyle(3, 0xffffff, 0.5)
+        g.strokeCircle(40, 40, 38)
+      } else {
+        g.fillTriangle(40, 4, 4, 76, 76, 76)
+        g.lineStyle(3, 0xffffff, 0.5)
+        g.strokeTriangle(40, 4, 4, 76, 76, 76)
+      }
       g.generateTexture(e.key, 80, 80)
       g.destroy()
     }

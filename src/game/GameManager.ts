@@ -2,11 +2,13 @@ import * as Phaser from 'phaser'
 import PreloadScene from './scenes/PreloadScene'
 import LocationScene from './scenes/LocationScene'
 import CombatScene from './scenes/CombatScene'
+import { SoundManager } from './SoundManager'
 
 let instance: Phaser.Game | null = null
 
 /**
  * GameManager —— 管理 Phaser 实例的生命周期，提供操作接口给 React 层
+ * 集成了 SoundManager 音效系统
  */
 export const GameManager = {
   init(parent: HTMLElement): Phaser.Game {
@@ -47,9 +49,10 @@ export const GameManager = {
     return instance?.scene.getScene('CombatScene') as CombatScene | undefined
   },
 
-  /** 切换地点背景 */
+  /** 切换地点背景并播放脚步音效 */
   changeLocation(bgKey: string) {
     this.getLocationScene()?.changeLocation(bgKey)
+    SoundManager.play('step')
   },
 
   /** 切入战斗模式（激活 CombatScene，暂停 LocationScene） */
@@ -63,7 +66,6 @@ export const GameManager = {
     }
     if (!instance?.scene.isActive('CombatScene')) {
       instance?.scene.start('CombatScene')
-      // 等一帧再调用入场动效
       setTimeout(() => combat.startBattleIntro(enemySpriteKey), 100)
     } else {
       combat.startBattleIntro(enemySpriteKey)
@@ -76,26 +78,98 @@ export const GameManager = {
     instance?.scene.stop('CombatScene')
   },
 
-  /** 玩家攻击动效 */
+  /** 玩家攻击动效 + 音效 */
   playPlayerAttack(cb?: () => void) {
-    this.getCombatScene()?.playPlayerAttack(cb)
+    SoundManager.play('attack')
+    this.getCombatScene()?.playPlayerAttack(() => {
+      SoundManager.play('hit')
+      this.getCombatScene()?.playEnemyHit()
+      cb?.()
+    })
   },
 
-  /** 敌人受击 */
+  /** 技能攻击动效 + 音效 */
+  playSkillAttack(cb?: () => void) {
+    SoundManager.play('skill')
+    this.getCombatScene()?.playPlayerAttack(() => {
+      SoundManager.play('hit')
+      this.getCombatScene()?.playEnemyHit()
+      cb?.()
+    })
+  },
+
+  /** 敌人受击（仅视觉，音效由 playPlayerAttack 统一驱动） */
   playEnemyHit() {
     this.getCombatScene()?.playEnemyHit()
   },
 
-  /** 敌人攻击动效 */
+  /** 敌人攻击动效 + 音效 */
   playEnemyAttack(cb?: () => void) {
+    SoundManager.play('attack')
     this.getCombatScene()?.playEnemyAttack(cb)
   },
 
   playVictory() {
+    SoundManager.play('victory')
     this.getCombatScene()?.playVictory()
   },
 
   playDefeat() {
+    SoundManager.play('defeat')
     this.getCombatScene()?.playDefeat()
+  },
+
+  /** 升级音效 */
+  playLevelUp() {
+    SoundManager.play('levelup')
+  },
+
+  /** 金币/购买音效 */
+  playCoin() {
+    SoundManager.play('coin')
+  },
+
+  /** 逃跑音效 */
+  playFlee() {
+    SoundManager.play('flee')
+  },
+
+  /** 治疗音效 */
+  playHeal() {
+    SoundManager.play('heal')
+  },
+
+  /** UI 点击音效 */
+  playClick() {
+    SoundManager.play('click')
+  },
+
+  /** 开启面板音效 */
+  playOpen() {
+    SoundManager.play('open')
+  },
+
+  /** 预热音频上下文（需在用户首次交互时调用） */
+  resumeAudio() {
+    SoundManager.resume()
+  },
+
+  /** 音效音量控制 0-1 */
+  setSfxVolume(v: number) {
+    SoundManager.setVolume(v)
+  },
+
+  /** 静音切换 */
+  toggleMute(): boolean {
+    return SoundManager.toggleMute()
+  },
+
+  get sfxMuted(): boolean {
+    return SoundManager.muted
+  },
+
+  /** 导出 SoundManager 供 React 组件直接访问 */
+  get sound() {
+    return SoundManager
   },
 }

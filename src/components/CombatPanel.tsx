@@ -46,6 +46,19 @@ export default function CombatPanel({ onBattleEnd }: CombatPanelProps) {
 
   const doAction = (action: BattleAction) => {
     if (!isPlayerTurn) return
+
+    // 播放音效（独立于游戏逻辑，不阻塞状态更新）
+    if (action.type === 'attack') {
+      GameManager.playPlayerAttack()
+    } else if (action.type === 'skill') {
+      GameManager.playSkillAttack()
+    } else if (action.type === 'item') {
+      GameManager.playHeal()
+    } else if (action.type === 'flee') {
+      GameManager.playFlee()
+    }
+
+    // 立即更新游戏状态
     executeBattleAction(action)
   }
 
