@@ -1,10 +1,10 @@
 import type { NPC } from '../../types'
 
 export const villageChiefNPC: NPC = {
-  id: 'village_chief',
+  id: 'npc_village_chief',
   name: '村长 格雷',
-  locationId: 'village',
-  subLocationId: 'village_chief_home',
+  locationId: 'zone_village',
+  subLocationId: 'space_village_chief_home',
   interactionLabel: '村长 格雷',
   dialogues: [
     {

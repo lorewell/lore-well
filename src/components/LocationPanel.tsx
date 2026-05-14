@@ -3,7 +3,7 @@ import { useGameStore } from '../store/gameStore'
 import { LOCATIONS } from '../data/locations'
 import { ENEMIES } from '../data/enemies'
 import { ITEMS } from '../data/items'
-import { NPCS } from '../data/npcs'
+import { NPCS } from '../data/dialogues'
 import type { Interaction, SubLocation } from '../types'
 import { GameManager } from '../game/GameManager'
 

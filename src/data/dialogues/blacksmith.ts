@@ -1,10 +1,10 @@
 import type { NPC } from '../../types'
 
 export const blacksmithNPC: NPC = {
-  id: 'blacksmith',
+  id: 'npc_blacksmith',
   name: '铁匠 托尔',
-  locationId: 'village',
-  subLocationId: 'village_blacksmith',
+  locationId: 'zone_village',
+  subLocationId: 'space_village_blacksmith',
   interactionLabel: '铁匠 托尔',
   onOpen: [
     { type: 'activateQuest', questId: 'quest_blacksmith' },
@@ -30,7 +30,7 @@ export const blacksmithNPC: NPC = {
         {
           text: '我有铁矿石。',
           next: 'has_ore',
-          condition: { type: 'hasItem', itemId: 'iron_ore' },
+          condition: { type: 'hasItem', itemId: 'mat_iron_ore' },
         },
         { text: '随便看看。' },
       ],

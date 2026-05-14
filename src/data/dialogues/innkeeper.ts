@@ -1,10 +1,10 @@
 import type { NPC } from '../../types'
 
 export const innkeeperNPC: NPC = {
-  id: 'innkeeper',
+  id: 'npc_innkeeper',
   name: '老板娘 玛格',
-  locationId: 'village',
-  subLocationId: 'village_inn',
+  locationId: 'zone_village',
+  subLocationId: 'space_village_inn',
   interactionLabel: '老板娘 玛格',
   dialogues: [
     {

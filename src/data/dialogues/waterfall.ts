@@ -2,7 +2,7 @@ import type { NPC } from '../../types'
 
 // ── 隐秘瀑布（场景描述）──────────────────────────────────────────────────────
 export const waterfallNPC: NPC = {
-  id: 'waterfall',
+  id: 'point_waterfall',
   name: '隐秘瀑布',
   dialogues: [
     {
@@ -26,7 +26,7 @@ export const waterfallNPC: NPC = {
 
 // ── 瀑布水池（可重复沐浴）────────────────────────────────────────────────────
 export const waterfallPoolNPC: NPC = {
-  id: 'waterfall_pool',
+  id: 'point_waterfall_pool',
   name: '瀑布水池',
   dialogues: [
     {
@@ -50,10 +50,10 @@ export const waterfallPoolNPC: NPC = {
 
 // ── 瀑布水底戒指（一次性触发）──────────────────────────────────────────────
 export const waterfallRingEventNPC: NPC = {
-  id: 'waterfall_ring_event',
+  id: 'point_waterfall_ring_event',
   name: '???',
   onOpen: [
-    { type: 'addItem', itemId: 'mysterious_ring', qty: 1 },
+    { type: 'addItem', itemId: 'qitem_mysterious_ring', qty: 1 },
     { type: 'activateQuest', questId: 'quest_ring_origin' },
     { type: 'consumeInteraction', interactionId: 'waterfall_pool_ring' },
   ],

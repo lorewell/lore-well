@@ -1,0 +1,128 @@
+import type { Item } from '../../types'
+
+export const EQUIPMENT: Record<string, Item> = {
+  // ── 武器（商店/掉落） ────────────────────────────────────────────────────
+  equip_iron_sword: {
+    id: 'equip_iron_sword',
+    name: '铁剑',
+    description: '一把普通的铁剑，锋利而耐用。',
+    type: 'equipment',
+    equipSlot: 'weapon',
+    statBonus: { atk: 10 },
+    stackable: false,
+  },
+  equip_steel_sword: {
+    id: 'equip_steel_sword',
+    name: '钢剑',
+    description: '精炼钢铁打造，攻击力远胜铁剑。',
+    type: 'equipment',
+    equipSlot: 'weapon',
+    statBonus: { atk: 20 },
+    stackable: false,
+  },
+  equip_magic_staff: {
+    id: 'equip_magic_staff',
+    name: '法术手杖',
+    description: '蕴含古老魔力，可增强法术并扩充法力上限。',
+    type: 'equipment',
+    equipSlot: 'weapon',
+    statBonus: { atk: 8, maxMp: 30 },
+    stackable: false,
+  },
+
+  // ── 护甲（商店/掉落） ────────────────────────────────────────────────────
+  equip_leather_armor: {
+    id: 'equip_leather_armor',
+    name: '皮甲',
+    description: '轻便的皮革护甲。',
+    type: 'equipment',
+    equipSlot: 'armor',
+    statBonus: { def: 8 },
+    stackable: false,
+  },
+  equip_chain_mail: {
+    id: 'equip_chain_mail',
+    name: '锁子甲',
+    description: '由铁环编织而成，防御出色。',
+    type: 'equipment',
+    equipSlot: 'armor',
+    statBonus: { def: 18 },
+    stackable: false,
+  },
+
+  // ── 饰品（商店/掉落） ────────────────────────────────────────────────────
+  equip_swift_ring: {
+    id: 'equip_swift_ring',
+    name: '疾风戒指',
+    description: '戴上后脚步轻盈，逃跑成功率大幅提升。',
+    type: 'equipment',
+    equipSlot: 'accessory',
+    statBonus: { spd: 8 },
+    stackable: false,
+  },
+  equip_vitality_amulet: {
+    id: 'equip_vitality_amulet',
+    name: '生命护符',
+    description: '镶嵌着红色宝石的护符，大幅提升生命上限。',
+    type: 'equipment',
+    equipSlot: 'accessory',
+    statBonus: { maxHp: 50 },
+    stackable: false,
+  },
+
+  // ── 合成装备（铁匠台，属性双修） ─────────────────────────────────────────
+  equip_hunters_blade: {
+    id: 'equip_hunters_blade',
+    name: '猎人之刃',
+    description: '以狼牙和哥布林牙镶嵌铁剑打造，攻击力与速度兼备，是适合浅层探索的均衡武器。',
+    type: 'equipment',
+    equipSlot: 'weapon',
+    statBonus: { atk: 16, spd: 5 },
+    stackable: false,
+  },
+  equip_venom_edge: {
+    id: 'equip_venom_edge',
+    name: '毒蛛战刃',
+    description: '以蜘蛛丝缠绕刃身，史莱姆胶渗入其中，异常锋利且出手迅速。',
+    type: 'equipment',
+    equipSlot: 'weapon',
+    statBonus: { atk: 14, spd: 10 },
+    stackable: false,
+  },
+  equip_runic_staff: {
+    id: 'equip_runic_staff',
+    name: '符文法杖',
+    description: '以石像核心为法杖核心，再以诅咒灰烬镌刻符文，大幅强化法力与攻击。',
+    type: 'equipment',
+    equipSlot: 'weapon',
+    statBonus: { atk: 12, maxMp: 60 },
+    stackable: false,
+  },
+  equip_silk_armor: {
+    id: 'equip_silk_armor',
+    name: '蛛丝软甲',
+    description: '以洞穴蛛丝编织、史莱姆胶强化的轻型软甲，防御出色且不影响行动速度。',
+    type: 'equipment',
+    equipSlot: 'armor',
+    statBonus: { def: 13, spd: 4 },
+    stackable: false,
+  },
+  equip_stone_plate: {
+    id: 'equip_stone_plate',
+    name: '石板铠甲',
+    description: '以石像核心熔铸、铁矿石为骨架打造的重甲，防御力极强，是正面硬抗的最佳选择。',
+    type: 'equipment',
+    equipSlot: 'armor',
+    statBonus: { def: 24, maxHp: 30 },
+    stackable: false,
+  },
+  equip_cursed_talisman: {
+    id: 'equip_cursed_talisman',
+    name: '诅咒符牌',
+    description: '以诅咒灰烬和石像核心炼制的饰品，散发着不安的魔力，大幅增强攻击与法力。',
+    type: 'equipment',
+    equipSlot: 'accessory',
+    statBonus: { atk: 10, maxMp: 30 },
+    stackable: false,
+  },
+}

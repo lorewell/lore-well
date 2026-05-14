@@ -2,7 +2,7 @@ import type { NPC } from '../../types'
 
 // ── 古老石井 ───────────────────────────────────────────────────────────────
 export const villageWellNPC: NPC = {
-  id: 'village_well',
+  id: 'point_village_well',
   name: '古老石井',
   dialogues: [
     {
@@ -26,7 +26,7 @@ export const villageWellNPC: NPC = {
 
 // ── 告示板 ─────────────────────────────────────────────────────────────────
 export const villageNoticeBoardNPC: NPC = {
-  id: 'village_notice_board',
+  id: 'point_village_notice_board',
   name: '告示板',
   dialogues: [
     {
@@ -50,7 +50,7 @@ export const villageNoticeBoardNPC: NPC = {
 
 // ── 艾尔文书架 ────────────────────────────────────────────────────────────
 export const elderBookshelfNPC: NPC = {
-  id: 'elder_bookshelf',
+  id: 'point_elder_bookshelf',
   name: '旧书架',
   dialogues: [
     {
@@ -74,7 +74,7 @@ export const elderBookshelfNPC: NPC = {
 
 // ── 村长之屋 墙上地图 ──────────────────────────────────────────────────────
 export const chiefMapNPC: NPC = {
-  id: 'chief_map',
+  id: 'point_chief_map',
   name: '墙上地图',
   dialogues: [
     {
@@ -98,7 +98,7 @@ export const chiefMapNPC: NPC = {
 
 // ── 客栈壁炉 ───────────────────────────────────────────────────────────────
 export const innHearthNPC: NPC = {
-  id: 'inn_hearth',
+  id: 'point_inn_hearth',
   name: '壁炉',
   dialogues: [
     {
@@ -122,7 +122,7 @@ export const innHearthNPC: NPC = {
 
 // ── 铁砧 ────────────────────────────────────────────────────────────────────
 export const smithAnvilNPC: NPC = {
-  id: 'smith_anvil',
+  id: 'point_smith_anvil',
   name: '铁砧',
   dialogues: [
     {
@@ -146,7 +146,7 @@ export const smithAnvilNPC: NPC = {
 
 // ── 草药架 ──────────────────────────────────────────────────────────────────
 export const grocerHerbsNPC: NPC = {
-  id: 'grocer_herbs',
+  id: 'point_grocer_herbs',
   name: '草药架',
   dialogues: [
     {
@@ -170,7 +170,7 @@ export const grocerHerbsNPC: NPC = {
 
 // ── 南路口风化路牌 ──────────────────────────────────────────────────────────
 export const southSignpostNPC: NPC = {
-  id: 'south_signpost',
+  id: 'point_south_signpost',
   name: '风化路牌',
   dialogues: [
     {
@@ -199,7 +199,7 @@ export const southSignpostNPC: NPC = {
 
 // ── 村口破损栅栏 ────────────────────────────────────────────────────────────
 export const outskirtsFenceNPC: NPC = {
-  id: 'outskirts_fence',
+  id: 'point_outskirts_fence',
   name: '破损栅栏',
   dialogues: [
     {
@@ -227,7 +227,7 @@ export const outskirtsFenceNPC: NPC = {
 
 // ── 灰烬谷口 · 烧焦的路牌 ──────────────────────────────────────────────────
 export const ashValleySignNPC: NPC = {
-  id: 'ash_valley_sign',
+  id: 'point_ash_valley_sign',
   name: '烧焦的路牌',
   dialogues: [
     {
@@ -247,7 +247,7 @@ export const ashValleySignNPC: NPC = {
 
 // ── 残营废地 · 猎人的残页 ──────────────────────────────────────────────────
 export const hunterNotesNPC: NPC = {
-  id: 'hunter_notes',
+  id: 'point_hunter_notes',
   name: '猎人的残页',
   dialogues: [
     {
@@ -271,7 +271,7 @@ export const hunterNotesNPC: NPC = {
 
 // ── 乌雾林道 · 刻字的界石 ─────────────────────────────────────────────────
 export const boundaryStoneNPC: NPC = {
-  id: 'boundary_stone',
+  id: 'point_boundary_stone',
   name: '刻字的界石',
   dialogues: [
     {
@@ -295,7 +295,7 @@ export const boundaryStoneNPC: NPC = {
 
 // ── 幽魂古林 · 符文古树 ──────────────────────────────────────────────────
 export const runeTreeNPC: NPC = {
-  id: 'rune_tree',
+  id: 'point_rune_tree',
   name: '符文古树',
   dialogues: [
     {
@@ -324,7 +324,7 @@ export const runeTreeNPC: NPC = {
 
 // ── 锈齿矿道 · 警示木牌 ──────────────────────────────────────────────────
 export const mineWarningNPC: NPC = {
-  id: 'mine_warning',
+  id: 'point_mine_warning',
   name: '警示木牌',
   dialogues: [
     {

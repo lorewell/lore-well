@@ -26,14 +26,14 @@ export const PLAYER_TEMPLATE: Character = {
   },
   skills: [
     {
-      id: 'slash',
+      id: 'skill_slash',
       name: '斩击',
       description: '一次有力的斩击，造成 1.4 倍攻击伤害。',
       mpCost: 8,
       damage: 1.4,
     },
     {
-      id: 'heal_self',
+      id: 'skill_heal_self',
       name: '恢复术',
       description: '恢复自身 20% 最大 HP。',
       mpCost: 12,

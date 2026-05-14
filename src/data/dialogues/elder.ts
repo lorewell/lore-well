@@ -1,10 +1,10 @@
 import type { NPC } from '../../types'
 
 export const elderNPC: NPC = {
-  id: 'elder',
+  id: 'npc_elder',
   name: '艾尔文',
-  locationId: 'village',
-  subLocationId: 'village_elder_home',
+  locationId: 'zone_village',
+  subLocationId: 'space_village_elder_home',
   interactionLabel: '长老 艾尔文',
   onOpen: [
     { type: 'activateQuest', questId: 'quest_elder' },

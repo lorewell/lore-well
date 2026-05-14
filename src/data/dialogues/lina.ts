@@ -2,7 +2,7 @@ import type { NPC } from '../../types'
 
 // ── 序章莉娜（一次性开场，由 startNewGame 自动触发）────────────────────────
 export const linaPrologueNPC: NPC = {
-  id: 'lina_prologue',
+  id: 'npc_lina_prologue',
   name: '小莉娜',
   dialogues: [
     {
@@ -39,10 +39,10 @@ export const linaPrologueNPC: NPC = {
 
 // ── 莉娜（客栈可重复对话）─────────────────────────────────────────────────
 export const linaNPC: NPC = {
-  id: 'lina',
+  id: 'npc_lina',
   name: '小莉娜',
-  locationId: 'village',
-  subLocationId: 'village_inn',
+  locationId: 'zone_village',
+  subLocationId: 'space_village_inn',
   interactionLabel: '小莉娜',
   dialogues: [
     {

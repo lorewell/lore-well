@@ -7,10 +7,10 @@ import type { NPC } from '../../types'
  * 功能：触发支线任务「同伴的下落」；可提供关于幽魂古林与矿坑异变的线索。
  */
 export const hunterNPC: NPC = {
-  id: 'hunter_toby',
+  id: 'npc_hunter_toby',
   name: '猎人 托比',
-  locationId: 'forest',
-  subLocationId: 'ruined_camp',
+  locationId: 'zone_forest',
+  subLocationId: 'space_ruined_camp',
   interactionLabel: '受伤的猎人',
   onOpen: [
     { type: 'activateQuest', questId: 'quest_hunter_companion' },
@@ -76,7 +76,7 @@ export const hunterNPC: NPC = {
       id: 'quest_accept',
       text: '「矿壁深坑，在锈齿矿道的北边——你进了矿道之后一直往里走就能到。」\n\n他从怀里掏出一块磨损的皮质腕环，「把这个带给他。他看见这个就知道你是我托付的人。」\n\n「……小心那个深坑。我是认真的。」',
       options: [
-        { text: '我会回来的。', next: 'after_accept', action: { type: 'addItem', itemId: 'hunter_wristband', qty: 1 } },
+        { text: '我会回来的。', next: 'after_accept', action: { type: 'addItem', itemId: 'qitem_hunter_wristband', qty: 1 } },
       ],
     },
 

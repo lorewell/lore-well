@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useGameStore } from '../store/gameStore'
-import { CRAFT_RECIPES } from '../data/recipes'
+import { CRAFT_RECIPES } from '../data/items'
 import { ITEMS } from '../data/items'
 import type { CraftRecipe } from '../types'
 

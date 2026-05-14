@@ -15,13 +15,42 @@ import type {
 import { PLAYER_TEMPLATE } from '../data/characters'
 import { LOCATIONS, STARTING_LOCATION } from '../data/locations'
 import { INITIAL_QUESTS } from '../data/quests'
-import { ITEMS } from '../data/items'
-import { CRAFT_RECIPES } from '../data/recipes'
+import { ITEMS, CRAFT_RECIPES } from '../data/items'
 import { NPCS } from '../data/dialogues'
 import type { DialogueAction } from '../types'
 
 // ─── 存档版本 ────────────────────────────────────────────────────────────────
-const SAVE_VERSION = 4
+const SAVE_VERSION = 5
+
+// ─── 存档迁移：v4 → v5 (ID 重命名) ──────────────────────────────────────────
+const ID_MIGRATION_MAP: Record<string, string> = {
+  health_potion: 'cons_health_potion', mana_potion: 'cons_mana_potion', elixir: 'cons_elixir',
+  iron_sword: 'equip_iron_sword', steel_sword: 'equip_steel_sword', magic_staff: 'equip_magic_staff',
+  leather_armor: 'equip_leather_armor', chain_mail: 'equip_chain_mail', swift_ring: 'equip_swift_ring',
+  vitality_amulet: 'equip_vitality_amulet', hunters_blade: 'equip_hunters_blade',
+  venom_edge: 'equip_venom_edge', runic_staff: 'equip_runic_staff', silk_armor: 'equip_silk_armor',
+  stone_plate: 'equip_stone_plate', cursed_talisman: 'equip_cursed_talisman',
+  iron_ore: 'mat_iron_ore', slime_jelly: 'mat_slime_jelly', wolf_fang: 'mat_wolf_fang',
+  spider_silk: 'mat_spider_silk', goblin_tooth: 'mat_goblin_tooth', stone_core: 'mat_stone_core',
+  cursed_ash: 'mat_cursed_ash', ancient_key: 'qitem_ancient_key', goblin_emblem: 'qitem_goblin_emblem',
+  mysterious_ring: 'qitem_mysterious_ring', hunter_wristband: 'qitem_hunter_wristband',
+  village: 'zone_village', forest: 'zone_forest', temple_ruins: 'zone_temple_ruins',
+  village_center: 'space_village_center', village_waterfall: 'space_village_waterfall',
+  village_elder_home: 'space_village_elder_home', village_chief_home: 'space_village_chief_home',
+  village_outskirts: 'space_village_outskirts', village_inn: 'space_village_inn',
+  village_blacksmith: 'space_village_blacksmith', village_grocer: 'space_village_grocer',
+  village_south_gate: 'space_village_south_gate', village_portal: 'space_village_portal',
+  ash_valley_gate: 'space_ash_valley_gate', bone_marsh: 'space_bone_marsh',
+  ruined_camp: 'space_ruined_camp', misty_forest_path: 'space_misty_forest_path',
+  broken_moon_altar: 'space_broken_moon_altar', ghost_grove: 'space_ghost_grove',
+  rusty_mine_road: 'space_rusty_mine_road', mine_pit: 'space_mine_pit',
+  dark_vein_wall: 'space_dark_vein_wall', temple_outer: 'space_temple_outer',
+  temple_inner: 'space_temple_inner', temple_altar: 'space_temple_altar',
+  temple_corridor: 'space_temple_corridor',
+  lina_prologue: 'npc_lina_prologue', lina: 'npc_lina', innkeeper: 'npc_innkeeper',
+  elder: 'npc_elder', village_chief: 'npc_village_chief', blacksmith: 'npc_blacksmith',
+  grocer: 'npc_grocer', hunter_toby: 'npc_hunter_toby',
+}
 
 // ─── NPC 位置快照类型 ────────────────────────────────────────────────────────
 export interface NpcLocationEntry {
@@ -191,7 +220,7 @@ export const useGameStore = create<GameState>()(
           currentSubLocationId: LOCATIONS[STARTING_LOCATION].subMap?.startNodeId ?? null,
           consumedInteractions: [],
           quests: structuredClone(INITIAL_QUESTS),
-          activeDialogue: { npcId: 'lina_prologue', nodeId: 'greeting' },
+          activeDialogue: { npcId: 'npc_lina_prologue', nodeId: 'greeting' },
           activeShopNpcId: null,
           activeCraftNpcId: null,
           npcLocations: buildInitialNpcLocations(),
@@ -339,8 +368,8 @@ export const useGameStore = create<GameState>()(
           }
         }
         // 若铁匠任务被激活，立即检查玩家是否已持有矿石
-        if (npcId === 'blacksmith') {
-          get()._autoCompleteObjectives({ type: 'have_item', itemId: 'iron_ore' })
+        if (npcId === 'npc_blacksmith') {
+          get()._autoCompleteObjectives({ type: 'have_item', itemId: 'mat_iron_ore' })
         }
         get()._autoCompleteObjectives({ type: 'talk_npc', npcId })
       },
@@ -738,8 +767,8 @@ export const useGameStore = create<GameState>()(
         set((s) => {
           const stats = s.player.stats
           return {
-            currentLocationId: 'village',
-            currentSubLocationId: LOCATIONS['village'].subMap?.startNodeId ?? null,
+            currentLocationId: 'zone_village',
+            currentSubLocationId: LOCATIONS['zone_village'].subMap?.startNodeId ?? null,
             player: {
               ...s.player,
               stats: {
@@ -755,6 +784,45 @@ export const useGameStore = create<GameState>()(
     {
       name: 'lore-well-save',
       version: SAVE_VERSION,
+      migrate: (persistedState, version) => {
+        const state = persistedState as Record<string, unknown>
+        if (version < 5) {
+          // 迁移 inventory item IDs
+          if (Array.isArray(state.inventory)) {
+            state.inventory = (state.inventory as Array<{ item: { id: string }; quantity: number }>).map((entry) => ({
+              ...entry,
+              item: { ...entry.item, id: ID_MIGRATION_MAP[entry.item.id] ?? entry.item.id },
+            }))
+          }
+          // 迁移 location IDs
+          if (typeof state.currentLocationId === 'string') {
+            state.currentLocationId = ID_MIGRATION_MAP[state.currentLocationId as string] ?? state.currentLocationId
+          }
+          if (typeof state.currentSubLocationId === 'string') {
+            state.currentSubLocationId = ID_MIGRATION_MAP[state.currentSubLocationId as string] ?? state.currentSubLocationId
+          }
+          // 迁移 quest trigger itemIds
+          if (Array.isArray(state.quests)) {
+            state.quests = (state.quests as Array<Record<string, unknown>>).map((q) => ({
+              ...q,
+              objectives: (q.objectives as Array<Record<string, unknown>>)?.map((obj) => ({
+                ...obj,
+                trigger: obj.trigger
+                  ? {
+                      ...(obj.trigger as Record<string, string>),
+                      itemId: ID_MIGRATION_MAP[(obj.trigger as Record<string, string>).itemId] ?? (obj.trigger as Record<string, string>).itemId,
+                      npcId: ID_MIGRATION_MAP[(obj.trigger as Record<string, string>).npcId] ?? (obj.trigger as Record<string, string>).npcId,
+                      enemyId: ID_MIGRATION_MAP[(obj.trigger as Record<string, string>).enemyId] ?? (obj.trigger as Record<string, string>).enemyId,
+                      locationId: ID_MIGRATION_MAP[(obj.trigger as Record<string, string>).locationId] ?? (obj.trigger as Record<string, string>).locationId,
+                      subLocationId: ID_MIGRATION_MAP[(obj.trigger as Record<string, string>).subLocationId] ?? (obj.trigger as Record<string, string>).subLocationId,
+                    }
+                  : obj.trigger,
+              }))
+            }))
+          }
+        }
+        return state
+      },
       partialize: (s) => {
         // 排除战斗状态（战斗中途刷新后应重置），避免持久化的 enemy 对象丢失方法
         const { battle: _battle, ...rest } = s as unknown as Record<string, unknown>
