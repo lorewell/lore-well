@@ -15,7 +15,7 @@ import MapModal from '../components/MapModal'
 import { LOCATIONS } from '../data/locations'
 import { getShopByNpc } from '../data/shops'
 
-function StatusPanel({ onClose }: { onClose: () => void }) {
+function EquipPanel({ onClose }: { onClose: () => void }) {
   const player = useGameStore((s) => s.player)
   const gold = useGameStore((s) => s.gold)
   const { stats, baseStats, equipment, level, exp, expToNext } = player
@@ -117,7 +117,7 @@ function StatusPanel({ onClose }: { onClose: () => void }) {
   )
 }
 
-type ActivePanel = 'none' | 'inventory' | 'quests' | 'status' | 'map'
+type ActivePanel = 'none' | 'inventory' | 'quests' | 'equip' | 'map'
 
 export default function GameScreen() {
   const canvasRef = useRef<HTMLDivElement>(null)
@@ -170,7 +170,7 @@ export default function GameScreen() {
       if (inCombat || paused) return
       if (e.key === 'b' || e.key === 'B') togglePanel('inventory')
       if (e.key === 'q' || e.key === 'Q') togglePanel('quests')
-      if (e.key === 'c' || e.key === 'C') togglePanel('status')
+      if (e.key === 'c' || e.key === 'C') togglePanel('equip')
       if (e.key === 'm' || e.key === 'M') togglePanel('map')
     }
     window.addEventListener('keydown', handler)
@@ -231,8 +231,8 @@ export default function GameScreen() {
             {activePanel === 'quests' && (
               <QuestLog onClose={() => setActivePanel('none')} />
             )}
-            {activePanel === 'status' && (
-              <StatusPanel onClose={() => setActivePanel('none')} />
+            {activePanel === 'equip' && (
+              <EquipPanel onClose={() => setActivePanel('none')} />
             )}
             {activePanel === 'map' && (
               <MapModal onClose={() => setActivePanel('none')} />

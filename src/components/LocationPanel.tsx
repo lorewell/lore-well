@@ -9,7 +9,7 @@ import { GameManager } from '../game/GameManager'
 
 interface LocationPanelProps {
   onStartBattle: () => void
-  onOpenPanel: (panel: 'inventory' | 'quests' | 'status' | 'map') => void
+  onOpenPanel: (panel: 'inventory' | 'quests' | 'equip' | 'map') => void
   onPause: () => void
 }
 
@@ -289,7 +289,7 @@ function ExitButtons({ exits, onTravel }: ExitButtonsProps) {
 }
 
 interface MenuColumnProps {
-  onOpenPanel: (panel: 'inventory' | 'quests' | 'status' | 'map') => void
+  onOpenPanel: (panel: 'inventory' | 'quests' | 'equip' | 'map') => void
   onPause: () => void
 }
 
@@ -297,7 +297,7 @@ function MenuColumn({ onOpenPanel, onPause }: MenuColumnProps) {
   const menuItems = [
     { id: 'inventory', marker: 'BAG', label: '背包', key: 'B', action: () => onOpenPanel('inventory') },
     { id: 'quests', marker: 'LOG', label: '任务', key: 'Q', action: () => onOpenPanel('quests') },
-    { id: 'status', marker: 'STAT', label: '状态', key: 'C', action: () => onOpenPanel('status') },
+    { id: 'equip', marker: 'EQUIP', label: '装备', key: 'C', action: () => onOpenPanel('equip') },
     { id: 'map', marker: 'MAP', label: '地图', key: 'M', action: () => onOpenPanel('map') },
     { id: 'pause', marker: 'MENU', label: '暂停', key: 'ESC', action: onPause },
   ] as const
