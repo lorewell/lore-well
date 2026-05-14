@@ -105,6 +105,7 @@ export default function DialogBox() {
           <div className="flex flex-col gap-1">
             {visibleOptions.map((opt, i) => (
               <button
+                type="button"
                 key={i}
                 onClick={() => handleOption(opt)}
                 className="text-left text-xs px-2.5 py-1.5 border cursor-pointer transition-all duration-150"
@@ -121,6 +122,7 @@ export default function DialogBox() {
             ))}
             {showDismissOption && (
               <button
+                type="button"
                 onClick={() => closeDialogue()}
                 className="text-left text-xs px-2.5 py-1.5 border cursor-pointer transition-all duration-150"
                 style={{
@@ -136,6 +138,7 @@ export default function DialogBox() {
             )}
             {showEndOption && (
               <button
+                type="button"
                 onClick={() => closeDialogue()}
                 className="text-left text-xs px-2.5 py-1.5 border cursor-pointer transition-all duration-150"
                 style={{

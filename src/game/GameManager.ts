@@ -12,7 +12,11 @@ let instance: Phaser.Game | null = null
  */
 export const GameManager = {
   init(parent: HTMLElement): Phaser.Game {
-    if (instance) return instance
+    if (instance) {
+      // 检测父节点是否已更换；若是则销毁旧实例再重建
+      if (instance.canvas?.parentElement === parent) return instance
+      this.destroy()
+    }
 
     instance = new Phaser.Game({
       type: Phaser.AUTO,
@@ -33,6 +37,7 @@ export const GameManager = {
   },
 
   destroy() {
+    SoundManager.close()
     instance?.destroy(true)
     instance = null
   },
@@ -147,6 +152,25 @@ export const GameManager = {
   /** 开启面板音效 */
   playOpen() {
     SoundManager.play('open')
+  },
+
+  /**
+   * 事件驱动的场景就绪回调：当 LocationScene 进入 active 状态后立即调用 cb，
+   * 替代 setTimeout 轮询方案，避免竞态与多次调用问题。
+   */
+  onceLocationReady(cb: () => void) {
+    if (!instance) return
+    // 如果场景已就绪，直接调用
+    const scene = this.getLocationScene()
+    if (scene?.sys.isActive()) { cb(); return }
+    // 否则每帧检测一次（step 在 Phaser 渲染循环中每帧触发）
+    const onStep = () => {
+      if (this.getLocationScene()?.sys.isActive()) {
+        instance!.events.off('step', onStep)
+        cb()
+      }
+    }
+    instance.events.on('step', onStep)
   },
 
   /** 预热音频上下文（需在用户首次交互时调用） */

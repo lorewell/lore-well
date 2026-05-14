@@ -52,7 +52,11 @@ function EquipPanel({ onClose }: { onClose: () => void }) {
               LV {level} · {gold} G
             </p>
           </div>
-          <button onClick={onClose} className="pixel-button px-3 py-2 text-xs font-bold">
+          <button
+            type="button"
+            onClick={() => { onClose(); }}
+            className="pixel-button px-3 py-2 text-xs font-bold"
+          >
             CLOSE
           </button>
         </div>
@@ -133,6 +137,10 @@ export default function GameScreen() {
   const closeShop = useGameStore((s) => s.closeShop)
   const activeShop = activeShopNpcId ? getShopByNpc(activeShopNpcId) : undefined
   const activeCraftNpcId = useGameStore((s) => s.activeCraftNpcId)
+
+  // ─── 使用 ref 持有最新的波动状态，避免键盘监听器频繁重注册 ───────────────
+  const stateRef = useRef({ inCombat, paused, activePanel, activeShopNpcId, activeCraftNpcId })
+  stateRef.current = { inCombat, paused, activePanel, activeShopNpcId, activeCraftNpcId }
   const closeCraft = useGameStore((s) => s.closeCraft)
   const activeDialogue = useGameStore((s) => s.activeDialogue)
 
@@ -148,6 +156,8 @@ export default function GameScreen() {
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
+      // 通过 ref 读取最新状态，避免依赖数组过多导致监听器频繁重注册
+      const { inCombat, paused, activePanel, activeShopNpcId, activeCraftNpcId } = stateRef.current
       if (e.key === 'Escape') {
         if (activeCraftNpcId) {
           closeCraft()
@@ -175,22 +185,18 @@ export default function GameScreen() {
     }
     window.addEventListener('keydown', handler)
     return () => window.removeEventListener('keydown', handler)
-  }, [inCombat, paused, activePanel, activeShopNpcId, activeCraftNpcId, closeShop, closeCraft, togglePanel])
+    // closeShop/closeCraft/togglePanel 均为稳定引用，stateRef 不触发重注册
+  }, [closeShop, closeCraft, togglePanel])
 
   useEffect(() => {
     if (!canvasRef.current) return
     GameManager.init(canvasRef.current)
 
-    const waitForScene = () => {
-      const scene = GameManager.getLocationScene()
-      if (scene) {
-        const loc = LOCATIONS[currentLocationId]
-        if (loc) GameManager.changeLocation(loc.backgroundKey)
-      } else {
-        setTimeout(waitForScene, 200)
-      }
-    }
-    waitForScene()
+    // 事件驱动：等待 LocationScene 就绪后再同步背景，避免 setTimeout 竞态
+    GameManager.onceLocationReady(() => {
+      const loc = LOCATIONS[currentLocationId]
+      if (loc) GameManager.changeLocation(loc.backgroundKey)
+    })
 
     return () => {
       GameManager.destroy()

@@ -82,6 +82,7 @@ export default function QuestLog({ onClose }: Props) {
             <span className="text-yellow-400">{active.length} 进行中</span>
             <span className="text-green-400">{completed.length} 已完成</span>
             <button
+              type="button"
               onClick={onClose}
               className="text-gray-400 hover:text-white transition-colors text-xl leading-none ml-2"
             >

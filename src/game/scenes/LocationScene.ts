@@ -97,8 +97,11 @@ export default class LocationScene extends Phaser.Scene {
   // ─── 粒子管理 ──────────────────────────────────────────────────────────────
 
   private _spawnParticles(bgKey: string) {
-    // 清除旧粒子
-    for (const p of this.particles) p.go.destroy()
+    // 清除旧粒子：先停止其 tween，再销毁对象，避免僵尸 tween 累积
+    for (const p of this.particles) {
+      this.tweens.killTweensOf(p.go)
+      p.go.destroy()
+    }
     this.particles = []
 
     const cfg = LOCATION_PARTICLES[bgKey]

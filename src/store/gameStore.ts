@@ -310,8 +310,9 @@ export const useGameStore = create<GameState>()(
         get().addItem(item, 1)
 
         const newStats = applyEquipmentBonuses(player.baseStats, newEquipment)
-        newStats.hp = clamp(player.stats.hp, 0, newStats.maxHp)
-        newStats.mp = clamp(player.stats.mp, 0, newStats.maxMp)
+        // 按百分比换算，避免 maxHp 下降时 HP 超出上限
+        newStats.hp = Math.round((player.stats.hp / player.stats.maxHp) * newStats.maxHp)
+        newStats.mp = Math.round((player.stats.mp / player.stats.maxMp) * newStats.maxMp)
 
         set((s) => ({
           player: { ...s.player, equipment: newEquipment, stats: newStats },
@@ -441,7 +442,7 @@ export const useGameStore = create<GameState>()(
             ps = { ...get().battle.playerStats! }
           }
         } else if (action.type === 'flee') {
-          const fleeChance = 0.5 + (ps.spd - (battle.enemyStats?.spd ?? 10)) * 0.02
+          const fleeChance = clamp(0.5 + (ps.spd - (battle.enemyStats?.spd ?? 10)) * 0.02, 0.1, 0.9)
           if (Math.random() < fleeChance) {
             log.push('你成功逃跑了！')
             set({ battle: { ...battle, playerStats: ps, enemyStats: es, phase: 'flee', turnLog: log } })
@@ -539,6 +540,7 @@ export const useGameStore = create<GameState>()(
         set((s) => {
           const player = { ...s.player }
           player.exp += amount
+          let leveledUp = false
           while (player.exp >= player.expToNext) {
             player.exp -= player.expToNext
             player.level += 1
@@ -546,16 +548,24 @@ export const useGameStore = create<GameState>()(
             player.baseStats = {
               ...player.baseStats,
               maxHp: player.baseStats.maxHp + 20,
-              hp: player.baseStats.maxHp + 20,
               maxMp: player.baseStats.maxMp + 8,
-              mp: player.baseStats.maxMp + 8,
               atk: player.baseStats.atk + 3,
               def: player.baseStats.def + 2,
               spd: player.baseStats.spd + 1,
             }
+            leveledUp = true
           }
-          // 重新计算有效属性（升级后满血满蓝）
+          // 重新计算有效属性（含装备加成）
           const newStats = applyEquipmentBonuses(player.baseStats, player.equipment)
+          if (leveledUp) {
+            // 升级时恢复满血满蓝
+            newStats.hp = newStats.maxHp
+            newStats.mp = newStats.maxMp
+          } else {
+            // 未升级，按百分比保留当前 HP/MP，避免非升级经验奖励意外满血
+            newStats.hp = Math.round((player.stats.hp / player.stats.maxHp) * newStats.maxHp)
+            newStats.mp = Math.round((player.stats.mp / player.stats.maxMp) * newStats.maxMp)
+          }
           player.stats = newStats
           return { player }
         })

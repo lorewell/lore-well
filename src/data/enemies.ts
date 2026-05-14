@@ -1,6 +1,11 @@
 import type { Enemy } from '../types'
 import { ITEMS } from './items'
 
+/**
+ * 改注——採落表判定规则：
+ * 每个 drop 条目是《独立》模拟的，chance 表示该条目单独掉落的概率。
+ * 尖各条目概率相加可超过 1.0，这是预期行为而非错误。
+ */
 export const ENEMIES: Record<string, Enemy> = {
   slime: {
     id: 'slime',

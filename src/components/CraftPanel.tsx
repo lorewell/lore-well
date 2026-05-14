@@ -85,7 +85,7 @@ export default function CraftPanel({ onClose }: CraftPanelProps) {
             <span className="text-xs" style={{ color: '#f1c45d' }}>
               {gold} G · LV {player.level}
             </span>
-            <button onClick={onClose} className="pixel-button px-3 py-1.5 text-xs font-bold">
+            <button type="button" onClick={onClose} className="pixel-button px-3 py-1.5 text-xs font-bold">
               CLOSE
             </button>
           </div>
@@ -115,6 +115,7 @@ export default function CraftPanel({ onClose }: CraftPanelProps) {
                       const isSelected = selected?.id === recipe.id
                       return (
                         <button
+                          type="button"
                           key={recipe.id}
                           onClick={() => setSelected(recipe)}
                           className={`pixel-interaction flex min-w-0 items-center gap-3 px-3 py-2.5 text-left ${
@@ -294,6 +295,7 @@ function RecipeDetail({ recipe, gold, playerLevel, getHave, canCraft, onCraft }:
 
       {/* 按钮 */}
       <button
+        type="button"
         onClick={onCraft}
         disabled={!canCraft || locked}
         className="pixel-button w-full py-2 text-xs font-bold tracking-wider disabled:opacity-40 disabled:cursor-not-allowed"

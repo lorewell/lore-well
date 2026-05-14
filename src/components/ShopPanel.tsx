@@ -53,6 +53,7 @@ export default function ShopPanel({ shop, onClose }: Props) {
           <div className="flex items-center gap-4">
             <span className="text-yellow-400 text-sm">💰 {gold}</span>
             <button
+              type="button"
               onClick={onClose}
               className="text-gray-400 hover:text-white transition-colors text-xl leading-none"
             >
@@ -65,6 +66,7 @@ export default function ShopPanel({ shop, onClose }: Props) {
         <div className="flex border-b border-gray-700">
           {(['buy', 'sell'] as const).map((m) => (
             <button
+              type="button"
               key={m}
               onClick={() => setMode(m)}
               className={`flex-1 py-2 text-sm font-medium transition-colors cursor-pointer ${
@@ -124,6 +126,7 @@ export default function ShopPanel({ shop, onClose }: Props) {
                       {entry.price} G
                     </span>
                     <button
+                      type="button"
                       onClick={() => buyItem(entry.itemId, entry.price)}
                       disabled={!canAfford}
                       className={`text-xs px-2.5 py-1 rounded border transition-colors ${
@@ -167,6 +170,7 @@ export default function ShopPanel({ shop, onClose }: Props) {
                   <div className="flex items-center gap-2 shrink-0">
                     <span className="text-sm font-bold text-gray-400">{price} G</span>
                     <button
+                      type="button"
                       onClick={() => sellItem(item.id, price)}
                       className="text-xs px-2.5 py-1 rounded border bg-gray-700 hover:bg-gray-600 border-gray-500 text-gray-200 cursor-pointer transition-colors"
                     >

@@ -53,6 +53,7 @@ export default function PauseMenu({ onClose }: Props) {
               </p>
               <div className="flex gap-2">
                 <button
+                  type="button"
                   onClick={handleLeave}
                   className="flex-1 py-2 text-xs tracking-wider rounded border cursor-pointer transition-colors hover:opacity-80"
                   style={{ borderColor: '#c03030', color: '#e07070', background: 'rgba(180,30,30,0.15)' }}
@@ -60,6 +61,7 @@ export default function PauseMenu({ onClose }: Props) {
                   确认
                 </button>
                 <button
+                  type="button"
                   onClick={() => setConfirmLeave(false)}
                   className="flex-1 py-2 text-xs tracking-wider rounded border cursor-pointer transition-colors hover:opacity-80"
                   style={{ borderColor: '#3a2060', color: '#9070b0' }}
@@ -99,6 +101,7 @@ function PauseButton({
 
   return (
     <button
+      type="button"
       onClick={onClick}
       className="w-full py-2.5 text-sm tracking-[0.2em] uppercase border rounded cursor-pointer transition-all hover:brightness-125"
       style={style}

@@ -241,6 +241,7 @@ function InteractionButton({ interaction, consumed, disabled, onClick }: Interac
 
   return (
     <button
+      type="button"
       onClick={() => !isDisabled && onClick()}
       disabled={isDisabled}
       className={`pixel-interaction ${typeClass} flex min-w-0 items-center gap-2 px-2 py-2 text-left text-[11px] sm:px-3 sm:text-xs`}
@@ -276,6 +277,7 @@ function ExitButtons({ exits, onTravel }: ExitButtonsProps) {
         if (!dest) return null
         return (
           <button
+            type="button"
             key={exitId}
             onClick={() => onTravel(exitId)}
             className="pixel-button pixel-button--secondary px-2 py-1.5 text-[10px] font-bold tracking-[0.08em] sm:px-3 sm:text-[11px] sm:tracking-[0.12em]"
@@ -308,6 +310,7 @@ function MenuColumn({ onOpenPanel, onPause }: MenuColumnProps) {
       <div className="pixel-menu-grid">
       {menuItems.map(({ id, marker, label, key, action }) => (
         <button
+          type="button"
           key={id}
           onClick={action}
           className="pixel-interaction pixel-menu-tile flex min-w-0 flex-col items-start justify-between gap-2 px-3 py-3 text-left text-[11px] font-bold sm:text-xs"
@@ -331,6 +334,7 @@ function ModeColumn({ mode, onToggle }: ModeColumnProps) {
   return (
     <aside className="pixel-mode-column flex flex-col items-center justify-end gap-2 px-2 py-3">
       <button
+        type="button"
         onClick={onToggle}
         title={mode === 'scene' ? '打开菜单' : '返回场景'}
         className="pixel-button flex h-10 w-10 items-center justify-center text-[10px] font-black sm:h-11 sm:w-11 sm:text-sm"

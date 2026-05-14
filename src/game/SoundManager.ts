@@ -84,7 +84,8 @@ function playFreqSweep(
 
   osc.type = type
   osc.frequency.setValueAtTime(startFreq, c.currentTime)
-  osc.frequency.exponentialRampToValueAtTime(endFreq, c.currentTime + duration)
+  // exponentialRampToValueAtTime 要求目标频率 > 0，否则会抛出错误
+  osc.frequency.exponentialRampToValueAtTime(Math.max(0.1, endFreq), c.currentTime + duration)
 
   gain.gain.setValueAtTime(gainPeak, c.currentTime)
   gain.gain.exponentialRampToValueAtTime(0.001, c.currentTime + duration)
@@ -239,5 +240,14 @@ export const SoundManager = {
   /** 预热 AudioContext（需在用户交互事件中调用一次） */
   resume(): void {
     getCtx()
+  },
+
+  /** 关闭 AudioContext，释放资源（在 GameManager.destroy() 时调用） */
+  close(): void {
+    if (ctx) {
+      ctx.close()
+      ctx = null
+      masterGain = null
+    }
   },
 }

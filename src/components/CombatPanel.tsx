@@ -76,7 +76,7 @@ export default function CombatPanel({ onBattleEnd }: CombatPanelProps) {
     }
   }
 
-  const consumables = inventory.filter((i) => i.item.type === 'consumable')
+  const consumables = inventory.filter((i) => i.item.type === 'consumable' && i.quantity > 0)
 
   return (
     <div
@@ -231,6 +231,7 @@ export default function CombatPanel({ onBattleEnd }: CombatPanelProps) {
               </div>
 
               <button
+                type="button"
                 onClick={handleClose}
                 className="px-8 py-2.5 text-sm tracking-widest border cursor-pointer hover:brightness-125 transition-all"
                 style={{ borderColor: '#3a1a5a', background: 'rgba(102,0,204,0.2)', color: '#e2d8f0' }}
@@ -245,6 +246,7 @@ export default function CombatPanel({ onBattleEnd }: CombatPanelProps) {
                 成功逃脱
               </p>
               <button
+                type="button"
                 onClick={handleClose}
                 className="px-8 py-2.5 text-sm tracking-widest border cursor-pointer hover:brightness-125 transition-all"
                 style={{ borderColor: '#3a1a5a', background: 'rgba(102,0,204,0.2)', color: '#e2d8f0' }}
@@ -266,6 +268,7 @@ export default function CombatPanel({ onBattleEnd }: CombatPanelProps) {
                 <span style={{ color: '#cc8888' }}>HP/MP 恢复至 50%，装备与道具保留。</span>
               </p>
               <button
+                type="button"
                 onClick={handleClose}
                 className="mt-1 px-8 py-2.5 text-sm tracking-widest border cursor-pointer hover:brightness-125 transition-all"
                 style={{ borderColor: '#5a1a1a', background: 'rgba(100,10,10,0.3)', color: '#e2c8c8' }}
@@ -326,6 +329,7 @@ function ActionButton({
 }) {
   return (
     <button
+      type="button"
       onClick={onClick}
       disabled={disabled}
       className="flex items-center justify-center gap-1 px-3 py-2.5 text-xs tracking-wider border transition-all duration-150 cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed hover:brightness-125"

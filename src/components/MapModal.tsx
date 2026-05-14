@@ -39,7 +39,7 @@ export default function MapModal({ onClose }: MapModalProps) {
               {location?.name ?? '未知区域'}
             </h2>
           </div>
-          <button onClick={onClose} className="pixel-button px-3 py-2 text-xs font-bold">
+          <button type="button" onClick={onClose} className="pixel-button px-3 py-2 text-xs font-bold">
             CLOSE
           </button>
         </div>
@@ -120,6 +120,7 @@ function MapDisplay({ subMap, currentNodeId, onMove }: MapDisplayProps) {
 
           return (
             <button
+              type="button"
               key={id}
               onClick={() => onMove(id)}
               title={node.name}

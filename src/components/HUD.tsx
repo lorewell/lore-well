@@ -56,6 +56,17 @@ export default function HUD() {
         </div>
       </div>
 
+      {/* 移动端显示地点与金币（sm 以下替代右侧卡片） */}
+      <div className="pixel-panel pixel-hud-card flex items-center justify-between gap-3 sm:hidden">
+        <div className="truncate text-xs font-bold tracking-[0.1em]" style={{ color: '#f8e7b7' }}>
+          {locationName}
+        </div>
+        <div className="shrink-0 flex items-center gap-1">
+          <span className="border px-1.5 py-0.5 text-[10px] font-bold" style={{ borderColor: '#6d4d26', color: '#f1c45d' }}>G</span>
+          <span className="text-xs font-bold" style={{ color: '#f1c45d' }}>{gold}</span>
+        </div>
+      </div>
+
       <div className="pixel-panel pixel-hud-card hidden min-w-52 sm:block">
         <div className="pixel-label mb-3 text-right">CURRENT AREA</div>
         <div className="text-right text-sm font-bold tracking-[0.12em]" style={{ color: '#f8e7b7' }}>

@@ -11,6 +11,10 @@ export default class CombatScene extends Phaser.Scene {
   private playerBody?: Phaser.GameObjects.Rectangle
   private bgOverlay?: Phaser.GameObjects.Rectangle
 
+  // 持续运行的 tween 引用，shutdown 时需主动停止
+  private eyeTween?: Phaser.Tweens.Tween
+  private floatTween?: Phaser.Tweens.Tween
+
   // 战斗开始时记录原始位置
   private enemyOrigin = { x: 0, y: 0 }
   private playerOrigin = { x: 0, y: 0 }
@@ -39,6 +43,12 @@ export default class CombatScene extends Phaser.Scene {
     })
   }
 
+  shutdown() {
+    // 停止无限循环 tween，防止场景 stop 后僵尸 tween 持续占用内存
+    this.eyeTween?.stop()
+    this.floatTween?.stop()
+  }
+
   // ─── 内部构建 ─────────────────────────────────────────────────────────────
 
   private _buildEnemyDisplay(w: number, h: number) {
@@ -58,7 +68,7 @@ export default class CombatScene extends Phaser.Scene {
     this.enemyOrigin = { x, y }
 
     // 眼睛呼吸动画
-    this.tweens.add({
+    this.eyeTween = this.tweens.add({
       targets: [eye1, eye2],
       scaleX: 1.3,
       scaleY: 1.3,
@@ -68,7 +78,7 @@ export default class CombatScene extends Phaser.Scene {
       ease: 'Sine.easeInOut',
     })
     // 敌人轻微悬浮
-    this.tweens.add({
+    this.floatTween = this.tweens.add({
       targets: this.enemyDisplay,
       y: y - 8,
       duration: 1600,

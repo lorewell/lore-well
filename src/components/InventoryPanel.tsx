@@ -33,6 +33,7 @@ export default function InventoryPanel({ onClose }: Props) {
           <div className="flex items-center gap-4">
             <span className="text-yellow-400 text-sm">💰 {gold}</span>
             <button
+              type="button"
               onClick={onClose}
               className="text-gray-400 hover:text-white transition-colors text-xl leading-none"
             >
@@ -79,6 +80,7 @@ export default function InventoryPanel({ onClose }: Props) {
                       <div className="flex gap-1 shrink-0">
                         {isConsumable && (
                           <button
+                            type="button"
                             onClick={(e) => { e.stopPropagation(); handleUse(entry.item.id) }}
                             className="text-xs bg-green-800 hover:bg-green-700 text-green-200 px-2 py-0.5 rounded"
                           >
@@ -87,6 +89,7 @@ export default function InventoryPanel({ onClose }: Props) {
                         )}
                         {isEquip && (
                           <button
+                            type="button"
                             onClick={(e) => { e.stopPropagation(); handleEquip(entry.item.id) }}
                             className="text-xs bg-blue-800 hover:bg-blue-700 text-blue-200 px-2 py-0.5 rounded"
                           >
