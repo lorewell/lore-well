@@ -33,7 +33,7 @@ const ID_MIGRATION_MAP: Record<string, string> = {
   iron_ore: 'mat_iron_ore', slime_jelly: 'mat_slime_jelly', wolf_fang: 'mat_wolf_fang',
   spider_silk: 'mat_spider_silk', goblin_tooth: 'mat_goblin_tooth', stone_core: 'mat_stone_core',
   cursed_ash: 'mat_cursed_ash', ancient_key: 'qitem_ancient_key', goblin_emblem: 'qitem_goblin_emblem',
-  mysterious_ring: 'qitem_mysterious_ring', hunter_wristband: 'qitem_hunter_wristband',
+  mysterious_ring: 'qitem_mysterious_ring',
   village: 'zone_village', forest: 'zone_forest', temple_ruins: 'zone_temple_ruins',
   village_center: 'space_village_center', village_waterfall: 'space_village_waterfall',
   village_elder_home: 'space_village_elder_home', village_chief_home: 'space_village_chief_home',
@@ -49,7 +49,7 @@ const ID_MIGRATION_MAP: Record<string, string> = {
   temple_corridor: 'space_temple_corridor',
   lina_prologue: 'npc_lina_prologue', lina: 'npc_lina', innkeeper: 'npc_innkeeper',
   elder: 'npc_elder', village_chief: 'npc_village_chief', blacksmith: 'npc_blacksmith',
-  grocer: 'npc_grocer', hunter_toby: 'npc_hunter_toby',
+  grocer: 'npc_grocer', hunter_toby: 'npc_hunter_toby', hunter_wife: 'npc_hunter_wife', hunter_son: 'npc_hunter_son',
 }
 
 // ─── NPC 位置快照类型 ────────────────────────────────────────────────────────

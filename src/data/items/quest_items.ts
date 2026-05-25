@@ -22,13 +22,6 @@ export const QUEST_ITEMS: Record<string, Item> = {
     type: 'quest',
     stackable: false,
   },
-  qitem_hunter_wristband: {
-    id: 'qitem_hunter_wristband',
-    name: '猎人腕带',
-    description: '托比留下的猎人腕带，作为同伴的信物。交给村长可领取报酬，或留作纪念。',
-    type: 'quest',
-    stackable: false,
-  },
   qitem_meteor_fragment: {
     id: 'qitem_meteor_fragment',
     name: '流星碎石',

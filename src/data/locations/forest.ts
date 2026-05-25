@@ -41,13 +41,13 @@ export const FOREST_LOCATION: Location = {
 
       space_ruined_camp: {
         id: 'space_ruined_camp',
-        name: '残营废地',
+        name: '猎人营地',
         description:
-          '一处被遗弃的猎人营地。帐篷架已经垮塌，锅里还残留着凝固的黑焦。周围的树上有被利爪刨过的深痕，狼群显然把这里当成了领地。',
+          '林中空地，几顶兽皮帐篷围成营地。篝火上架着铁锅，晾晒架挂着风干的兽肉和药草，一切井井有条。猎人一家常年居于此，这片林子是他们的家。',
         interactions: [
-          { id: 'camp_wolf_pack',    label: '侵占营地的狼群', type: 'enemy',    targetId: 'mob_forest_wolf' },
-          { id: 'camp_hunter_notes', label: '猎人的残页',     type: 'building', targetId: 'point_hunter_notes' },
-          { id: 'camp_hunter_toby',  label: '受伤的猎人',     type: 'npc',      targetId: 'npc_hunter_toby' },
+          { id: 'camp_hunter_wife',  label: '猎人的妻子',     type: 'npc',      targetId: 'npc_hunter_wife' },
+          { id: 'camp_hunter_son',   label: '猎人的儿子',     type: 'npc',      targetId: 'npc_hunter_son' },
+          { id: 'camp_hunter_notes', label: '猎人离家前的笔记', type: 'building', targetId: 'point_hunter_notes' },
         ],
         south:  'space_ash_valley_gate',
         north:  'space_misty_forest_path',
@@ -115,10 +115,11 @@ export const FOREST_LOCATION: Location = {
         id: 'space_mine_pit',
         name: '矿壁深坑',
         description:
-          '矿道尽头的地面塌陷成一个深坑，坑底隐约可见幽蓝的荧光。哥布林聚集在此，他们似乎找到了什么值得守护的东西。',
+          '矿道尽头的地面塌陷成一个深坑，坑壁上有数道幽蓝荧光渗出，忽明忽暗。一侧岩壁有一处浅浅的壁龛，似乎曾有人在此藏身——地上留有残余食物和蜡烛痕迹。',
         interactions: [
-          { id: 'pit_goblin_miner', label: '挖坑的哥布林', type: 'enemy', targetId: 'mob_goblin' },
-          { id: 'pit_cave_spider',  label: '巨蛛',         type: 'enemy', targetId: 'mob_cave_spider' },
+          { id: 'pit_goblin_miner',  label: '挖坑的哥布林', type: 'enemy', targetId: 'mob_goblin' },
+          { id: 'pit_cave_spider',   label: '巨蛛',         type: 'enemy', targetId: 'mob_cave_spider' },
+          { id: 'pit_hunter_toby',   label: '受困的猎人',   type: 'npc',   targetId: 'npc_hunter_toby' },
         ],
         south: 'space_rusty_mine_road',
       },

@@ -37,29 +37,35 @@ export const SIDE_QUESTS: Quest[] = [
     id: 'quest_hunter_companion',
     title: '同伴的下落',
     description:
-      '受伤困在残营废地的猎人托比请你前往矿壁深坑，寻找他失踪四天的同伴莱斯的下落。托比递给你一只皮质腕环——莱斯认识它。',
+      '猎人营地中，诺拉独自守候着丈夫托比的归来。托比和同伴进入锈齿矿洞调查异变，三周未归。她的儿子凯恩执意同去，誓要找回父亲——这片森林，他比任何人都熟悉。',
     status: 'locked',
     objectives: [
       {
-        id: 'get_wristband',
-        description: '接过托比的腕环',
+        id: 'join_kain',
+        description: '凯恩（猎人之子）加入队伍',
         completed: false,
-        trigger: { type: 'have_item', itemId: 'qitem_hunter_wristband' },
+        trigger: { type: 'talk_npc', npcId: 'npc_hunter_son' },
       },
       {
         id: 'visit_mine_pit',
-        description: '前往矿壁深坑，寻找莱斯的线索',
+        description: '前往矿壁深坑寻找托比的踪迹',
         completed: false,
         trigger: { type: 'visit_location', subLocationId: 'space_mine_pit' },
       },
       {
-        id: 'return_to_toby',
-        description: '回到残营废地，向托比汇报',
+        id: 'find_toby',
+        description: '在矿壁深坑找到猎人托比',
         completed: false,
         trigger: { type: 'talk_npc', npcId: 'npc_hunter_toby' },
       },
+      {
+        id: 'return_to_camp',
+        description: '与托比和凯恩一同返回猎人营地',
+        completed: false,
+        trigger: { type: 'talk_npc', npcId: 'npc_hunter_wife' },
+      },
     ],
-    reward: { exp: 120, gold: 40 },
+    reward: { exp: 150, gold: 50, items: [{ itemId: 'cons_elixir', qty: 2 }] },
   },
 
   // ── 彩蛋支线：戒指的秘密（后期任务，仅第一步可见）────────────────────────
