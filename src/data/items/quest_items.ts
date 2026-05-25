@@ -29,4 +29,25 @@ export const QUEST_ITEMS: Record<string, Item> = {
     type: 'quest',
     stackable: false,
   },
+  qitem_meteor_fragment: {
+    id: 'qitem_meteor_fragment',
+    name: '流星碎石',
+    description: '碎月祭台附近发现的古老陨石碎片，表面呈深灰色并隐约泛着暗金色光泽。即使历经岁月，依然保有某种亘古的余温。',
+    type: 'quest',
+    stackable: false,
+  },
+  qitem_miner_tag: {
+    id: 'qitem_miner_tag',
+    name: '矿工号牌',
+    description: '锈齿矿道深处发现的铁质号牌，编号"M-017"，背面刻着名字：罗格。这是玛格失踪的弟弟的遗物。',
+    type: 'quest',
+    stackable: false,
+  },
+  qitem_torn_map: {
+    id: 'qitem_torn_map',
+    name: '残破地图',
+    description: '一张半烧毁的地图碎片，上面有莉娜看不懂的文字和某座城堡的轮廓。艾尔文认出地图上标注的方向——那是魔王城所在的位置。',
+    type: 'quest',
+    stackable: false,
+  },
 }

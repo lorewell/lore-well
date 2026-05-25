@@ -53,6 +53,18 @@ export const linaNPC: NPC = {
         { text: '村里还有谁能帮我？', next: 'villagers' },
         { text: '村外现在安全吗？', next: 'outskirts' },
         { text: '村北那个瀑布……我听说我就是在那里被发现的？', next: 'waterfall_question' },
+        {
+          text: '你有不有需要我帮忙的？',
+          condition: { type: 'questStatus', questId: 'quest_arrive', status: ['completed'] },
+          next: 'lina_gift_start',
+          action: { type: 'activateQuest', questId: 'quest_lina_gift' },
+        },
+        {
+          text: '我感觉你好像有什么事想说？',
+          condition: { type: 'questStatus', questId: 'quest_village_intro', status: ['completed'] },
+          next: 'lina_secret_start',
+          action: { type: 'activateQuest', questId: 'quest_torn_map' },
+        },
         { text: '只是来看看你。' },
       ],
     },
@@ -75,6 +87,27 @@ export const linaNPC: NPC = {
       id: 'waterfall_question',
       text: '对呀对呀！就是村子北边那个隐秘瀑布——水特别清，潭底的石头都看得一清二楚。平时没什么人去那边，但风景真的很好……你要是想散散心的话可以去看看，说不定还能想起什么来呢。',
       options: [{ text: '嗯，我会去看看的。' }],
+    },    {
+      id: 'lina_gift_start',
+      text: '其实……我最近一直想给爷爷准备一个生辰礼物。他年轻时一直想找一块流星碎石，说是在碎月祭台附近见过。我自己没办法去取，也不好意思麺烦村里的大人……你——你能帮我去取吗？',
+      options: [
+        { text: '当然，记着是碎月祭台附近，我去看看。', next: 'lina_gift_thanks' },
+      ],
     },
-  ],
+    {
+      id: 'lina_gift_thanks',
+      text: '太好了！谢谢你！爷爷一定会好好高兴的！',
+    },
+    {
+      id: 'lina_secret_start',
+      text: '其实……我一直屁着一件事，没有存带爷爷说。（她迟疑了一下，最终达到了什么决定。）你被发现的那一天，我在瀑布边的乱石堆里捡到了一张地图碎片——已经烧坏了一半，上面有一些我看不懂的字和一座城堡的轮廓。我……我觉得这也许和你有关。',
+      options: [
+        { text: '你沐到了那张地图？能给我看看吗？', next: 'lina_secret_give_map' },
+      ],
+    },
+    {
+      id: 'lina_secret_give_map',
+      text: '当然可以——一直放在我这里也没什么用。（她把地图碎片小心地递了过来。）也许你可以拿给爷爷看看？如果这张地图和你有关系，他应该最清楚它代表什么。',
+      action: { type: 'addItem', itemId: 'qitem_torn_map', qty: 1 },
+    },  ],
 }

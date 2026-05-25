@@ -342,3 +342,82 @@ export const mineWarningNPC: NPC = {
   ],
 }
 
+// ════════════════════════════════════════════════════════════
+//  新增景物 NPC（支线任务触发点）
+// ════════════════════════════════════════════════════════════
+
+// ── 废旧传送阵（激活 quest_broken_portal）───────────────────────────────────
+export const portalInspectNPC: NPC = {
+  id: 'point_broken_portal',
+  name: '废旧传送阵',
+  onOpen: [
+    { type: 'activateQuest', questId: 'quest_broken_portal' },
+  ],
+  dialogues: [
+    {
+      id: 'greeting',
+      text: '传送阵石台中央的符文已经完全熄灭，只留下焦黑的刻痕。你蹲下来仔细看，发现石台四角各有一个掌印——烧融进石头里的，像是有人在巨大的爆发中被定住了。',
+      options: [
+        { text: '检查焦黑的符文。', next: 'examine_rune' },
+        { text: '触摸石台烧融的痕迹。', next: 'touch_scar' },
+      ],
+    },
+    {
+      id: 'examine_rune',
+      text: '这些符文你认不出来，但它们的结构与你在符文古树上看到的东西有一种模糊的相似感。传送阵并非损坏——更像是被某种外力强行封住了。',
+    },
+    {
+      id: 'touch_scar',
+      text: '指尖触碰那道烧痕的瞬间，你感到一阵强烈的眩晕。脑海中一片黑暗中出现了模糊的轮廓：有人站在这里，四周火光冲天，然后什么都消失了。你抬起头，胸口还在轻微悸动。',
+    },
+  ],
+}
+
+// ── 碎月祭台 · 祭台裂缝（quest_lina_gift 中的流星碎石）──────────────────────
+export const meteorFragmentNPC: NPC = {
+  id: 'point_meteor_fragment',
+  name: '祭台裂缝',
+  onOpen: [
+    { type: 'addItem', itemId: 'qitem_meteor_fragment', qty: 1 },
+    { type: 'consumeInteraction', interactionId: 'altar_meteor_fragment' },
+  ],
+  dialogues: [
+    {
+      id: 'greeting',
+      text: '祭台中央的裂缝深处嵌着一块拳头大小的黑色碎石，表面有细密的金属光泽，像夜空的一块碎片。它已经在这里不知多少年了，却没有风化半分。',
+      options: [
+        { text: '小心地取出碎石。', next: 'pick_up' },
+        { text: '先观察一下。' },
+      ],
+    },
+    {
+      id: 'pick_up',
+      text: '碎石握在手心出乎意料地沉，还带着一丝难以察觉的温热。你把它收入包中，想着莉娜说爷爷年轻时一直想找到它——也许艾尔文会认出这是什么。',
+    },
+  ],
+}
+
+// ── 锈齿矿道 · 矿工遗物（quest_mag_brother 中的矿工号牌）──────────────────
+export const minerRemainsNPC: NPC = {
+  id: 'point_miner_remains',
+  name: '矿工遗物',
+  onOpen: [
+    { type: 'addItem', itemId: 'qitem_miner_tag', qty: 1 },
+    { type: 'consumeInteraction', interactionId: 'mine_road_remains' },
+  ],
+  dialogues: [
+    {
+      id: 'greeting',
+      text: '在一堆坍塌的支撑木和碎石中，你看见了一只翻倒的锡质饭盒，旁边压着一条铁链，铁链末端挂着一枚刻有编号的铁质号牌。号牌的反面刻着一个小小的字：罗。',
+      options: [
+        { text: '捡起号牌。', next: 'check_tag' },
+        { text: '再仔细搜寻一番。' },
+      ],
+    },
+    {
+      id: 'check_tag',
+      text: '号牌正面写着"落瀑村矿工 0047"，背面那个"罗"字旁边还有一道短短的竖痕，像是用钉子一笔一划刻上去的。这大概是罗格留下的。你把号牌收好——玛格应该见到它。',
+    },
+  ],
+}
+

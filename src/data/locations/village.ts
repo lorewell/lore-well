@@ -35,8 +35,7 @@ export const VILLAGE_LOCATION: Location = {
         interactions: [
           { id: 'village_waterfall_npc',  label: '凝视瀑布',    type: 'building', targetId: 'point_waterfall' },
           { id: 'waterfall_pool_bathe',   label: '在水池中沐浴', type: 'building', targetId: 'point_waterfall_pool' },
-          { id: 'waterfall_pool_ring',    label: '探查水底',    type: 'npc',      targetId: 'point_waterfall_ring_event' },
-        ],
+          { id: 'waterfall_pool_ring',    label: '探查水底',    type: 'npc',      targetId: 'point_waterfall_ring_event' },          { id: 'waterfall_humphrey',     label: '老渔夫 汉弗',  type: 'npc',      targetId: 'npc_ring_mystery_contact' },        ],
         south: 'space_village_elder_home',
       },
       space_village_elder_home: {
@@ -81,7 +80,8 @@ export const VILLAGE_LOCATION: Location = {
         description:
           '村里唯一的客栈——你醒来时就在这里。炉火的气息和玛格爽朗的笑声混在一起，令人安心。小莉娜常在此处帮忙。',
         interactions: [
-          { id: 'village_inn_hearth', label: '壁炉', type: 'building', targetId: 'point_inn_hearth' },
+          { id: 'village_inn_hearth',  label: '壁炉',         type: 'building', targetId: 'point_inn_hearth' },
+          { id: 'village_inn_voss',    label: '旅行商人 奥斯', type: 'npc',      targetId: 'npc_merchant_voss' },
         ],
         east: 'space_village_center',
       },
@@ -128,13 +128,7 @@ export const VILLAGE_LOCATION: Location = {
         description:
           '石台中央刻满了密密麻麻的古老符文，地面留有烧焦的痕迹。曾经，这里能将人瞬间送往遥远的地方——但那已是遥远的过去。',
         interactions: [
-          {
-            id: 'village_portal_interact',
-            label: '废旧传送阵',
-            type: 'portal',
-            targetId: '',
-            disabled: true,
-          },
+          { id: 'village_portal_inspect', label: '废旧传送阵', type: 'npc', targetId: 'point_broken_portal' },
         ],
         north: 'space_village_south_gate',
       },

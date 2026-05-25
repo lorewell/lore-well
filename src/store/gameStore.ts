@@ -250,6 +250,7 @@ export const useGameStore = create<GameState>()(
       // ── 小地图子节点移动 ───────────────────────────────────────
       travelToSubLocation: (subId) => {
         set({ currentSubLocationId: subId })
+        get()._autoCompleteObjectives({ type: 'visit_location', subLocationId: subId })
       },
 
       // ── 物品：添加 ─────────────────────────────────────────────────────────
@@ -656,7 +657,11 @@ export const useGameStore = create<GameState>()(
                     matched = trigger.type === 'defeat_enemy' && t.enemyId === trigger.enemyId
                     break
                   case 'visit_location':
-                    matched = trigger.type === 'visit_location' && t.locationId === trigger.locationId
+                    if (trigger.type === 'visit_location') {
+                      matched = t.subLocationId !== undefined
+                        ? trigger.subLocationId === t.subLocationId
+                        : trigger.locationId === t.locationId
+                    }
                     break
                   case 'talk_npc':
                     matched = trigger.type === 'talk_npc' && t.npcId === trigger.npcId

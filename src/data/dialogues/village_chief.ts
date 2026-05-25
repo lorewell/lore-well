@@ -15,8 +15,23 @@ export const villageChiefNPC: NPC = {
         { text: '我能帮上什么忙吗？', next: 'help' },
         { text: '村子里都有哪些地方？', next: 'directions' },
         { text: '你们发现我时是什么情况？', next: 'rescue_report' },
-        { text: '好，我去找艾尔文。谢谢村长。', next: 'chief_farewell' },
-      ],
+        { text: '好，我去找艾尔文。谢谢村长。', next: 'chief_farewell' },        {
+          text: '我想领一个巡逐的任务。',
+          next: 'patrol_quest_start',
+          action: { type: 'activateQuest', questId: 'quest_chief_patrol' },
+        },
+        {
+          text: '栮木森林已经确认安全了。',
+          condition: { type: 'questStatus', questId: 'quest_forest', status: ['completed'] },
+          next: 'forest_cleared',
+          action: { type: 'activateQuest', questId: 'quest_goblin_conspiracy' },
+        },
+        {
+          text: '坑南的传送阵——我想了解它的来历。',
+          condition: { type: 'questStatus', questId: 'quest_broken_portal', status: ['active'] },
+          next: 'portal_history',
+          action: { type: 'completeObjective', questId: 'quest_broken_portal', objectiveId: 'ask_chief_portal' },
+        },      ],
     },
     {
       id: 'chief_farewell',
@@ -45,6 +60,18 @@ export const villageChiefNPC: NPC = {
     {
       id: 'grateful',
       text: '如果你真的查清楚了，我代表全村感谢你。尤其是那些哥布林……如果能找到它们的巢穴或者头目就更好了。去找艾尔文，他知道的比我多。保重。',
+    },
+    {
+      id: 'patrol_quest_start',
+      text: '好，我把任务写下来。你需要先检查村外围逃损的栊栏，有情况就抨再被永。然后清兼一下附近带路的哥布林，确认村界安全。有任务奖励，不会让你白跳的。',
+    },
+    {
+      id: 'forest_cleared',
+      text: '等等，深林被清理干净了？（他展开地图，表情却没有没有全然放松。）。这是好事，但……我展年在村子里，了解这些哥布林。它们以前根本不需要一个预邪法师就能掌控攻组。如果有高级存在的话……我不希望这山有肯这个客。下次去森林，多留心。',
+    },
+    {
+      id: 'portal_history',
+      text: '传送阵……三年前它就就像被什么东西打区了一样，整个碎揉。那天夜里有巨大的声响，我以为限雷——第二天去看才知道它就这样了。模也没有被损，碎的是里面的连接符文。艾尔文说需要相应等级的魔導才能修复，但我觉得这不是资源缺乏的问题——它根本就不应该会出现这种情况。',
     },
   ],
 }

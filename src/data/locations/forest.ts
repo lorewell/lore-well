@@ -60,8 +60,9 @@ export const FOREST_LOCATION: Location = {
         description:
           '浓稠的雾气从地面升腾，将视线压缩至数步之内。脚踩在湿软的腐叶上几乎没有声音，但你能感觉到有什么东西在雾中跟随着你。',
         interactions: [
-          { id: 'misty_wolf_spirit', label: '缠绕的狼灵', type: 'enemy',    targetId: 'mob_forest_wolf' },
-          { id: 'misty_stone_mark',  label: '刻字的界石', type: 'building', targetId: 'point_boundary_stone' },
+          { id: 'misty_wolf_spirit',  label: '缠绕的狼灵',   type: 'enemy',    targetId: 'mob_forest_wolf' },
+          { id: 'misty_goblin_mage',  label: '哥布林法师',   type: 'enemy',    targetId: 'mob_goblin_mage' },
+          { id: 'misty_stone_mark',   label: '刻字的界石',   type: 'building', targetId: 'point_boundary_stone' },
         ],
         south: 'space_ruined_camp',
         west:  'space_broken_moon_altar',
@@ -73,8 +74,9 @@ export const FOREST_LOCATION: Location = {
         description:
           '一座古老的圆形祭台静立于林间空地，台面被某种巨力从中劈裂，半块台石沉入土中。石像鬼守候两侧，仿佛在等待某个永远不会到来的仪式。',
         interactions: [
-          { id: 'altar_golem_guard', label: '祭台守卫', type: 'enemy', targetId: 'mob_stone_golem' },
-          { id: 'altar_iron_coffer', label: '祭台铁匣', type: 'item',  targetId: 'qitem_ancient_key' },
+          { id: 'altar_golem_guard',    label: '祭台守卫',   type: 'enemy',    targetId: 'mob_stone_golem' },
+          { id: 'altar_iron_coffer',    label: '祭台铁匄',   type: 'item',     targetId: 'qitem_ancient_key' },
+          { id: 'altar_meteor_fragment', label: '碎裂纹旁的石块', type: 'npc', targetId: 'point_meteor_fragment' },
         ],
         east:  'space_misty_forest_path',
         north: 'space_ghost_grove',
@@ -98,10 +100,11 @@ export const FOREST_LOCATION: Location = {
         id: 'space_rusty_mine_road',
         name: '锈齿矿道',
         description:
-          '铁轨已经锈蚀成橘红色，矿车脱轨翻倒在一侧。支撑横梁吱呀作响，偶尔有碎石从顶部坠落。洞穴蜘蛛在角落里编织着厚重的蛛网。',
+          '铁轨已经锈蚀成橘红色，矿车脱轨翻倒在一侧。支撑横梁吓呀作响，偶尔有碎石从顶部坠落。洞穴蜘蛛在角落里编织着厉重的蜘蛛网。',
         interactions: [
-          { id: 'mine_road_spider',  label: '守道蜘蛛', type: 'enemy',    targetId: 'mob_cave_spider' },
-          { id: 'mine_road_placard', label: '警示木牌', type: 'building', targetId: 'point_mine_warning' },
+          { id: 'mine_road_spider',   label: '守道蜘蛛',   type: 'enemy',    targetId: 'mob_cave_spider' },
+          { id: 'mine_road_placard',  label: '警示木牌',   type: 'building', targetId: 'point_mine_warning' },
+          { id: 'mine_road_remains',  label: '屏风控的遗物', type: 'npc', targetId: 'point_miner_remains' },
         ],
         west:  'space_ash_valley_gate',
         east:  'space_dark_vein_wall',

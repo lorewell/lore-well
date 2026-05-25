@@ -27,8 +27,17 @@ export const blacksmithNPC: NPC = {
         { text: '新手该准备什么装备？', next: 'starter_gear' },
         { text: '矿洞最近怎么了？', next: 'mine_trouble' },
         { text: '你听说哥布林的事了吗？', next: 'goblin_news' },
+        {          text: '为什么不做一批蜘蛛丝职奕？',
+          condition: { type: 'questStatus', questId: 'quest_blacksmith_silk', status: ['locked'] },
+          next: 'silk_quest_start',
+          action: { type: 'activateQuest', questId: 'quest_blacksmith_silk' },
+        },
         {
-          text: '我有铁矿石。',
+          text: '我带来了蜘蛛丝。',
+          condition: { type: 'questStatus', questId: 'quest_blacksmith_silk', status: ['active', 'completed'] },
+          next: 'silk_thanks',
+        },
+        {          text: '我有铁矿石。',
           next: 'has_ore',
           condition: { type: 'hasItem', itemId: 'mat_iron_ore' },
         },
@@ -59,6 +68,14 @@ export const blacksmithNPC: NPC = {
     {
       id: 'has_ore',
       text: '不错，带了铁矿石。我下次给你多留几件好货。',
+    },
+    {
+      id: 'silk_quest_start',
+      text: '蜘蛛丝？（他抢过一张纸翻看）察故，我确实有一单外地商人的订单，要用蜘蛛丝羝一批蛛丝软甲。洞穴蜘蛛增多了，我自己越不过去。你要是没事干的话，帮我收集些蜘蛛丝回来——我给你应得的报酬。',
+    },
+    {
+      id: 'silk_thanks',
+      text: '（他接过蜘蛛丝，视检后点头。）不错，就是这个。（他从后面拖出一件叠得整整齐齐的软甲。）先前做好的，拿去。合适的软甲，正耒类懂得。',
     },
   ],
 }

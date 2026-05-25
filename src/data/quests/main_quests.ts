@@ -97,6 +97,12 @@ export const MAIN_QUESTS: Quest[] = [
         completed: false,
         trigger: { type: 'defeat_enemy', enemyId: 'mob_forest_wolf' },
       },
+      {
+        id: 'collect_emblem',
+        description: '获得哥布林族徽作为证明',
+        completed: false,
+        trigger: { type: 'have_item', itemId: 'qitem_goblin_emblem' },
+      },
     ],
     reward: { exp: 150, gold: 60 },
   },

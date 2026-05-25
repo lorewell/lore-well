@@ -206,7 +206,7 @@ export type QuestStatus = 'locked' | 'active' | 'completed'
 export type ObjectiveTrigger =
   | { type: 'have_item'; itemId: string }
   | { type: 'defeat_enemy'; enemyId: string }
-  | { type: 'visit_location'; locationId: string }
+  | { type: 'visit_location'; locationId?: string; subLocationId?: string }
   | { type: 'talk_npc'; npcId: string }
 
 export interface QuestObjective {

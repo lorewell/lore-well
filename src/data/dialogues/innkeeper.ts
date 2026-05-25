@@ -24,6 +24,22 @@ export const innkeeperNPC: NPC = {
         { text: '最近有什么消息吗？', next: 'news' },
         { text: '是谁把我带回客栈的？', next: 'rescue' },
         { text: '离村前有什么建议？', next: 'advice' },
+        {
+          text: '我来帮你砸柴火的。',
+          next: 'firewood_quest_start',
+          action: { type: 'activateQuest', questId: 'quest_mag_firewood' },
+        },
+        {
+          text: '我想问问你弟弟的事。',
+          condition: { type: 'questStatus', questId: 'quest_mag_brother', status: ['locked'] },
+          next: 'brother_talk',
+          action: { type: 'activateQuest', questId: 'quest_mag_brother' },
+        },
+        {
+          text: '关于你弟弟——我找到了一些东西。',
+          condition: { type: 'questStatus', questId: 'quest_mag_brother', status: ['active', 'completed'] },
+          next: 'brother_thanks',
+        },
         { text: '不了，谢谢。' },
       ],
     },
@@ -47,6 +63,18 @@ export const innkeeperNPC: NPC = {
     {
       id: 'advice',
       text: '先把村里的人认一圈，再决定往哪边走。要是只想买药，梅娜那边通常比我便宜一点；要是想换装备，就去找托尔。别什么都没准备就冲出南路口。',
+    },
+    {
+      id: 'firewood_quest_start',
+      text: '哪——真的？（她抹了抹手。）那太好了，苦死我了。我需要一批材料，是天干的泊山松木，长约四尺。平时就在圆琥山谷口那边连着，但最近路被哥布林堵住了。你要是能帮我把路清斷一下就太感激了。',
+    },
+    {
+      id: 'brother_talk',
+      text: '（她停顿了很久才开口。）……我弟弟罗格，三周前跟着首批进矿道的矿工就失联系了。官府说是矿道崩塌，但……但我不知道。我——你下次进矿道的时候，能帮我一起找找吗？哪怕只是一个迃息。',
+    },
+    {
+      id: 'brother_thanks',
+      text: '（她接过号牌，长久地没有说话。）……是罗格的。我认得出来，这是她用燒子刻上去的字。……谢谢你。至少我现在知道了。（她把号牌紧紧拡在手心里，转身回到柜台后面。）',
     },
   ],
 }

@@ -15,6 +15,8 @@ export { villageChiefNPC } from './village_chief'
 export { blacksmithNPC } from './blacksmith'
 export { grocerNPC } from './grocer'
 export { hunterNPC } from './hunter'
+export { humphreyNPC } from './humphrey'
+export { merchantVossNPC } from './merchant'
 export {
   waterfallNPC,
   waterfallPoolNPC,
@@ -35,6 +37,9 @@ export {
   boundaryStoneNPC,
   runeTreeNPC,
   mineWarningNPC,
+  portalInspectNPC,
+  meteorFragmentNPC,
+  minerRemainsNPC,
 } from './scenery'
 
 // ── 聚合为 Record（保持与旧 NPCS 相同的访问方式）─────────────────────────
@@ -46,6 +51,8 @@ import { villageChiefNPC } from './village_chief'
 import { blacksmithNPC } from './blacksmith'
 import { grocerNPC } from './grocer'
 import { hunterNPC } from './hunter'
+import { humphreyNPC } from './humphrey'
+import { merchantVossNPC } from './merchant'
 import {
   waterfallNPC,
   waterfallPoolNPC,
@@ -66,6 +73,9 @@ import {
   boundaryStoneNPC,
   runeTreeNPC,
   mineWarningNPC,
+  portalInspectNPC,
+  meteorFragmentNPC,
+  minerRemainsNPC,
 } from './scenery'
 
 const ALL_NPCS: NPC[] = [
@@ -77,6 +87,8 @@ const ALL_NPCS: NPC[] = [
   blacksmithNPC,
   grocerNPC,
   hunterNPC,
+  humphreyNPC,
+  merchantVossNPC,
   waterfallPoolNPC,
   waterfallRingEventNPC,
   villageWellNPC,
@@ -93,6 +105,9 @@ const ALL_NPCS: NPC[] = [
   boundaryStoneNPC,
   runeTreeNPC,
   mineWarningNPC,
+  portalInspectNPC,
+  meteorFragmentNPC,
+  minerRemainsNPC,
 ]
 
 export const NPCS: Record<string, NPC> = Object.fromEntries(

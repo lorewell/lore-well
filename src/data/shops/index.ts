@@ -37,6 +37,17 @@ export const SHOPS: Record<string, Shop> = {
       { itemId: 'mat_iron_ore',       price: 15 },
     ],
   },
+
+  shop_merchant: {
+    id: 'shop_merchant',
+    npcId: 'npc_merchant_voss',
+    name: '奥斯的行商包',
+    entries: [
+      { itemId: 'equip_vitality_amulet', price: 200 },
+      { itemId: 'cons_elixir',           price: 120 },
+      { itemId: 'equip_magic_staff',     price: 280 },
+    ],
+  },
 }
 
 /** 根据 NPC id 查找商店（找不到返回 undefined） */

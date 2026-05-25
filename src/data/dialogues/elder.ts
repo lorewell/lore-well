@@ -9,6 +9,7 @@ export const elderNPC: NPC = {
   onOpen: [
     { type: 'activateQuest', questId: 'quest_elder' },
     { type: 'activateQuest', questId: 'quest_forest' },
+    { type: 'activateQuest', questId: 'quest_rune_whisper' },
   ],
   dialogues: [
     {
@@ -19,6 +20,18 @@ export const elderNPC: NPC = {
         { text: '村子现在还安全吗？', next: 'village_danger' },
         { text: '村里还有谁值得我去见见？', next: 'village_people' },
         { text: '是你救了我？谢谢你。', next: 'thanks' },
+        {
+          text: '我有一张残破的地图想请你看看。',
+          condition: { type: 'questStatus', questId: 'quest_torn_map', status: ['active', 'completed'] },
+          next: 'map_identification',
+          action: { type: 'completeObjective', questId: 'quest_torn_map', objectiveId: 'show_map_elder' },
+        },
+        {
+          text: '我查看了村南的废旧传送阵——你知道它为什么失效吗？',
+          condition: { type: 'questStatus', questId: 'quest_broken_portal', status: ['active'] },
+          next: 'portal_anomaly',
+          action: { type: 'completeObjective', questId: 'quest_broken_portal', objectiveId: 'ask_elder_portal' },
+        },
       ],
     },
     {
@@ -59,6 +72,28 @@ export const elderNPC: NPC = {
     {
       id: 'more',
       text: '传说森林深处的石台匣子里藏着一把古代钥匙，它也许能帮你继续深入神殿。那里封印着某种古老的力量——若你真要去，就先做好准备。',
+    },
+    {
+      id: 'map_identification',
+      text: '（他接过地图碎片，眉头先皱后松，眼神渐渐深沉。）……这是……这是帝国时期的制图法，已经至少有七十年了。（他用手指描摹城堡轮廓。）这座建筑我认识——是北方卡尔·斯特莱恩要塞，那位勇者卡尔的封地所在。但这张地图……（他压低声音）……它从哪里来的？',
+      options: [
+        { text: '是莉娜给我的，说是三年前捡到的。', next: 'map_origin' },
+      ],
+    },
+    {
+      id: 'map_origin',
+      text: '（他合上地图，沉默片刻。）……三年前，莉娜捡到这张地图——那正好是勇者失踪的那一年。也是你被发现在瀑布边的那一年。（他看向你的眼神有些不同了。）你先把地图留着，我需要仔细查阅一些旧籍。这件事，我们之后再谈。',
+    },
+    {
+      id: 'portal_anomaly',
+      text: '（他停顿了一下，语气变得慎重。）那座传送阵……我一直没有主动提它。三年前它失效的夜晚，我整夜没有入睡——空气里有一种奇怪的气味，像是被高温灼烧过的金属和泥土混在一起。那种气味，只有传送阵在超负荷运转时才会出现。它不是坏掉了，它是……被使用了，而且方式极其激烈。使用者付出了极大的代价，或者……根本就没有离开。',
+      options: [
+        { text: '你觉得使用它的人是谁？', next: 'portal_user' },
+      ],
+    },
+    {
+      id: 'portal_user',
+      text: '（他闭上眼睛。）……我不知道。但我那个夜晚，在瀑布附近看到了一道光。后来，第二天早晨，我在瀑布边的乱石里找到了你。（他睁开眼，声音很轻。）这件事我一直没有告诉任何人，也没有告诉你——因为我不确定说出来是否对你有帮助。但现在……你应该知道这些。',
     },
   ],
 }
