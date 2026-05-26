@@ -58,7 +58,7 @@ export default function HUD() {
 
       {/* 移动端显示地点与金币（sm 以下替代右侧卡片） */}
       <div className="pixel-panel pixel-hud-card flex items-center justify-between gap-3 sm:hidden">
-        <div className="truncate text-xs font-bold tracking-[0.1em]" style={{ color: '#f8e7b7' }}>
+        <div className="truncate text-xs font-bold tracking-widest" style={{ color: '#f8e7b7' }}>
           {locationName}
         </div>
         <div className="shrink-0 flex items-center gap-1">

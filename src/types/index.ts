@@ -106,7 +106,7 @@ export type DialogueAction =
  */
 export type DialogueCondition =
   | { type: 'hasItem'; itemId: string }
-  | { type: 'questStatus'; questId: string; status: QuestStatus }
+  | { type: 'questStatus'; questId: string; status: QuestStatus | QuestStatus[] }
   | { type: 'not'; condition: DialogueCondition }
   | { type: 'and'; conditions: DialogueCondition[] }
   | { type: 'or'; conditions: DialogueCondition[] }

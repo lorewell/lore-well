@@ -13,7 +13,9 @@ function evaluateCondition(
       return gameState.inventory.some((i) => i.item.id === cond.itemId)
     case 'questStatus': {
       const q = gameState.quests.find((q) => q.id === cond.questId)
-      return q?.status === cond.status
+      if (!q) return false
+      const statuses = Array.isArray(cond.status) ? cond.status : [cond.status]
+      return statuses.includes(q.status)
     }
     case 'not':
       return !evaluateCondition(cond.condition, gameState)
