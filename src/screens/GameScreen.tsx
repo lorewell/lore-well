@@ -13,6 +13,7 @@ import ShopPanel from '../components/ShopPanel'
 import CraftPanel from '../components/CraftPanel'
 import MapModal from '../components/MapModal'
 import MiniMap from '../components/MiniMap'
+import DirectionNav from '../components/DirectionNav'
 import { LOCATIONS } from '../data/locations'
 import { getShopByNpc } from '../data/shops'
 
@@ -229,6 +230,7 @@ export default function GameScreen() {
             {!activeDialogue && (
               <MiniMap onOpenMap={() => setActivePanel('map')} />
             )}
+            {!activeDialogue && <DirectionNav />}
             {!activeDialogue && (
               <LocationPanel
                 onStartBattle={() => setInCombat(true)}
