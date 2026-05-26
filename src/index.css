@@ -268,6 +268,13 @@ button {
   z-index: 24;
 }
 
+.pixel-minimap {
+  position: absolute;
+  right: max(12px, env(safe-area-inset-right));
+  bottom: max(190px, calc(env(safe-area-inset-bottom) + 140px));
+  z-index: 22;
+}
+
 .pixel-bottom-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(50px, 72px);
