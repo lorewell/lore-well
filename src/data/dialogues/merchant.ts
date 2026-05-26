@@ -7,13 +7,12 @@ export const merchantVossNPC: NPC = {
   locationId: 'zone_village',
   subLocationId: 'space_village_inn',
   interactionLabel: '旅行商人 奥斯',
-  shopId: 'shop_merchant',
   dialogues: [
     {
       id: 'greeting',
       text: '哟，新面孔！奥斯·维奥，行商二十年，走遍帝国每个角落，甚至到过影月海的尽头。这里……（他扫视了一眼客栈）……确实是我见过最僻静的地方了。需要点什么？',
       options: [
-        { text: '想看看你有什么东西卖。', next: 'shop', action: { type: 'openShop', shopId: 'shop_merchant' } },
+        { text: '想看看你有什么东西卖。', next: 'shop', action: { type: 'openShop' } },
         { text: '帝国最近有什么消息？', next: 'empire_news' },
         { text: '路上有什么见闻？', next: 'road_news' },
         { text: '你打算在这里待多久？', next: 'stay_long' },

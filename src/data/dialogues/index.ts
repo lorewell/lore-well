@@ -91,6 +91,7 @@ const ALL_NPCS: NPC[] = [
   hunterSonNPC,
   humphreyNPC,
   merchantVossNPC,
+  waterfallNPC,
   waterfallPoolNPC,
   waterfallRingEventNPC,
   villageWellNPC,

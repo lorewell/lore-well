@@ -35,6 +35,7 @@ export default function DialogBox() {
   const inventory = useGameStore((s) => s.inventory)
   const quests = useGameStore((s) => s.quests)
   const boxRef = useRef<HTMLDivElement>(null)
+  const lastNodeActionKeyRef = useRef<string | null>(null)
 
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
@@ -43,6 +44,21 @@ export default function DialogBox() {
     window.addEventListener('keydown', handleKey)
     return () => window.removeEventListener('keydown', handleKey)
   }, [closeDialogue])
+
+  useEffect(() => {
+    if (!activeDialogue) {
+      lastNodeActionKeyRef.current = null
+      return
+    }
+
+    const node = NPCS[activeDialogue.npcId]?.dialogues.find((d) => d.id === activeDialogue.nodeId)
+    if (!node?.action) return
+
+    const key = `${activeDialogue.npcId}:${activeDialogue.nodeId}`
+    if (lastNodeActionKeyRef.current === key) return
+    lastNodeActionKeyRef.current = key
+    dispatchDialogueAction(node.action, activeDialogue.npcId)
+  }, [activeDialogue, dispatchDialogueAction])
 
   if (!activeDialogue) return null
 

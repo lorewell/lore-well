@@ -12,7 +12,7 @@ export interface Stats {
 
 // ─── 物品 ────────────────────────────────────────────────────────────────────
 
-export type ItemType = 'consumable' | 'equipment' | 'quest' | 'misc'
+export type ItemType = 'consumable' | 'equipment' | 'material' | 'quest' | 'misc'
 export type EquipSlot = 'weapon' | 'armor' | 'accessory'
 
 export interface Item {
@@ -95,6 +95,7 @@ export type DialogueAction =
   | { type: 'openCraft' }
   | { type: 'addItem'; itemId: string; qty?: number }
   | { type: 'activateQuest'; questId: string }
+  | { type: 'completeObjective'; questId: string; objectiveId: string }
   | { type: 'consumeInteraction'; interactionId: string }
   | { type: 'custom'; key: string }   // 兜底：任意自定义 key，在 store 侧处理
 
@@ -123,6 +124,8 @@ export interface DialogueOption {
 export interface DialogueNode {
   id: string
   text: string
+  /** 到达该节点时触发的动作（可选） */
+  action?: DialogueAction
   /** 满足条件才能到达此节点；缺省则始终可到达 */
   condition?: DialogueCondition
   /** 选项为空时，由 UI 提供结束对话按钮 */

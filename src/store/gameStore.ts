@@ -395,6 +395,25 @@ export const useGameStore = create<GameState>()(
           case 'activateQuest':
             get().activateQuest(action.questId)
             break
+          case 'completeObjective': {
+            set((s) => ({
+              quests: s.quests.map((q) =>
+                q.id === action.questId && q.status === 'active'
+                  ? {
+                      ...q,
+                      objectives: q.objectives.map((obj) =>
+                        obj.id === action.objectiveId ? { ...obj, completed: true } : obj,
+                      ),
+                    }
+                  : q,
+              ),
+            }))
+            const quest = get().quests.find((q) => q.id === action.questId)
+            if (quest?.status === 'active' && quest.objectives.every((obj) => obj.completed)) {
+              get().completeQuest(action.questId)
+            }
+            break
+          }
           case 'consumeInteraction':
             get().consumeInteraction(action.interactionId)
             break
@@ -826,7 +845,7 @@ export const useGameStore = create<GameState>()(
             }))
           }
         }
-        return state
+        return state as unknown as GameState
       },
       partialize: (s) => {
         // 排除战斗状态（战斗中途刷新后应重置），避免持久化的 enemy 对象丢失方法

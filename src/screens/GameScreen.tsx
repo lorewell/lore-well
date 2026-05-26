@@ -140,9 +140,12 @@ export default function GameScreen() {
 
   // ─── 使用 ref 持有最新的波动状态，避免键盘监听器频繁重注册 ───────────────
   const stateRef = useRef({ inCombat, paused, activePanel, activeShopNpcId, activeCraftNpcId })
-  stateRef.current = { inCombat, paused, activePanel, activeShopNpcId, activeCraftNpcId }
   const closeCraft = useGameStore((s) => s.closeCraft)
   const activeDialogue = useGameStore((s) => s.activeDialogue)
+
+  useEffect(() => {
+    stateRef.current = { inCombat, paused, activePanel, activeShopNpcId, activeCraftNpcId }
+  }, [inCombat, paused, activePanel, activeShopNpcId, activeCraftNpcId])
 
   const togglePanel = useCallback((panel: ActivePanel) => {
     setActivePanel((prev) => (prev === panel ? 'none' : panel))
