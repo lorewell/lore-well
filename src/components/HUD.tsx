@@ -1,12 +1,9 @@
 import type { CSSProperties } from 'react'
 import { useGameStore } from '../store/gameStore'
-import { LOCATIONS } from '../data/locations'
 
 export default function HUD() {
   const player = useGameStore((s) => s.player)
-  const location = useGameStore((s) => s.currentLocationId)
   const gold = useGameStore((s) => s.gold)
-  const locationName = LOCATIONS[location]?.name ?? location
 
   const hpPct = (player.stats.hp / player.stats.maxHp) * 100
   const mpPct = (player.stats.mp / player.stats.maxMp) * 100
@@ -22,8 +19,13 @@ export default function HUD() {
               {player.name}
             </div>
           </div>
-          <div className="shrink-0 border-2 px-2 py-1 text-xs font-bold" style={{ borderColor: '#59442a', color: '#d6a845' }}>
-            LV {player.level}
+          <div className="shrink-0 flex items-center gap-2">
+            <span className="border-2 px-2 py-1 text-xs font-bold" style={{ borderColor: '#6d4d26', color: '#f1c45d' }}>
+              {gold} G
+            </span>
+            <div className="border-2 px-2 py-1 text-xs font-bold" style={{ borderColor: '#59442a', color: '#d6a845' }}>
+              LV {player.level}
+            </div>
           </div>
         </div>
 
@@ -56,29 +58,7 @@ export default function HUD() {
         </div>
       </div>
 
-      {/* 移动端显示地点与金币（sm 以下替代右侧卡片） */}
-      <div className="pixel-panel pixel-hud-card flex items-center justify-between gap-3 sm:hidden">
-        <div className="truncate text-xs font-bold tracking-widest" style={{ color: '#f8e7b7' }}>
-          {locationName}
-        </div>
-        <div className="shrink-0 flex items-center gap-1">
-          <span className="border px-1.5 py-0.5 text-[10px] font-bold" style={{ borderColor: '#6d4d26', color: '#f1c45d' }}>G</span>
-          <span className="text-xs font-bold" style={{ color: '#f1c45d' }}>{gold}</span>
-        </div>
-      </div>
 
-      <div className="pixel-panel pixel-hud-card hidden min-w-52 sm:block">
-        <div className="pixel-label mb-3 text-right">CURRENT AREA</div>
-        <div className="text-right text-sm font-bold tracking-[0.12em]" style={{ color: '#f8e7b7' }}>
-          {locationName}
-        </div>
-        <div className="mt-3 flex items-center justify-end gap-2">
-          <span className="border-2 px-2 py-1 text-xs font-bold" style={{ borderColor: '#6d4d26', color: '#f1c45d' }}>
-            GOLD
-          </span>
-          <span className="text-sm font-bold" style={{ color: '#f1c45d' }}>{gold} G</span>
-        </div>
-      </div>
     </div>
   )
 }
