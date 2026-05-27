@@ -17,11 +17,7 @@ export { grocerNPC } from './grocer'
 export { hunterNPC, hunterWifeNPC, hunterSonNPC } from './hunter'
 export { humphreyNPC } from './humphrey'
 export { merchantVossNPC } from './merchant'
-export {
-  waterfallNPC,
-  waterfallPoolNPC,
-  waterfallRingEventNPC,
-} from './waterfall'
+export { waterfallNPC } from './waterfall'
 export {
   villageWellNPC,
   villageNoticeBoardNPC,
@@ -53,11 +49,7 @@ import { grocerNPC } from './grocer'
 import { hunterNPC, hunterWifeNPC, hunterSonNPC } from './hunter'
 import { humphreyNPC } from './humphrey'
 import { merchantVossNPC } from './merchant'
-import {
-  waterfallNPC,
-  waterfallPoolNPC,
-  waterfallRingEventNPC,
-} from './waterfall'
+import { waterfallNPC } from './waterfall'
 import {
   villageWellNPC,
   villageNoticeBoardNPC,
@@ -92,8 +84,6 @@ const ALL_NPCS: NPC[] = [
   humphreyNPC,
   merchantVossNPC,
   waterfallNPC,
-  waterfallPoolNPC,
-  waterfallRingEventNPC,
   villageWellNPC,
   villageNoticeBoardNPC,
   elderBookshelfNPC,

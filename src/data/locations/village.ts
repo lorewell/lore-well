@@ -33,9 +33,9 @@ export const VILLAGE_LOCATION: Location = {
         description:
           '一道银白色的瀑布从山间石缝倾泻而下，水声如鼓，雾气弥漫。就是在这片乱石丛中，艾尔文老人发现了昏迷的你。瀑布底部积成一汪清潭，透可见底。',
         interactions: [
-          { id: 'village_waterfall_npc',  label: '凝视瀑布',    type: 'building', targetId: 'point_waterfall' },
-          { id: 'waterfall_pool_bathe',   label: '在水池中沐浴', type: 'building', targetId: 'point_waterfall_pool' },
-          { id: 'waterfall_pool_ring',    label: '探查水底',    type: 'npc',      targetId: 'point_waterfall_ring_event' },          { id: 'waterfall_humphrey',     label: '老渔夫 汉弗',  type: 'npc',      targetId: 'npc_ring_mystery_contact' },        ],
+          { id: 'village_waterfall_npc', label: '凝视瀑布', type: 'building', targetId: 'point_waterfall' },
+          { id: 'waterfall_humphrey', label: '老渔夫 汉弗', type: 'npc', targetId: 'npc_ring_mystery_contact' },
+        ],
         south: 'space_village_elder_home',
       },
       space_village_elder_home: {
