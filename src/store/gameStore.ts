@@ -107,6 +107,8 @@ function clamp(val: number, min: number, max: number): number {
 interface GameState {
   started: boolean
   player: Character
+  /** 同伴队伍（共享背包/金币，各自独立装备/等级/技能） */
+  companions: Character[]
   inventory: InventoryItem[]
   gold: number
   currentLocationId: string
@@ -185,6 +187,7 @@ export const useGameStore = create<GameState>()(
     (set, get) => ({
       started: false,
       player: structuredClone(PLAYER_TEMPLATE),
+      companions: [],
       inventory: [],
       gold: 50,
       currentLocationId: STARTING_LOCATION,
@@ -214,6 +217,7 @@ export const useGameStore = create<GameState>()(
         set({
           started: true,
           player,
+          companions: [],
           inventory: [],
           gold: 50,
           currentLocationId: STARTING_LOCATION,
