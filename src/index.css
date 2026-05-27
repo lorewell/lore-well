@@ -213,16 +213,9 @@ button {
 }
 
 .pixel-hud {
-  position: absolute;
-  top: max(12px, env(safe-area-inset-top));
-  left: max(12px, env(safe-area-inset-left));
-  right: max(12px, env(safe-area-inset-right));
-  z-index: 20;
   display: flex;
   align-items: stretch;
-  justify-content: space-between;
   gap: 12px;
-  pointer-events: none;
 }
 
 .pixel-hud-card {
@@ -261,17 +254,10 @@ button {
 }
 
 .pixel-bottom-shell {
-  position: absolute;
-  left: max(10px, env(safe-area-inset-left));
-  right: max(10px, env(safe-area-inset-right));
-  bottom: max(10px, env(safe-area-inset-bottom));
-  z-index: 24;
+  padding: 0 max(10px, env(safe-area-inset-right)) max(10px, env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left));
 }
 
 .pixel-minimap {
-  position: absolute;
-  top: max(12px, env(safe-area-inset-top));
-  right: max(12px, env(safe-area-inset-right));
   z-index: 22;
 }
 

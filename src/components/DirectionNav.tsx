@@ -39,7 +39,7 @@ export default function DirectionNav() {
   if (availableDirs.length === 0) return null
 
   return (
-    <div className="absolute inset-0 z-15 flex items-center justify-center pointer-events-none" style={{ paddingTop: '80px', paddingBottom: '170px' }}>
+    <div className="absolute inset-0 z-15 flex items-center justify-center pointer-events-none" style={{ paddingTop: '20px', paddingBottom: '20px' }}>
       <div className="relative w-full h-full" style={{ maxWidth: 460, maxHeight: 460 }}>
         {availableDirs.map(({ dir, icon, className }) => {
           const neighborId = currentNode[dir]!

@@ -223,14 +223,31 @@ export default function GameScreen() {
     >
       <div ref={canvasRef} className="absolute inset-0 z-0" />
 
-      <div className="pixel-ui absolute inset-0">
+      <div className="pixel-ui absolute inset-0 flex flex-col">
         {!inCombat ? (
           <>
-            <HUD />
-            {!activeDialogue && (
-              <MiniMap onOpenMap={() => setActivePanel('map')} />
-            )}
-            {!activeDialogue && <DirectionNav />}
+            {/* ===== 顶部：HUD + 小地图 ===== */}
+            <div className="flex items-start gap-3 px-3 pt-3 z-20 pointer-events-none">
+              <div className="flex-1 min-w-0 pointer-events-auto">
+                <HUD />
+              </div>
+              {!activeDialogue && (
+                <div className="shrink-0 pointer-events-auto">
+                  <MiniMap onOpenMap={() => setActivePanel('map')} />
+                </div>
+              )}
+            </div>
+
+            {/* ===== 中部：方向导航 + 人物展示 ===== */}
+            <div className="flex-1 relative min-h-0">
+              {!activeDialogue && <DirectionNav />}
+              {/* 人物图像展示区 */}
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                {/* TODO: 角色立绘 */}
+              </div>
+            </div>
+
+            {/* ===== 底部：场景操作栏 ===== */}
             {!activeDialogue && (
               <LocationPanel
                 onStartBattle={() => setInCombat(true)}
