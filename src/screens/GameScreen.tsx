@@ -227,7 +227,7 @@ export default function GameScreen() {
         {!inCombat ? (
           <>
             {/* ===== 顶部：HUD + 小地图 ===== */}
-            <div className="flex items-start gap-3 px-3 pt-3 z-20 pointer-events-none">
+            <div className="flex items-stretch gap-3 px-3 pt-3 z-20 pointer-events-none">
               <div className="flex-1 min-w-0 pointer-events-auto">
                 <HUD />
               </div>

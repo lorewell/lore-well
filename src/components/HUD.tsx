@@ -11,8 +11,8 @@ export default function HUD() {
   const party: Character[] = [player, ...companions]
 
   return (
-    <div className="pixel-hud w-full">
-      <div className="pixel-panel pixel-hud-card w-full">
+    <div className="pixel-hud w-full h-full">
+      <div className="pixel-panel pixel-hud-card w-full h-full">
         <div className="mb-3 flex items-start justify-between gap-3">
           <div className="min-w-0">
             <div className="pixel-label mb-1">WANDERER</div>
