@@ -13,7 +13,7 @@ export interface Stats {
 // ─── 物品 ────────────────────────────────────────────────────────────────────
 
 export type ItemType = 'consumable' | 'equipment' | 'material' | 'quest' | 'misc'
-export type EquipSlot = 'weapon' | 'armor' | 'accessory'
+export type EquipSlot = 'weapon' | 'helmet' | 'armor' | 'boots' | 'accessory'
 
 export interface Item {
   id: string

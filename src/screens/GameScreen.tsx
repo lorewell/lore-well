@@ -33,7 +33,9 @@ function EquipPanel({ onClose }: { onClose: () => void }) {
 
   const equipSlots = [
     { key: 'weapon' as const, label: '武器' },
+    { key: 'helmet' as const, label: '头盔' },
     { key: 'armor' as const, label: '护甲' },
+    { key: 'boots' as const, label: '鞋子' },
     { key: 'accessory' as const, label: '饰品' },
   ]
 

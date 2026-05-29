@@ -6,11 +6,20 @@ export const SHOPS: Record<string, Shop> = {
     npcId: 'npc_blacksmith',
     name: '托尔的铁匠铺',
     entries: [
+      // 武器
       { itemId: 'equip_iron_sword',      price: 80  },
       { itemId: 'equip_steel_sword',     price: 200 },
+      { itemId: 'equip_magic_staff',     price: 220 },
+      // 头盔
+      { itemId: 'equip_leather_hood',    price: 50  },
+      { itemId: 'equip_iron_helm',       price: 150 },
+      // 护甲
       { itemId: 'equip_leather_armor',   price: 60  },
       { itemId: 'equip_chain_mail',      price: 180 },
-      { itemId: 'equip_magic_staff',     price: 220 },
+      // 鞋子
+      { itemId: 'equip_cloth_boots',     price: 50  },
+      { itemId: 'equip_hard_boots',      price: 150 },
+      // 饰品
       { itemId: 'equip_swift_ring',      price: 120 },
       { itemId: 'equip_vitality_amulet', price: 150 },
     ],

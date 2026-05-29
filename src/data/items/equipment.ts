@@ -70,6 +70,46 @@ export const EQUIPMENT: Record<string, Item> = {
     stackable: false,
   },
 
+  // ── 头盔（商店/掉落） ────────────────────────────────────────────────────
+  equip_leather_hood: {
+    id: 'equip_leather_hood',
+    name: '皮帽',
+    description: '鞣制皮革缝制的帽子，提供基础的头部防护。',
+    type: 'equipment',
+    equipSlot: 'helmet',
+    statBonus: { def: 4 },
+    stackable: false,
+  },
+  equip_iron_helm: {
+    id: 'equip_iron_helm',
+    name: '铁盔',
+    description: '铁铸头盔，坚固可靠，有效抵御头部攻击。',
+    type: 'equipment',
+    equipSlot: 'helmet',
+    statBonus: { def: 10 },
+    stackable: false,
+  },
+
+  // ── 鞋子（商店/掉落） ────────────────────────────────────────────────────
+  equip_cloth_boots: {
+    id: 'equip_cloth_boots',
+    name: '布靴',
+    description: '轻便的布制靴子，行走舒适，略微提升速度。',
+    type: 'equipment',
+    equipSlot: 'boots',
+    statBonus: { spd: 4 },
+    stackable: false,
+  },
+  equip_hard_boots: {
+    id: 'equip_hard_boots',
+    name: '硬皮靴',
+    description: '用厚牛皮加固的靴子，行动更迅捷。',
+    type: 'equipment',
+    equipSlot: 'boots',
+    statBonus: { spd: 8 },
+    stackable: false,
+  },
+
   // ── 合成装备（铁匠台，属性双修） ─────────────────────────────────────────
   equip_hunters_blade: {
     id: 'equip_hunters_blade',
@@ -123,6 +163,46 @@ export const EQUIPMENT: Record<string, Item> = {
     type: 'equipment',
     equipSlot: 'accessory',
     statBonus: { atk: 10, maxMp: 30 },
+    stackable: false,
+  },
+
+  // ── 合成头盔 ──────────────────────────────────────────────────────────
+  equip_wolf_mask: {
+    id: 'equip_wolf_mask',
+    name: '狼首面具',
+    description: '以狼牙和兽皮制成的面具，戴上去后双眼如狼一般锐利，攻击与速度双双提升。',
+    type: 'equipment',
+    equipSlot: 'helmet',
+    statBonus: { atk: 5, spd: 5 },
+    stackable: false,
+  },
+  equip_shadow_hood: {
+    id: 'equip_shadow_hood',
+    name: '暗影兜帽',
+    description: '以诅咒灰烬浸染蛛丝织成的兜帽，笼罩着一层淡淡的暗影，增强防御并扩充法力。',
+    type: 'equipment',
+    equipSlot: 'helmet',
+    statBonus: { def: 6, maxMp: 25 },
+    stackable: false,
+  },
+
+  // ── 合成鞋子 ──────────────────────────────────────────────────────────
+  equip_tracker_boots: {
+    id: 'equip_tracker_boots',
+    name: '追踪者之靴',
+    description: '以狼皮和哥布林牙碎片加固的靴子，轻盈而结实，在森林中行走如风。',
+    type: 'equipment',
+    equipSlot: 'boots',
+    statBonus: { spd: 6, def: 3 },
+    stackable: false,
+  },
+  equip_cursed_greaves: {
+    id: 'equip_cursed_greaves',
+    name: '诅咒胫甲',
+    description: '以诅咒灰烬熔铸石像核心碎片制成的胫甲，牺牲速度换取攻防，适合正面硬刚。',
+    type: 'equipment',
+    equipSlot: 'boots',
+    statBonus: { def: 5, atk: 5 },
     stackable: false,
   },
 }

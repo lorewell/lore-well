@@ -37,6 +37,28 @@ export const CRAFT_RECIPES: CraftRecipe[] = [
       { itemId: 'mat_slime_jelly', qty: 2 },
     ],
   },
+  {
+    id: 'recipe_wolf_mask',
+    resultItemId: 'equip_wolf_mask',
+    goldCost: 25,
+    requiredLevel: 1,
+    description: '攻击与速度兼备的头盔，适合速攻流派。',
+    ingredients: [
+      { itemId: 'mat_wolf_fang', qty: 3 },
+      { itemId: 'mat_iron_ore', qty: 2 },
+    ],
+  },
+  {
+    id: 'recipe_tracker_boots',
+    resultItemId: 'equip_tracker_boots',
+    goldCost: 25,
+    requiredLevel: 1,
+    description: '速度与防御均衡的鞋子，森林追踪者必备。',
+    ingredients: [
+      { itemId: 'mat_wolf_fang', qty: 2 },
+      { itemId: 'mat_goblin_tooth', qty: 3 },
+    ],
+  },
 
   // ── Tier 2：中级合成（LV 3，稀有材料） ──────────────────────────────────
   {
@@ -60,6 +82,29 @@ export const CRAFT_RECIPES: CraftRecipe[] = [
     ingredients: [
       { itemId: 'mat_cursed_ash', qty: 3 },
       { itemId: 'mat_stone_core', qty: 1 },
+    ],
+  },
+  {
+    id: 'recipe_shadow_hood',
+    resultItemId: 'equip_shadow_hood',
+    goldCost: 45,
+    requiredLevel: 3,
+    description: '防御与法力兼备的暗影兜帽。',
+    ingredients: [
+      { itemId: 'mat_cursed_ash', qty: 2 },
+      { itemId: 'mat_spider_silk', qty: 3 },
+    ],
+  },
+  {
+    id: 'recipe_cursed_greaves',
+    resultItemId: 'equip_cursed_greaves',
+    goldCost: 45,
+    requiredLevel: 3,
+    description: '攻防兼备的诅咒胫甲，适合正面硬抗。',
+    ingredients: [
+      { itemId: 'mat_cursed_ash', qty: 2 },
+      { itemId: 'mat_stone_core', qty: 1 },
+      { itemId: 'mat_iron_ore', qty: 3 },
     ],
   },
 
