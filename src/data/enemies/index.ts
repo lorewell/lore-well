@@ -10,7 +10,7 @@ export const ENEMIES: Record<string, Enemy> = {
   mob_slime: {
     id: 'mob_slime',
     name: '史莱姆',
-    stats: { hp: 40, maxHp: 40, mp: 0, maxMp: 0, atk: 8, def: 3, spd: 5 },
+    stats: { hp: 40, maxHp: 40, mp: 0, maxMp: 0, atk: 8, matk: 2, def: 3, mdef: 1, spd: 5, crit: 1, dodge: 0, tenacity: 0 },
     skills: [],
     expReward: 20,
     goldReward: 5,
@@ -23,7 +23,7 @@ export const ENEMIES: Record<string, Enemy> = {
   mob_goblin: {
     id: 'mob_goblin',
     name: '哥布林',
-    stats: { hp: 60, maxHp: 60, mp: 10, maxMp: 10, atk: 14, def: 5, spd: 10 },
+    stats: { hp: 60, maxHp: 60, mp: 10, maxMp: 10, atk: 14, matk: 4, def: 5, mdef: 2, spd: 10, crit: 3, dodge: 2, tenacity: 1 },
     skills: [
       {
         id: 'skill_stab',
@@ -46,7 +46,7 @@ export const ENEMIES: Record<string, Enemy> = {
   mob_forest_wolf: {
     id: 'mob_forest_wolf',
     name: '森林狼',
-    stats: { hp: 80, maxHp: 80, mp: 0, maxMp: 0, atk: 18, def: 8, spd: 16 },
+    stats: { hp: 80, maxHp: 80, mp: 0, maxMp: 0, atk: 18, matk: 0, def: 8, mdef: 4, spd: 16, crit: 5, dodge: 5, tenacity: 0 },
     skills: [
       {
         id: 'skill_bite',
@@ -68,7 +68,7 @@ export const ENEMIES: Record<string, Enemy> = {
   mob_cave_spider: {
     id: 'mob_cave_spider',
     name: '洞穴蜘蛛',
-    stats: { hp: 55, maxHp: 55, mp: 0, maxMp: 0, atk: 15, def: 4, spd: 18 },
+    stats: { hp: 55, maxHp: 55, mp: 0, maxMp: 0, atk: 15, matk: 0, def: 4, mdef: 3, spd: 18, crit: 4, dodge: 8, tenacity: 0 },
     skills: [
       {
         id: 'skill_poison_bite',
@@ -90,7 +90,7 @@ export const ENEMIES: Record<string, Enemy> = {
   mob_goblin_mage: {
     id: 'mob_goblin_mage',
     name: '哥布林法师',
-    stats: { hp: 50, maxHp: 50, mp: 40, maxMp: 40, atk: 12, def: 3, spd: 8 },
+    stats: { hp: 50, maxHp: 50, mp: 40, maxMp: 40, atk: 6, matk: 18, def: 3, mdef: 8, spd: 8, crit: 2, dodge: 1, tenacity: 3 },
     skills: [
       {
         id: 'skill_fire_bolt',
@@ -112,7 +112,7 @@ export const ENEMIES: Record<string, Enemy> = {
   mob_stone_golem: {
     id: 'mob_stone_golem',
     name: '石像鬼',
-    stats: { hp: 150, maxHp: 150, mp: 0, maxMp: 0, atk: 25, def: 20, spd: 4 },
+    stats: { hp: 150, maxHp: 150, mp: 0, maxMp: 0, atk: 25, matk: 0, def: 20, mdef: 12, spd: 4, crit: 0, dodge: 0, tenacity: 8 },
     skills: [
       {
         id: 'skill_smash',

@@ -24,11 +24,16 @@ function EquipPanel({ onClose }: { onClose: () => void }) {
   const expPct = Math.max(0, Math.min(100, (exp / expToNext) * 100))
 
   const statRows = [
-    { label: '攻击', value: stats.atk, base: baseStats.atk },
-    { label: '防御', value: stats.def, base: baseStats.def },
-    { label: '速度', value: stats.spd, base: baseStats.spd },
-    { label: '生命上限', value: stats.maxHp, base: baseStats.maxHp },
-    { label: '魔力上限', value: stats.maxMp, base: baseStats.maxMp },
+    { label: '物理攻击', value: stats.atk, base: baseStats.atk, key: 'atk' },
+    { label: '魔法攻击', value: stats.matk, base: baseStats.matk, key: 'matk' },
+    { label: '物理防御', value: stats.def, base: baseStats.def, key: 'def' },
+    { label: '魔法防御', value: stats.mdef, base: baseStats.mdef, key: 'mdef' },
+    { label: '速度', value: stats.spd, base: baseStats.spd, key: 'spd' },
+    { label: '生命上限', value: stats.maxHp, base: baseStats.maxHp, key: 'maxHp' },
+    { label: '魔力上限', value: stats.maxMp, base: baseStats.maxMp, key: 'maxMp' },
+    { label: '暴击率', value: stats.crit, base: baseStats.crit, key: 'crit' },
+    { label: '闪避率', value: stats.dodge, base: baseStats.dodge, key: 'dodge' },
+    { label: '韧性', value: stats.tenacity, base: baseStats.tenacity, key: 'tenacity' },
   ]
 
   const equipSlots = [
@@ -80,19 +85,20 @@ function EquipPanel({ onClose }: { onClose: () => void }) {
 
         <div className="mb-5">
           <div className="pixel-label mb-3">ATTRIBUTES</div>
-          <div className="grid gap-2">
-            {statRows.map(({ label, value, base }) => {
+          <div className="grid grid-cols-2 gap-2">
+            {statRows.map(({ label, value, base, key }) => {
               const bonus = value - base
+              const isPercent = key === 'crit' || key === 'dodge' || key === 'tenacity'
               return (
                 <div
-                  key={label}
-                  className="grid grid-cols-[88px_1fr] border-2 px-3 py-2 text-xs"
+                  key={key}
+                  className="flex items-center justify-between border-2 px-2 py-1.5 text-xs"
                   style={{ borderColor: '#2e3938', background: 'rgba(8, 10, 10, 0.5)' }}
                 >
-                  <span style={{ color: '#b68f59' }}>{label}</span>
-                  <span className="text-right font-bold" style={{ color: '#f8e7b7' }}>
-                    {value}
-                    {bonus > 0 && <span style={{ color: '#73c66d' }}> +{bonus}</span>}
+                  <span className="shrink-0 mr-1" style={{ color: '#b68f59' }}>{label}</span>
+                  <span className="text-right font-bold truncate" style={{ color: '#f8e7b7' }}>
+                    {value}{isPercent ? '%' : ''}
+                    {bonus > 0 && <span style={{ color: '#73c66d' }}> +{bonus}{isPercent ? '%' : ''}</span>}
                   </span>
                 </div>
               )

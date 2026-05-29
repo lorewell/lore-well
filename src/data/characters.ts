@@ -12,8 +12,13 @@ export const PLAYER_TEMPLATE: Character = {
     mp: 40,
     maxMp: 40,
     atk: 20,
+    matk: 8,
     def: 10,
+    mdef: 6,
     spd: 12,
+    crit: 5,
+    dodge: 3,
+    tenacity: 2,
   },
   stats: {
     hp: 100,
@@ -21,8 +26,13 @@ export const PLAYER_TEMPLATE: Character = {
     mp: 40,
     maxMp: 40,
     atk: 20,
+    matk: 8,
     def: 10,
+    mdef: 6,
     spd: 12,
+    crit: 5,
+    dodge: 3,
+    tenacity: 2,
   },
   skills: [
     {

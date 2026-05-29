@@ -5,9 +5,21 @@ export interface Stats {
   maxHp: number
   mp: number
   maxMp: number
+  /** 物理攻击力 */
   atk: number
+  /** 魔法攻击力 */
+  matk: number
+  /** 物理防御 */
   def: number
+  /** 魔法防御 */
+  mdef: number
   spd: number
+  /** 暴击率（百分比，如 5 = 5%） */
+  crit: number
+  /** 闪避率（百分比，如 3 = 3%） */
+  dodge: number
+  /** 韧性（百分比，抵抗控制/暴击/异常） */
+  tenacity: number
 }
 
 // ─── 物品 ────────────────────────────────────────────────────────────────────

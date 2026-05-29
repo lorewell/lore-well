@@ -603,7 +603,9 @@ export const useGameStore = create<GameState>()(
               maxHp: player.baseStats.maxHp + 20,
               maxMp: player.baseStats.maxMp + 8,
               atk: player.baseStats.atk + 3,
+              matk: player.baseStats.matk + 2,
               def: player.baseStats.def + 2,
+              mdef: player.baseStats.mdef + 1,
               spd: player.baseStats.spd + 1,
             }
             leveledUp = true

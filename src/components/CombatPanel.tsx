@@ -97,7 +97,9 @@ export default function CombatPanel({ onBattleEnd }: CombatPanelProps) {
           <MiniBar label="MP" pct={mpPct} color="#4488ff" />
           <div className="text-[10px] mt-1 space-y-0.5" style={{ color: '#9070b0' }}>
             <div>{playerStats.hp}/{playerStats.maxHp} HP · {playerStats.mp}/{playerStats.maxMp} MP</div>
-            <div>ATK {playerStats.atk} · DEF {playerStats.def}</div>
+            <div>物攻 {playerStats.atk} · 魔攻 {playerStats.matk}</div>
+            <div>物防 {playerStats.def} · 魔防 {playerStats.mdef}</div>
+            <div>暴击 {playerStats.crit}% · 闪避 {playerStats.dodge}%</div>
           </div>
         </div>
 
@@ -120,7 +122,9 @@ export default function CombatPanel({ onBattleEnd }: CombatPanelProps) {
           <MiniBar label="HP" pct={enemyHpPct} color="#cc4466" reverse />
           <div className="text-[10px] mt-1 space-y-0.5" style={{ color: '#9070b0' }}>
             <div>{enemyStats.hp}/{enemyStats.maxHp} HP</div>
-            <div>ATK {enemyStats.atk} · DEF {enemyStats.def}</div>
+            <div>物攻 {enemyStats.atk} · 魔攻 {enemyStats.matk}</div>
+            <div>物防 {enemyStats.def} · 魔防 {enemyStats.mdef}</div>
+            <div>暴击 {enemyStats.crit}% · 闪避 {enemyStats.dodge}%</div>
           </div>
         </div>
       </div>
