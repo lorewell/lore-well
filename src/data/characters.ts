@@ -1,38 +1,29 @@
 import type { Character } from '../types'
+import { HERO_TALENT, calcBaseStats } from '../store/gameStore'
+
+/** 勇者初始能力值（均衡分配） */
+const HERO_ABILITIES = { str: 5, agi: 5, int: 5, con: 5 }
+
+const heroBase = calcBaseStats(HERO_ABILITIES, 1, HERO_TALENT)
 
 export const PLAYER_TEMPLATE: Character = {
   id: 'player',
-  name: '旅行者',
+  name: '勇者',
   level: 1,
   exp: 0,
   expToNext: 100,
+  abilities: { ...HERO_ABILITIES },
+  abilityPoints: 0,
+  talent: { ...HERO_TALENT },
   baseStats: {
-    hp: 100,
-    maxHp: 100,
-    mp: 40,
-    maxMp: 40,
-    atk: 20,
-    matk: 8,
-    def: 10,
-    mdef: 6,
-    spd: 12,
-    crit: 5,
-    dodge: 3,
-    tenacity: 2,
+    ...heroBase,
+    hp: heroBase.maxHp,
+    mp: heroBase.maxMp,
   },
   stats: {
-    hp: 100,
-    maxHp: 100,
-    mp: 40,
-    maxMp: 40,
-    atk: 20,
-    matk: 8,
-    def: 10,
-    mdef: 6,
-    spd: 12,
-    crit: 5,
-    dodge: 3,
-    tenacity: 2,
+    ...heroBase,
+    hp: heroBase.maxHp,
+    mp: heroBase.maxMp,
   },
   skills: [
     {

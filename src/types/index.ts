@@ -13,13 +13,34 @@ export interface Stats {
   def: number
   /** 魔法防御 */
   mdef: number
-  spd: number
   /** 暴击率（百分比，如 5 = 5%） */
   crit: number
   /** 闪避率（百分比，如 3 = 3%） */
   dodge: number
-  /** 韧性（百分比，抵抗控制/暴击/异常） */
-  tenacity: number
+}
+
+/** 四能力值：力量/敏捷/智力/体质 */
+export interface Abilities {
+  /** 力量 → 物攻、物防 */
+  str: number
+  /** 敏捷 → 暴击、闪避 */
+  agi: number
+  /** 智力 → 魔攻、魔防 */
+  int: number
+  /** 体质 → 生命上限、魔力上限 */
+  con: number
+}
+
+/** 角色天赋加成（每级额外获得的属性） */
+export interface Talent {
+  maxHp: number
+  maxMp: number
+  atk: number
+  matk: number
+  def: number
+  mdef: number
+  crit: number
+  dodge: number
 }
 
 // ─── 物品 ────────────────────────────────────────────────────────────────────
@@ -53,9 +74,11 @@ export interface Skill {
   name: string
   description: string
   mpCost: number
-  damage?: number       // 基础伤害系数（倍 atk）
+  damage?: number       // 基础伤害系数（倍 atk 或 matk）
   heal?: number         // 治疗量系数（倍 maxHp）
   targetSelf?: boolean
+  /** 是否为魔法伤害（默认 false = 物理） */
+  isMagical?: boolean
 }
 
 export interface Character {
@@ -63,8 +86,14 @@ export interface Character {
   name: string
   /** 当前有效属性（基础 + 装备加成），始终通过 applyEquipmentBonuses 计算 */
   stats: Stats
-  /** 纯基础属性（不含装备），用于装备/脱装时重新计算 stats */
+  /** 纯基础属性（不含装备），由 calcBaseStats(abilities, level, talent) 动态计算 */
   baseStats: Stats
+  /** 四能力值 */
+  abilities: Abilities
+  /** 可分配能力点数 */
+  abilityPoints: number
+  /** 角色天赋配置（每级额外属性加成） */
+  talent: Talent
   level: number
   exp: number
   expToNext: number

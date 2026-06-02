@@ -20,20 +20,26 @@ import { getShopByNpc } from '../data/shops'
 function EquipPanel({ onClose }: { onClose: () => void }) {
   const player = useGameStore((s) => s.player)
   const gold = useGameStore((s) => s.gold)
-  const { stats, baseStats, equipment, level, exp, expToNext } = player
+  const allocateAbility = useGameStore((s) => s.allocateAbility)
+  const { stats, baseStats, equipment, level, exp, expToNext, abilities, abilityPoints } = player
   const expPct = Math.max(0, Math.min(100, (exp / expToNext) * 100))
+
+  const abilityRows = [
+    { key: 'str' as const, label: '力量', hint: '物攻/物防' },
+    { key: 'agi' as const, label: '敏捷', hint: '暴击/闪避' },
+    { key: 'int' as const, label: '智力', hint: '魔攻/魔防' },
+    { key: 'con' as const, label: '体质', hint: '生命/魔力' },
+  ]
 
   const statRows = [
     { label: '物理攻击', value: stats.atk, base: baseStats.atk, key: 'atk' },
     { label: '魔法攻击', value: stats.matk, base: baseStats.matk, key: 'matk' },
     { label: '物理防御', value: stats.def, base: baseStats.def, key: 'def' },
     { label: '魔法防御', value: stats.mdef, base: baseStats.mdef, key: 'mdef' },
-    { label: '速度', value: stats.spd, base: baseStats.spd, key: 'spd' },
     { label: '生命上限', value: stats.maxHp, base: baseStats.maxHp, key: 'maxHp' },
     { label: '魔力上限', value: stats.maxMp, base: baseStats.maxMp, key: 'maxMp' },
     { label: '暴击率', value: stats.crit, base: baseStats.crit, key: 'crit' },
     { label: '闪避率', value: stats.dodge, base: baseStats.dodge, key: 'dodge' },
-    { label: '韧性', value: stats.tenacity, base: baseStats.tenacity, key: 'tenacity' },
   ]
 
   const equipSlots = [
@@ -84,11 +90,46 @@ function EquipPanel({ onClose }: { onClose: () => void }) {
         </div>
 
         <div className="mb-5">
+          <div className="pixel-label mb-3">ABILITIES</div>
+          {abilityPoints > 0 && (
+            <div className="mb-2 text-xs text-center font-bold" style={{ color: '#73c66d' }}>
+              可分配点数: {abilityPoints}
+            </div>
+          )}
+          <div className="grid gap-2">
+            {abilityRows.map(({ key, label, hint }) => (
+              <div
+                key={key}
+                className="flex items-center border-2 px-3 py-2 text-xs"
+                style={{ borderColor: '#2e3938', background: 'rgba(8, 10, 10, 0.5)' }}
+              >
+                <span className="shrink-0 w-10" style={{ color: '#b68f59' }}>{label}</span>
+                <span className="flex-1 text-[10px]" style={{ color: '#6d5434' }}>{hint}</span>
+                <span className="font-bold mr-2" style={{ color: '#f8e7b7' }}>{abilities[key]}</span>
+                <button
+                  type="button"
+                  onClick={() => allocateAbility(key)}
+                  disabled={abilityPoints <= 0}
+                  className="w-6 h-6 flex items-center justify-center border-2 text-xs font-bold transition-all cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed hover:brightness-125"
+                  style={{
+                    borderColor: abilityPoints > 0 ? '#73c66d' : '#2e3938',
+                    background: abilityPoints > 0 ? 'rgba(115, 198, 109, 0.15)' : 'transparent',
+                    color: abilityPoints > 0 ? '#73c66d' : '#6d5434',
+                  }}
+                >
+                  +
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="mb-5">
           <div className="pixel-label mb-3">ATTRIBUTES</div>
           <div className="grid grid-cols-2 gap-2">
             {statRows.map(({ label, value, base, key }) => {
               const bonus = value - base
-              const isPercent = key === 'crit' || key === 'dodge' || key === 'tenacity'
+              const isPercent = key === 'crit' || key === 'dodge'
               return (
                 <div
                   key={key}

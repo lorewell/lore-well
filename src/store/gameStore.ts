@@ -11,6 +11,8 @@ import type {
   EquipSlot,
   Quest,
   ObjectiveTrigger,
+  Abilities,
+  Talent,
 } from '../types'
 import { PLAYER_TEMPLATE } from '../data/characters'
 import { LOCATIONS, STARTING_LOCATION } from '../data/locations'
@@ -20,7 +22,7 @@ import { NPCS } from '../data/dialogues'
 import type { DialogueAction } from '../types'
 
 // ─── 存档版本 ────────────────────────────────────────────────────────────────
-const SAVE_VERSION = 5
+const SAVE_VERSION = 6
 
 // ─── 存档迁移：v4 → v5 (ID 重命名) ──────────────────────────────────────────
 const ID_MIGRATION_MAP: Record<string, string> = {
@@ -92,10 +94,46 @@ export function applyEquipmentBonuses(
   return result
 }
 
+/**
+ * 伤害计算：百分比减免公式
+ * reduction = def / (def + 100)，最终伤害 = atk × multiplier × (1 - reduction) × 随机浮
+ * 物理伤害：(atk, def)，魔法伤害：(matk, mdef)
+ */
 function calcDamage(atk: number, def: number, multiplier = 1): number {
-  const base = Math.max(1, atk - def)
-  const variance = 0.8 + Math.random() * 0.4
-  return Math.round(base * multiplier * variance)
+  const reduction = def / (def + 100)
+  const raw = atk * multiplier * (1 - reduction)
+  const variance = 0.85 + Math.random() * 0.3 // 0.85–1.15 浮动
+  return Math.max(1, Math.round(raw * variance))
+}
+
+/**
+ * 能力值 → 战斗属性映射
+ * 力量→物攻+物防，敏捷→暴击+闪避，智力→魔攻+魔防，体质→生命+魔力
+ */
+export function calcBaseStats(abilities: Abilities, level: number, talent: Talent): Omit<Stats, 'hp' | 'mp'> {
+  const lvl = level - 1
+  return {
+    maxHp: Math.round(100 + abilities.con * 8 + lvl * talent.maxHp),
+    maxMp: Math.round(40 + abilities.con * 3 + lvl * talent.maxMp),
+    atk: Math.round(10 + abilities.str * 2 + lvl * talent.atk),
+    matk: Math.round(5 + abilities.int * 2 + lvl * talent.matk),
+    def: Math.round(5 + abilities.str * 0.5 + lvl * talent.def),
+    mdef: Math.round(3 + abilities.int * 0.5 + lvl * talent.mdef),
+    crit: Math.round((5 + abilities.agi * 0.4 + lvl * talent.crit) * 10) / 10,
+    dodge: Math.round((3 + abilities.agi * 0.4 + lvl * talent.dodge) * 10) / 10,
+  }
+}
+
+/** 勇者天赋：均衡型，各项都有加成 */
+export const HERO_TALENT: Talent = {
+  maxHp: 4,
+  maxMp: 2,
+  atk: 0.8,
+  matk: 0.8,
+  def: 0.6,
+  mdef: 0.6,
+  crit: 0.1,
+  dodge: 0.1,
 }
 
 function clamp(val: number, min: number, max: number): number {
@@ -176,6 +214,9 @@ interface GameState {
   // 复活
   respawnAtVillage: () => void
 
+  // 能力值分配
+  allocateAbility: (key: keyof Abilities) => void
+
   // 内部：自动完成任务目标（暴露在接口上以消除 TS 报错）
   _autoCompleteObjectives: (trigger: ObjectiveTrigger) => void
 }
@@ -211,7 +252,7 @@ export const useGameStore = create<GameState>()(
       },
 
       // ── 开始新游戏 ──────────────────────────────────────────────────────────
-      startNewGame: (playerName = '旅行者') => {
+      startNewGame: (playerName = '勇者') => {
         const player = structuredClone(PLAYER_TEMPLATE)
         player.name = playerName
         set({
@@ -476,7 +517,9 @@ export const useGameStore = create<GameState>()(
           if (skill && ps.mp >= skill.mpCost) {
             ps = { ...ps, mp: ps.mp - skill.mpCost }
             if (skill.damage) {
-              const dmg = calcDamage(ps.atk, es.def, skill.damage)
+              const dmg = skill.isMagical
+                ? calcDamage(ps.matk, es.mdef, skill.damage)
+                : calcDamage(ps.atk, es.def, skill.damage)
               es = { ...es, hp: Math.max(0, es.hp - dmg) }
               log.push(`你使用【${skill.name}】，对【${battle.enemy.name}】造成 ${dmg} 点伤害。`)
             }
@@ -495,7 +538,7 @@ export const useGameStore = create<GameState>()(
             ps = { ...get().battle.playerStats! }
           }
         } else if (action.type === 'flee') {
-          const fleeChance = clamp(0.5 + (ps.spd - (battle.enemyStats?.spd ?? 10)) * 0.02, 0.1, 0.9)
+          const fleeChance = 0.6
           if (Math.random() < fleeChance) {
             log.push('你成功逃跑了！')
             set({ battle: { ...battle, playerStats: ps, enemyStats: es, phase: 'flee', turnLog: log } })
@@ -535,7 +578,9 @@ export const useGameStore = create<GameState>()(
         let enemyAction: string
         if (enemySkills.length > 0 && Math.random() < 0.4) {
           const sk = enemySkills[Math.floor(Math.random() * enemySkills.length)]
-          const dmg = calcDamage(es.atk, ps.def, sk.damage ?? 1)
+          const dmg = sk.isMagical
+            ? calcDamage(es.matk, ps.mdef, sk.damage ?? 1)
+            : calcDamage(es.atk, ps.def, sk.damage ?? 1)
           ps = { ...ps, hp: Math.max(0, ps.hp - dmg) }
           es = { ...es, mp: es.mp - sk.mpCost }
           enemyAction = `【${battle.enemy.name}】使用【${sk.name}】，对你造成 ${dmg} 点伤害。`
@@ -588,7 +633,7 @@ export const useGameStore = create<GameState>()(
         })
       },
 
-      // ── 获得经验并升级（同步更新 baseStats 和 stats） ──────────────────────
+      // ── 获得经验并升级（能力值驱动，不再硬编码属性成长） ──────────────────
       gainExp: (amount) => {
         set((s) => {
           const player = { ...s.player }
@@ -598,26 +643,18 @@ export const useGameStore = create<GameState>()(
             player.exp -= player.expToNext
             player.level += 1
             player.expToNext = Math.round(player.expToNext * 1.5)
-            player.baseStats = {
-              ...player.baseStats,
-              maxHp: player.baseStats.maxHp + 20,
-              maxMp: player.baseStats.maxMp + 8,
-              atk: player.baseStats.atk + 3,
-              matk: player.baseStats.matk + 2,
-              def: player.baseStats.def + 2,
-              mdef: player.baseStats.mdef + 1,
-              spd: player.baseStats.spd + 1,
-            }
+            player.abilityPoints += 5
             leveledUp = true
           }
-          // 重新计算有效属性（含装备加成）
+          // 重算 baseStats（由 abilities + level + talent 驱动）
+          const newBase = calcBaseStats(player.abilities, player.level, player.talent)
+          player.baseStats = { ...newBase, hp: player.baseStats.hp, mp: player.baseStats.mp }
+          // 重算有效属性（含装备加成）
           const newStats = applyEquipmentBonuses(player.baseStats, player.equipment)
           if (leveledUp) {
-            // 升级时恢复满血满蓝
             newStats.hp = newStats.maxHp
             newStats.mp = newStats.maxMp
           } else {
-            // 未升级，按百分比保留当前 HP/MP，避免非升级经验奖励意外满血
             newStats.hp = Math.round((player.stats.hp / player.stats.maxHp) * newStats.maxHp)
             newStats.mp = Math.round((player.stats.mp / player.stats.maxMp) * newStats.maxMp)
           }
@@ -810,6 +847,29 @@ export const useGameStore = create<GameState>()(
           }
         })
       },
+
+      // ── 能力值分配 ──────────────────────────────────────────────────────
+      allocateAbility: (key) => {
+        set((s) => {
+          const player = { ...s.player }
+          if (player.abilityPoints <= 0) return s
+          player.abilities = { ...player.abilities, [key]: player.abilities[key] + 1 }
+          player.abilityPoints -= 1
+          // 重算 baseStats
+          const newBase = calcBaseStats(player.abilities, player.level, player.talent)
+          const oldBase = player.baseStats
+          player.baseStats = { ...newBase, hp: player.baseStats.hp, mp: player.baseStats.mp }
+          // 重算有效属性（含装备）
+          const newStats = applyEquipmentBonuses(player.baseStats, player.equipment)
+          // HP/MP 按比例保留，并加上 baseStats maxHp 增量部分
+          const maxHpDelta = newBase.maxHp - oldBase.maxHp
+          const maxMpDelta = newBase.maxMp - oldBase.maxMp
+          newStats.hp = Math.min(newStats.maxHp, player.stats.hp + maxHpDelta)
+          newStats.mp = Math.min(newStats.maxMp, player.stats.mp + maxMpDelta)
+          player.stats = newStats
+          return { player }
+        })
+      },
     } as GameState & { _autoCompleteObjectives: (t: ObjectiveTrigger) => void }),
     {
       name: 'lore-well-save',
@@ -849,6 +909,38 @@ export const useGameStore = create<GameState>()(
                   : obj.trigger,
               }))
             }))
+          }
+        }
+        if (version < 6) {
+          // v5→v6：补充 abilities/abilityPoints/talent，去除 spd
+          const player = state.player as Record<string, unknown> | undefined
+          if (player) {
+            // 默认能力值（均衡分配）
+            player.abilities = player.abilities ?? { str: 5, agi: 5, int: 5, con: 5 }
+            player.abilityPoints = player.abilityPoints ?? 0
+            player.talent = player.talent ?? HERO_TALENT
+            // 去除 spd（如有）
+            if (player.baseStats && typeof player.baseStats === 'object') {
+              delete (player.baseStats as Record<string, unknown>).spd
+            }
+            if (player.stats && typeof player.stats === 'object') {
+              delete (player.stats as Record<string, unknown>).spd
+            }
+          }
+          // 同伴也需处理
+          const companions = state.companions as Array<Record<string, unknown>> | undefined
+          if (Array.isArray(companions)) {
+            for (const c of companions) {
+              c.abilities = c.abilities ?? { str: 5, agi: 5, int: 5, con: 5 }
+              c.abilityPoints = c.abilityPoints ?? 0
+              c.talent = c.talent ?? HERO_TALENT
+              if (c.baseStats && typeof c.baseStats === 'object') {
+                delete (c.baseStats as Record<string, unknown>).spd
+              }
+              if (c.stats && typeof c.stats === 'object') {
+                delete (c.stats as Record<string, unknown>).spd
+              }
+            }
           }
         }
         return state as unknown as GameState
