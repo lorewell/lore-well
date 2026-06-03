@@ -48,6 +48,9 @@ export interface Talent {
 export type ItemType = 'consumable' | 'equipment' | 'material' | 'quest' | 'misc'
 export type EquipSlot = 'weapon' | 'helmet' | 'armor' | 'boots' | 'accessory'
 
+/** 武器伤害类型：物理/魔法/双修 */
+export type DamageType = 'physical' | 'magical' | 'hybrid'
+
 export interface Item {
   id: string
   name: string
@@ -58,6 +61,8 @@ export interface Item {
   effect?: Partial<Stats>
   /** 装备提供的属性加成（可含 maxHp / maxMp，但不含当前 hp/mp） */
   statBonus?: Partial<Omit<Stats, 'hp' | 'mp'>>
+  /** 武器伤害类型（仅 equipSlot='weapon' 时生效） */
+  damageType?: DamageType
   icon?: string
   stackable: boolean
 }

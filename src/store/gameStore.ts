@@ -509,9 +509,23 @@ export const useGameStore = create<GameState>()(
         const log: string[] = [...battle.turnLog]
 
         if (action.type === 'attack') {
-          const dmg = calcDamage(ps.atk, es.def)
-          es = { ...es, hp: Math.max(0, es.hp - dmg) }
-          log.push(`你发动普通攻击，对【${battle.enemy.name}】造成 ${dmg} 点伤害。`)
+          const weapon = player.equipment.weapon
+          const dmgType = weapon?.damageType ?? 'physical'
+          if (dmgType === 'hybrid') {
+            const physDmg = calcDamage(ps.atk, es.def, 0.6)
+            const magDmg = calcDamage(ps.matk, es.mdef, 0.6)
+            const total = physDmg + magDmg
+            es = { ...es, hp: Math.max(0, es.hp - total) }
+            log.push(`你发动普通攻击（物魔双修），对【${battle.enemy.name}】造成 ${physDmg} 点物理 + ${magDmg} 点魔法伤害，合计 ${total} 点。`)
+          } else if (dmgType === 'magical') {
+            const dmg = calcDamage(ps.matk, es.mdef)
+            es = { ...es, hp: Math.max(0, es.hp - dmg) }
+            log.push(`你发动普通攻击（魔法），对【${battle.enemy.name}】造成 ${dmg} 点伤害。`)
+          } else {
+            const dmg = calcDamage(ps.atk, es.def)
+            es = { ...es, hp: Math.max(0, es.hp - dmg) }
+            log.push(`你发动普通攻击（物理），对【${battle.enemy.name}】造成 ${dmg} 点伤害。`)
+          }
         } else if (action.type === 'skill' && action.skillId) {
           const skill = player.skills.find((sk) => sk.id === action.skillId)
           if (skill && ps.mp >= skill.mpCost) {

@@ -66,7 +66,7 @@ export const CRAFT_RECIPES: CraftRecipe[] = [
     resultItemId: 'equip_runic_staff',
     goldCost: 60,
     requiredLevel: 3,
-    description: '大幅增强法力与攻击的强力法杖。',
+    description: '同时造成物理与魔法双重伤害的强力符文法杖。',
     ingredients: [
       { itemId: 'mat_stone_core', qty: 1 },
       { itemId: 'mat_cursed_ash', qty: 2 },
