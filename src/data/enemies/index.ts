@@ -133,4 +133,101 @@ export const ENEMIES: Record<string, Enemy> = {
     ],
     sprite: 'enemy_golem',
   },
+
+  // ── 森林浅层新怪物 ─────────────────────────────────────────────────────
+  mob_swamp_frog: {
+    id: 'mob_swamp_frog',
+    name: '泥沼蛙',
+    stats: { hp: 85, maxHp: 85, mp: 0, maxMp: 0, atk: 9, matk: 0, def: 12, mdef: 3, crit: 2, dodge: 2 },
+    skills: [
+      {
+        id: 'skill_tongue_lash',
+        name: '舌鞭',
+        description: '弹出长舌抽打，造成 1.6 倍攻击伤害。',
+        mpCost: 0,
+        damage: 1.6,
+      },
+    ],
+    expReward: 50,
+    goldReward: 12,
+    dropTable: [
+      { item: ITEMS.mat_slime_jelly,    chance: 0.85, minQty: 1, maxQty: 2 },
+      { item: ITEMS.cons_health_potion, chance: 0.25 },
+      { item: ITEMS.mat_iron_ore,       chance: 0.30, minQty: 1, maxQty: 2 },
+    ],
+    sprite: 'enemy_frog',
+  },
+
+  // ── 森林深处新怪物 ─────────────────────────────────────────────────────
+  mob_shadow_vine: {
+    id: 'mob_shadow_vine',
+    name: '暗影妖藤',
+    stats: { hp: 65, maxHp: 65, mp: 30, maxMp: 30, atk: 8, matk: 16, def: 4, mdef: 6, crit: 3, dodge: 1 },
+    skills: [
+      {
+        id: 'skill_vine_whip',
+        name: '藤蔓抽打',
+        description: '以暗影藤蔓抽打敌人，造成 1.8 倍魔法伤害。',
+        mpCost: 8,
+        damage: 1.8,
+        isMagical: true,
+      },
+    ],
+    expReward: 55,
+    goldReward: 15,
+    dropTable: [
+      { item: ITEMS.mat_cursed_ash,   chance: 0.60, minQty: 1, maxQty: 2 },
+      { item: ITEMS.cons_mana_potion, chance: 0.35 },
+      { item: ITEMS.mat_spider_silk,  chance: 0.40, minQty: 1, maxQty: 2 },
+    ],
+    sprite: 'enemy_vine',
+  },
+
+  mob_corrupted_treant: {
+    id: 'mob_corrupted_treant',
+    name: '腐化树灵',
+    stats: { hp: 130, maxHp: 130, mp: 0, maxMp: 0, atk: 22, matk: 0, def: 15, mdef: 8, crit: 0, dodge: 0 },
+    skills: [
+      {
+        id: 'skill_root_smash',
+        name: '根须重击',
+        description: '以粗壮根须猛击地面，造成 2.0 倍攻击伤害。',
+        mpCost: 0,
+        damage: 2.0,
+      },
+    ],
+    expReward: 120,
+    goldReward: 35,
+    dropTable: [
+      { item: ITEMS.mat_stone_core,    chance: 0.40, minQty: 1, maxQty: 1 },
+      { item: ITEMS.mat_wolf_fang,     chance: 0.50, minQty: 1, maxQty: 2 },
+      { item: ITEMS.cons_elixir,       chance: 0.20 },
+      { item: ITEMS.mat_iron_ore,      chance: 0.45, minQty: 1, maxQty: 3 },
+    ],
+    sprite: 'enemy_treant',
+  },
+
+  // ── 矿洞新怪物 ─────────────────────────────────────────────────────────
+  mob_cave_bat: {
+    id: 'mob_cave_bat',
+    name: '矿洞蝠群',
+    stats: { hp: 30, maxHp: 30, mp: 0, maxMp: 0, atk: 12, matk: 0, def: 3, mdef: 2, crit: 8, dodge: 12 },
+    skills: [
+      {
+        id: 'skill_sonic_screech',
+        name: '音波尖啸',
+        description: '发出刺耳音波，造成 1.5 倍攻击伤害。',
+        mpCost: 0,
+        damage: 1.5,
+      },
+    ],
+    expReward: 30,
+    goldReward: 8,
+    dropTable: [
+      { item: ITEMS.mat_goblin_tooth,  chance: 0.40, minQty: 1, maxQty: 1 },
+      { item: ITEMS.cons_health_potion, chance: 0.20 },
+      { item: ITEMS.mat_iron_ore,      chance: 0.25, minQty: 1, maxQty: 1 },
+    ],
+    sprite: 'enemy_bat',
+  },
 }

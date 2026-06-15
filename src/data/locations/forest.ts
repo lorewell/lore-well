@@ -19,6 +19,7 @@ export const FOREST_LOCATION: Location = {
           '曾经有村民在此地焚烧荆棘开路，留下一片烧焦的地面和半截倒木。哥布林频繁出没，猎人们已经多日未踏足此处。',
         interactions: [
           { id: 'gate_goblin_patrol', label: '哥布林巡逻队',  type: 'enemy',    targetId: 'mob_goblin' },
+          { id: 'gate_slime',         label: '游荡的史莱姆',  type: 'enemy',    targetId: 'mob_slime' },
           { id: 'gate_charred_sign',  label: '烧焦的路牌',   type: 'building', targetId: 'point_ash_valley_sign' },
         ],
         north:  'space_ruined_camp',
@@ -34,6 +35,7 @@ export const FOREST_LOCATION: Location = {
           '泥泞的低洼地带，野兽的骨骸半陷在黑泥里，空气中有淡淡的硫磺味。哥布林常在灌木后伏击路人。',
         interactions: [
           { id: 'marsh_goblin_ambush', label: '伏击的哥布林', type: 'enemy', targetId: 'mob_goblin' },
+          { id: 'marsh_swamp_frog',    label: '泥沼蛙',       type: 'enemy', targetId: 'mob_swamp_frog' },
           { id: 'marsh_old_pack',      label: '泥中的行囊',   type: 'item',  targetId: 'cons_health_potion' },
         ],
         east: 'space_ash_valley_gate',
@@ -62,6 +64,7 @@ export const FOREST_LOCATION: Location = {
         interactions: [
           { id: 'misty_wolf_spirit',  label: '缠绕的狼灵',   type: 'enemy',    targetId: 'mob_forest_wolf' },
           { id: 'misty_goblin_mage',  label: '哥布林法师',   type: 'enemy',    targetId: 'mob_goblin_mage' },
+          { id: 'misty_shadow_vine',  label: '暗影妖藤',     type: 'enemy',    targetId: 'mob_shadow_vine' },
           { id: 'misty_stone_mark',   label: '刻字的界石',   type: 'building', targetId: 'point_boundary_stone' },
         ],
         south: 'space_ruined_camp',
@@ -88,9 +91,11 @@ export const FOREST_LOCATION: Location = {
         description:
           '参天古木的树干比马车还宽，根系盘结成拱门般的形状。这里几乎没有任何声音，连风都静止了——据说第一批进入此地的人，再也没有走出来。',
         interactions: [
-          { id: 'grove_wolf_alpha',  label: '狼灵首领',   type: 'enemy',    targetId: 'mob_forest_wolf' },
-          { id: 'grove_elder_golem', label: '远古石像鬼', type: 'enemy',    targetId: 'mob_stone_golem' },
-          { id: 'grove_rune_tree',   label: '符文古树',   type: 'building', targetId: 'point_rune_tree' },
+          { id: 'grove_wolf_alpha',        label: '狼灵首领',   type: 'enemy',    targetId: 'mob_forest_wolf' },
+          { id: 'grove_shadow_vine',       label: '暗影妖藤',   type: 'enemy',    targetId: 'mob_shadow_vine' },
+          { id: 'grove_elder_golem',       label: '远古石像鬼', type: 'enemy',    targetId: 'mob_stone_golem' },
+          { id: 'grove_corrupted_treant',  label: '腐化树灵',   type: 'enemy',    targetId: 'mob_corrupted_treant' },
+          { id: 'grove_rune_tree',         label: '符文古树',   type: 'building', targetId: 'point_rune_tree' },
         ],
         south: 'space_broken_moon_altar',
       },
@@ -103,6 +108,7 @@ export const FOREST_LOCATION: Location = {
           '铁轨已经锈蚀成橘红色，矿车脱轨翻倒在一侧。支撑横梁吓呀作响，偶尔有碎石从顶部坠落。洞穴蜘蛛在角落里编织着厉重的蜘蛛网。',
         interactions: [
           { id: 'mine_road_spider',   label: '守道蜘蛛',   type: 'enemy',    targetId: 'mob_cave_spider' },
+          { id: 'mine_road_bat',      label: '矿洞蝠群',   type: 'enemy',    targetId: 'mob_cave_bat' },
           { id: 'mine_road_placard',  label: '警示木牌',   type: 'building', targetId: 'point_mine_warning' },
           { id: 'mine_road_remains',  label: '屏风控的遗物', type: 'npc', targetId: 'point_miner_remains' },
         ],
@@ -131,6 +137,7 @@ export const FOREST_LOCATION: Location = {
           '岩壁深处裸露出一道粗大的铁矿脉，在火把光下泛着冷金属光泽。附近散落着被遗弃的镐头和空矿车——上一批矿工走得很匆忙。',
         interactions: [
           { id: 'vein_goblin_guard', label: '守矿哥布林', type: 'enemy', targetId: 'mob_goblin' },
+          { id: 'vein_cave_bat',     label: '矿洞蝠群',   type: 'enemy', targetId: 'mob_cave_bat' },
           { id: 'vein_iron_ore',     label: '裸露的矿脉', type: 'item',  targetId: 'mat_iron_ore' },
         ],
         west: 'space_rusty_mine_road',
