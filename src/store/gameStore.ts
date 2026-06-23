@@ -625,25 +625,32 @@ export const useGameStore = create<GameState>()(
 
       // ── 战斗结束：将战斗中的 HP/MP 写回玩家，清空战斗状态 ─────────────────
       restoreHpMp: () => {
-        set((s) => {
-          const maxHp = s.player.stats.maxHp
-          const maxMp = s.player.stats.maxMp
-          return {
-            player: {
-              ...s.player,
-              stats: { ...s.player.stats, hp: maxHp, mp: maxMp },
+        const { player, battle } = get()
+        if (!player?.stats) return
+        const fps = battle.playerStats ?? player.stats
+        set({
+          player: {
+            ...player,
+            stats: {
+              ...player.stats,
+              hp: player.stats.maxHp ?? 100,
+              mp: player.stats.maxMp ?? 40,
             },
-            battle: {
-              active: false,
-              phase: 'idle',
-              enemy: null,
-              playerStats: { ...s.player.stats, hp: maxHp, mp: maxMp },
-              enemyStats: null,
-              turnLog: [],
-              round: 0,
-              loot: [],
+          },
+          battle: {
+            active: false,
+            phase: 'idle',
+            enemy: null,
+            playerStats: {
+              ...player.stats,
+              hp: player.stats.maxHp ?? 100,
+              mp: player.stats.maxMp ?? 40,
             },
-          }
+            enemyStats: null,
+            turnLog: [],
+            round: 0,
+            loot: [],
+          },
         })
       },
 
@@ -888,6 +895,23 @@ export const useGameStore = create<GameState>()(
     {
       name: 'lore-well-save',
       version: SAVE_VERSION,
+      onRehydrateStorage: () => {
+        // 水合后校验：若旧存档缺少新字段，自动补全
+        return (state, error) => {
+          if (error || !state) return
+          const p = state.player
+          if (p && (!p.abilities || !p.talent || !p.baseStats?.maxHp)) {
+            p.abilities = p.abilities ?? { str: 5, agi: 5, int: 5, con: 5 }
+            p.talent = p.talent ?? HERO_TALENT
+            p.abilityPoints = p.abilityPoints ?? 0
+            if (!p.baseStats?.maxHp) {
+              const fixed = calcBaseStats(p.abilities, p.level ?? 1, p.talent)
+              p.baseStats = { ...fixed, hp: fixed.maxHp, mp: fixed.maxMp }
+              p.stats = { ...fixed, hp: fixed.maxHp, mp: fixed.maxMp }
+            }
+          }
+        }
+      },
       migrate: (persistedState, version) => {
         const state = persistedState as Record<string, unknown>
         if (version < 5) {
