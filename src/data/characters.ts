@@ -1,5 +1,5 @@
 import type { Character } from '../types'
-import { HERO_TALENT, calcBaseStats } from '../store/gameStore'
+import { HERO_TALENT, calcBaseStats } from '../game/stats'
 
 /** 勇者初始能力值（均衡分配） */
 const HERO_ABILITIES = { str: 5, agi: 5, int: 5, con: 5 }
