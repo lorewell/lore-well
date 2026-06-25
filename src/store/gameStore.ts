@@ -989,6 +989,68 @@ export const useGameStore = create<GameState>()(
         void _battle
         return rest as unknown as typeof s
       },
+      /**
+       * 存档水合时以当前 PLAYER_TEMPLATE 为底，仅覆盖持久化的关键进度字段。
+       * 这样即使旧存档缺少 abilities/talent 等新字段，也不会导致 crash。
+       */
+      merge: (persisted, current) => {
+        const p = persisted as Record<string, unknown>
+        const c = current as Record<string, unknown>
+        const cPlayer = c.player as Record<string, unknown>
+        const pPlayer = p.player as Record<string, unknown> | undefined
+
+        if (pPlayer && cPlayer) {
+          // 只覆盖进度相关字段，其他字段用当前模板的默认值兜底
+          const mergedPlayer = {
+            ...cPlayer,  // 当前模板（保护新字段 abilities/talent/abilityPoints/baseStats/stats）
+            name: pPlayer.name ?? cPlayer.name,
+            level: pPlayer.level ?? cPlayer.level,
+            exp: pPlayer.exp ?? cPlayer.exp,
+            expToNext: pPlayer.expToNext ?? cPlayer.expToNext,
+            equipment: pPlayer.equipment ?? cPlayer.equipment,
+            skills: pPlayer.skills ?? cPlayer.skills,
+            abilities: pPlayer.abilities ?? cPlayer.abilities,
+            abilityPoints: pPlayer.abilityPoints ?? cPlayer.abilityPoints,
+            talent: pPlayer.talent ?? cPlayer.talent,
+            baseStats: (pPlayer.baseStats && typeof pPlayer.baseStats === 'object' && (pPlayer.baseStats as Record<string, unknown>).maxHp !== undefined)
+              ? pPlayer.baseStats
+              : cPlayer.baseStats,
+            stats: (pPlayer.stats && typeof pPlayer.stats === 'object' && (pPlayer.stats as Record<string, unknown>).maxHp !== undefined)
+              ? pPlayer.stats
+              : cPlayer.stats,
+          }
+          p.player = mergedPlayer
+        }
+        // 同伴同理
+        const pCompanions = p.companions as Array<Record<string, unknown>> | undefined
+        if (Array.isArray(pCompanions)) {
+          for (let i = 0; i < pCompanions.length; i++) {
+            const pc = pCompanions[i]
+            const cc = (c.companions as Array<Record<string, unknown>>)?.[i]
+            if (pc && cc) {
+              pCompanions[i] = {
+                ...cc,
+                name: pc.name ?? cc.name,
+                level: pc.level ?? cc.level,
+                exp: pc.exp ?? cc.exp,
+                expToNext: pc.expToNext ?? cc.expToNext,
+                equipment: pc.equipment ?? cc.equipment,
+                skills: pc.skills ?? cc.skills,
+                abilities: pc.abilities ?? cc.abilities,
+                abilityPoints: pc.abilityPoints ?? cc.abilityPoints,
+                talent: pc.talent ?? cc.talent,
+                baseStats: (pc.baseStats && typeof pc.baseStats === 'object' && (pc.baseStats as Record<string, unknown>).maxHp !== undefined)
+                  ? pc.baseStats
+                  : cc.baseStats,
+                stats: (pc.stats && typeof pc.stats === 'object' && (pc.stats as Record<string, unknown>).maxHp !== undefined)
+                  ? pc.stats
+                  : cc.stats,
+              }
+            }
+          }
+        }
+        return { ...current, ...persisted } as typeof current
+      },
     },
   ),
 )
