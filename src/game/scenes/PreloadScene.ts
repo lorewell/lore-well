@@ -107,10 +107,10 @@ export default class PreloadScene extends Phaser.Scene {
       if (e.shape === 'hex') {
         // 六边形（石像鬼/树灵/蜘蛛等重型怪物）
         const cx = 40, cy = 40, r = 36
-        const points: Phaser.Geom.Point[] = []
+        const points: { x: number; y: number }[] = []
         for (let i = 0; i < 6; i++) {
           const a = (Math.PI / 3) * i - Math.PI / 2
-          points.push(new Phaser.Geom.Point(cx + r * Math.cos(a), cy + r * Math.sin(a)))
+          points.push({ x: cx + r * Math.cos(a), y: cy + r * Math.sin(a) })
         }
         g.fillPoints(points, true)
         g.lineStyle(3, 0xffffff, 0.5)
